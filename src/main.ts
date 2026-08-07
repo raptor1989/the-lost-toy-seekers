@@ -21,5 +21,9 @@ new Phaser.Game({
       debug: false,
     },
   },
+  // Pady przejmują sterowanie automatycznie po podłączeniu (InputManager).
+  input: {
+    gamepad: true,
+  },
   scene: [BootScene, PreloadScene, GameScene],
 });

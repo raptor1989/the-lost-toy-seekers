@@ -212,7 +212,7 @@ Kolejność zoptymalizowana pod zasadę: **najpierw grywalny prototyp, grafika n
 | Etap | Stan | Uwagi |
 |---|---|---|
 | **M0** — Szkielet projektu | ✅ **ukończony** | Boot/Preload/Game, jeden gracz na strzałkach, platformy z prostokątów |
-| **M1** — Rdzeń ruchu i strojenie | ⬜ nierozpoczęty | **następny w kolejce** |
+| **M1** — Rdzeń ruchu i strojenie | 🟡 **kod gotowy, czeka na playtest** | `InputManager`, `CoopCamera` z bańką, `RescueSystem`, coyote time + jump buffering, squash & stretch. **Do zamknięcia brakuje strojenia z dziećmi** — kryterium: 5-latek samodzielnie przechodzi tor testowy |
 | **M2** — Pętla rozgrywki | ⬜ nierozpoczęty | |
 | **M3** — Mechaniki kooperacji | ⬜ nierozpoczęty | |
 | **M4** — Poziomy w Tiled | ⬜ nierozpoczęty | |
@@ -236,8 +236,19 @@ Vite + TS + Phaser, sceny Boot/Preload/Game, pusty poziom z kolorowych prostoką
 [Player.ts](../src/objects/Player.ts), [constants.ts](../src/config/constants.ts).
 Tekstury to nadal generowane prostokąty — podmiana na SVG należy do M5.
 
-### M1 — Rdzeń ruchu i strojenie (1–2 wieczory) ⭐ najważniejszy etap
+### M1 — Rdzeń ruchu i strojenie (1–2 wieczory) ⭐ najważniejszy etap 🟡
 Dwóch graczy na klawiaturze, `CoopCamera`, `RescueSystem`. **Strojenie skoku z dziećmi na szarych klockach** — wartości do `constants.ts`. Kryterium ukończenia: 5-latek samodzielnie przechodzi testowy tor.
+
+**Zrealizowano:** [InputManager.ts](../src/systems/InputManager.ts) (strzałki / WASD / pady),
+[CoopCamera.ts](../src/systems/CoopCamera.ts) (wspólna kamera, dynamiczny zoom, „magiczna bańka"),
+[RescueSystem.ts](../src/systems/RescueSystem.ts) (brak śmierci, checkpoint per gracz),
+[Player.ts](../src/objects/Player.ts) (coyote time, jump buffering, squash & stretch)
++ [PlayerOne](../src/objects/PlayerOne.ts) / [PlayerTwo](../src/objects/PlayerTwo.ts),
+tor testowy z linijką zasięgu skoku w [GameScene.ts](../src/scenes/GameScene.ts).
+
+**Pozostało do zamknięcia etapu:** playtest z dziećmi i strojenie wartości ⚙
+w [constants.ts](../src/config/constants.ts). Checkpointy to na razie „ostatni bezpieczny
+grunt" próbkowany co `CHECKPOINT_SAMPLE_MS` — w M2 zastąpią je obiekty z warstwy Tiled.
 
 ### M2 — Pętla rozgrywki (2–3 wieczory)
 Import map z Tiled, cukierki + HUD, duszki, meta z nagrodą, `SaveManager`, menu wyboru poziomów. Kryterium: pełne przejście "szarego" poziomu 1 od menu do nagrody.

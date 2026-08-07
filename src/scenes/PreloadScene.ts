@@ -34,10 +34,16 @@ export class PreloadScene extends Phaser.Scene {
   private createPlaceholderTextures(): void {
     const g = this.make.graphics({ x: 0, y: 0 }, false);
 
-    // Gracz — pomarańczowy prostokąt
-    g.fillStyle(0xf4845f, 1);
+    // Gracz 1 (strzałki) — ciepły pomarańcz, jak plecak misia
+    g.fillStyle(0xe15240, 1);
     g.fillRect(0, 0, PLAYER_WIDTH, PLAYER_HEIGHT);
-    g.generateTexture('player', PLAYER_WIDTH, PLAYER_HEIGHT);
+    g.generateTexture('player_one', PLAYER_WIDTH, PLAYER_HEIGHT);
+    g.clear();
+
+    // Gracz 2 (WASD) — chłodny błękit, jak plecak królika
+    g.fillStyle(0x4a90d9, 1);
+    g.fillRect(0, 0, PLAYER_WIDTH, PLAYER_HEIGHT);
+    g.generateTexture('player_two', PLAYER_WIDTH, PLAYER_HEIGHT);
     g.clear();
 
     // Platforma — zielony kafel 64×32 (skalowany w GameScene)

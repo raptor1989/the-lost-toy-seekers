@@ -23,9 +23,15 @@ npx tsc --noEmit  # sam typecheck, bez builda
 
 Brak testów i lintera — weryfikacja to `tsc` + ręczne uruchomienie gry (`npm run dev`).
 
+**Sprzątanie po weryfikacji:** jeśli uruchomisz serwer dev albo przeglądarkę, żeby coś
+sprawdzić, **zamknij je przed końcem tury** i usuń pliki robocze (zrzuty ekranu,
+`.playwright-cli/`). Nie zostawiaj wiszących procesów — użytkownik nie ma ich sprzątać za Ciebie.
+Jeśli proces przeżył zatrzymanie zadania, dobij go po porcie:
+`Get-NetTCPConnection -LocalPort <port> -State Listen | ForEach-Object { Stop-Process -Id $_.OwningProcess -Force }`.
+
 ## Stan projektu vs architektura docelowa
 
-Projekt jest realizowany milestone'ami M0–M6 (Dokumentacja, sekcja 8). **Aktualnie ukończono M0**: szkielet Boot → Preload → Game, jeden gracz na strzałkach, poziom z kolorowych prostokątów (tekstury-placeholdery generowane w `PreloadScene`, nie ładowane z plików).
+Projekt jest realizowany milestone'ami M0–M6 (Dokumentacja, sekcja 8 — tam jest tabela stanu realizacji, czytaj ją przed zmianami). **M0 ukończony, M1 ma gotowy kod i czeka na playtest z dziećmi**: dwóch graczy przez `InputManager`, `CoopCamera` z „magiczną bańką", `RescueSystem`, skok z coyote time i buforowaniem. Tekstury to nadal placeholdery generowane w `PreloadScene` — podmiana na SVG należy do M5.
 
 Docelowa struktura `src/` (sekcja 2.1 Dokumentacji) — twórz nowe pliki zgodnie z nią:
 

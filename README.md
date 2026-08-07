@@ -45,9 +45,21 @@ Koncept nastroju i palety: [docs/concept/](docs/concept/).
 
 ## Stan projektu
 
-**M0 ukończony** — szkielet Boot → Preload → Game, jeden gracz na strzałkach, poziom
-z kolorowych prostokątów. **Następny krok: M1** (dwóch graczy, kamera kooperacyjna,
-system ratunkowy, strojenie skoku z dziećmi).
+**M0 ukończony.** **M1 — kod gotowy, czeka na playtest**: dwóch graczy (strzałki + WASD,
+pady przejmują automatycznie), wspólna kamera kooperacyjna z „magiczną bańką", system
+ratunkowy bez śmierci, skok z coyote time i buforowaniem.
+
+**Następny krok: zagrać z dziećmi** i dostroić wartości oznaczone ⚙
+w [`src/config/constants.ts`](src/config/constants.ts). Kryterium zamknięcia M1: 5-latek
+samodzielnie przechodzi tor testowy.
+
+### Sterowanie
+
+| | Gracz 1 (7 lat) | Gracz 2 (5 lat) |
+|---|---|---|
+| Ruch | ← → | A D |
+| Skok | ↑ | W |
+| Pad | pad 1 (gałka / d-pad + A) | pad 2 |
 
 Aktualna tabela postępu: [sekcja 8 dokumentacji implementacyjnej](docs/Dokumentacja_Implementacji_Techniczna.md#8-plan-wdrożenia--kamienie-milowe).
 
