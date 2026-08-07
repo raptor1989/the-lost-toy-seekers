@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!-- Moduł platformy — mały karton. Płaska górna krawędź = powierzchnia do stania. -->
+  <g stroke="#6B4A2A" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round">
+
+    <!-- korpus -->
+    <rect x="5" y="16" width="54" height="42" rx="4" fill="#C89257"/>
+
+    <!-- górna ścianka (lekka perspektywa zabawkowa) -->
+    <path d="M5 20 h54" fill="none"/>
+    <rect x="5" y="16" width="54" height="6" rx="3" fill="#DCA96D"/>
+
+    <!-- klapy -->
+    <path d="M32 22 v10" fill="none"/>
+    <path d="M18 22 q14 6 28 0" fill="none" stroke-width="2"/>
+
+    <!-- taśma klejąca -->
+    <rect x="26" y="22" width="12" height="36" fill="#EFDCB8" fill-opacity="0.85"/>
+
+    <!-- zagniecenia -->
+    <path d="M14 34 q3 6 0 12" fill="none" stroke-width="1.8" stroke-opacity="0.55"/>
+    <path d="M50 32 q-3 8 0 14" fill="none" stroke-width="1.8" stroke-opacity="0.55"/>
+  </g>
+</svg>

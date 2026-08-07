@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!-- Znajdźka — cukierek w papierku. Wariant kolorystyczny: podmień #F2913A / #FFD166. -->
+  <g stroke="#7A3E12" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round">
+
+    <!-- skręcone końcówki papierka -->
+    <path d="M14 32 L4 22 q-2 10 0 20 z" fill="#FFD166"/>
+    <path d="M50 32 L60 22 q2 10 0 20 z" fill="#FFD166"/>
+
+    <!-- korpus cukierka -->
+    <ellipse cx="32" cy="32" rx="19" ry="16" fill="#F2913A"/>
+
+    <!-- paski -->
+    <path d="M26 17 q-5 15 0 30" fill="none" stroke="#FFD166" stroke-width="5"/>
+    <path d="M38 17 q5 15 0 30" fill="none" stroke="#FFD166" stroke-width="5"/>
+
+    <!-- obrys korpusu na wierzchu pasków -->
+    <ellipse cx="32" cy="32" rx="19" ry="16" fill="none"/>
+
+    <!-- refleks -->
+    <ellipse cx="25" cy="25" rx="5" ry="3" fill="#FFFFFF" fill-opacity="0.6" stroke="none"
+             transform="rotate(-25 25 25)"/>
+  </g>
+</svg>

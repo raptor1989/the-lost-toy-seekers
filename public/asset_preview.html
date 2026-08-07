@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<title>Podgląd assetów SVG — Poszukiwacze Zaginionych Zabawek</title>
+<style>
+  :root { --grass: #4E9A52; }
+  body { margin:0; font-family: system-ui, sans-serif; background: #101a2e; color:#e8eefc; }
+  header { padding: 20px 24px 4px; }
+  h1 { font-size: 18px; margin:0 0 4px; font-weight:600; }
+  p.sub { margin:0; font-size:13px; opacity:.65; }
+  .scene {
+    margin: 20px 24px; border-radius: 12px; overflow:hidden;
+    background: linear-gradient(#1E3A6E 0%, #2b4f8c 70%, #35608f 100%);
+    position: relative; height: 320px;
+  }
+  .ground { position:absolute; left:0; right:0; bottom:0; height:56px; background: var(--grass); }
+  .star { position:absolute; width:3px; height:3px; background:#fff; border-radius:50%; opacity:.8; }
+  .place { position:absolute; }
+  .row { display:flex; gap:28px; flex-wrap:wrap; align-items:flex-start; margin: 0 24px 28px; }
+  figure { margin:0; background:#f7f4ec; border-radius:10px; padding:14px; text-align:center; }
+  figure.dark { background:#16233d; }
+  figcaption { font-size:11px; margin-top:8px; opacity:.7; color:#333; }
+  figure.dark figcaption { color:#cfd9ee; }
+  h2 { font-size:13px; margin:24px 24px 10px; text-transform:uppercase; letter-spacing:.08em; opacity:.55; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Podgląd assetów SVG — POC</h1>
+  <p class="sub">Miś (128 px), karton (64 px), cukierek (32 px) w skali gry oraz w powiększeniu.</p>
+</header>
+
+<h2>W scenie (skala docelowa)</h2>
+<div class="scene" id="scene">
+  <div class="ground"></div>
+  <img class="place" src="/assets/svg/world_box_small.svg" style="width:64px; left:360px; bottom:56px;">
+  <img class="place" src="/assets/svg/world_box_small.svg" style="width:64px; left:424px; bottom:56px;">
+  <img class="place" src="/assets/svg/world_box_small.svg" style="width:64px; left:424px; bottom:120px;">
+  <img class="place" src="/assets/svg/char_bear_idle.svg" style="width:128px; left:190px; bottom:50px;">
+  <img class="place" src="/assets/svg/pickup_candy_orange.svg" style="width:32px; left:440px; bottom:196px;">
+  <img class="place" src="/assets/svg/pickup_candy_orange.svg" style="width:32px; left:560px; bottom:64px;">
+</div>
+
+<h2>Powiększenie — kontrola konturu i detalu</h2>
+<div class="row">
+  <figure><img src="/assets/svg/char_bear_idle.svg" width="320"><figcaption>char_bear_idle.svg</figcaption></figure>
+  <figure><img src="/assets/svg/world_box_small.svg" width="192"><figcaption>world_box_small.svg</figcaption></figure>
+  <figure><img src="/assets/svg/pickup_candy_orange.svg" width="192"><figcaption>pickup_candy_orange.svg</figcaption></figure>
+</div>
+
+<h2>Na ciemnym tle — kontrola czytelności sylwetki</h2>
+<div class="row">
+  <figure class="dark"><img src="/assets/svg/char_bear_idle.svg" width="220"><figcaption>char_bear_idle.svg</figcaption></figure>
+  <figure class="dark"><img src="/assets/svg/world_box_small.svg" width="128"><figcaption>world_box_small.svg</figcaption></figure>
+  <figure class="dark"><img src="/assets/svg/pickup_candy_orange.svg" width="128"><figcaption>pickup_candy_orange.svg</figcaption></figure>
+</div>
+
+<script>
+  // rozsiane gwiazdy — dekoracja podglądu, nie asset gry
+  const scene = document.getElementById('scene');
+  for (let i = 0; i < 40; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    s.style.left = Math.random() * 100 + '%';
+    s.style.top = Math.random() * 60 + '%';
+    scene.appendChild(s);
+  }
+</script>
+</body>
+</html>

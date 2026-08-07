@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <!-- Gracz 1 — Miś-dzieciak, poza spoczynkowa. Ciało w 3/4 w prawo, twarz do widza. -->
+  <g stroke="#3E2A20" stroke-width="3" stroke-linejoin="round" stroke-linecap="round">
+
+    <!-- plecak (za postacią) -->
+    <rect x="26" y="62" width="26" height="38" rx="10" fill="#E0503C"/>
+    <rect x="30" y="80" width="15" height="14" rx="5" fill="#C4402E"/>
+
+    <!-- tylna noga i ręka (ciemniejszy odcień = w głębi) -->
+    <rect x="50" y="94" width="16" height="24" rx="8" fill="#A97139"/>
+    <ellipse cx="56" cy="118" rx="11" ry="6" fill="#A97139"/>
+    <rect x="42" y="70" width="14" height="30" rx="7" fill="#A97139"/>
+
+    <!-- tułów -->
+    <rect x="42" y="58" width="44" height="48" rx="19" fill="#C08A4E"/>
+
+    <!-- koszulka -->
+    <path d="M48 70 h32 a8 8 0 0 1 8 8 v18 a6 6 0 0 1 -6 6 h-36 a6 6 0 0 1 -6 -6 v-18 a8 8 0 0 1 8 -8 z"
+          fill="#F6EFE2"/>
+
+    <!-- przednia noga -->
+    <rect x="68" y="94" width="17" height="24" rx="8" fill="#C08A4E"/>
+    <ellipse cx="76" cy="118" rx="12" ry="6" fill="#C08A4E"/>
+
+    <!-- przednia ręka -->
+    <rect x="80" y="70" width="14" height="30" rx="7" fill="#C08A4E"/>
+
+    <!-- szelka plecaka -->
+    <path d="M56 70 q6 14 4 30" fill="none" stroke="#E0503C" stroke-width="6"/>
+    <path d="M56 70 q6 14 4 30" fill="none" stroke="#3E2A20" stroke-width="1.5"/>
+
+    <!-- uszy (za głową) -->
+    <circle cx="44" cy="18" r="12" fill="#C08A4E"/>
+    <circle cx="86" cy="16" r="12" fill="#C08A4E"/>
+    <circle cx="44" cy="18" r="5.5" fill="#A97139"/>
+    <circle cx="86" cy="16" r="5.5" fill="#A97139"/>
+
+    <!-- głowa -->
+    <circle cx="64" cy="40" r="30" fill="#C8935A"/>
+
+    <!-- policzki -->
+    <ellipse cx="44" cy="46" rx="7" ry="5" fill="#F08A8A" stroke="none"/>
+    <ellipse cx="88" cy="44" rx="7" ry="5" fill="#F08A8A" stroke="none"/>
+
+    <!-- pyszczek -->
+    <ellipse cx="70" cy="50" rx="16" ry="12" fill="#E8CDA4"/>
+    <ellipse cx="76" cy="44" rx="5.5" ry="4.5" fill="#3E2A20" stroke="none"/>
+    <path d="M72 51 q4 6 8 1" fill="none" stroke-width="2.5"/>
+
+    <!-- oczy -->
+    <circle cx="56" cy="34" r="4.5" fill="#3E2A20" stroke="none"/>
+    <circle cx="78" cy="31" r="4.5" fill="#3E2A20" stroke="none"/>
+    <circle cx="57.5" cy="32.5" r="1.6" fill="#FFFFFF" stroke="none"/>
+    <circle cx="79.5" cy="29.5" r="1.6" fill="#FFFFFF" stroke="none"/>
+  </g>
+</svg>
