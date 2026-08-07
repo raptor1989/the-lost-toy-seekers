@@ -1,5 +1,20 @@
+# zależności i build
 node_modules/
 dist/
-*.local
-.DS_Store
+dist-ssr/
+
+# cache narzędzi
+.vite/
+*.tsbuildinfo
+
+# narzędzia dev
 .playwright-cli/
+
+# lokalne nadpisania i logi
+*.local
+*.log
+npm-debug.log*
+
+# system
+.DS_Store
+Thumbs.db

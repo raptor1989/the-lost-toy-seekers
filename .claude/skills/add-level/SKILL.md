@@ -15,7 +15,7 @@ Poziomy są danymi, nie kodem: jedna generyczna `GameScene` czyta mapę Tiled + 
    - `objects` — object layer: spawny graczy (`spawn_p1`, `spawn_p2`), cukierki, duszki + punkty patrolu, checkpointy, obiekty interaktywne (`allowedPlayer`), `hidden` dla latarki, strefa mety z zabawką,
    - `decor` — czysto wizualna.
 2. **Manifest**: wpis w `src/config/levels.ts` — klucz mapy, muzyka, zabawka-nagroda (jeśli plik nie istnieje, utwórz wg Dokumentacji sekcja 2.1).
-3. **Ładowanie**: `PreloadScene` ładuje paczkę danego poziomu (mapa + atlas + audio) z paskiem postępu.
+3. **Ładowanie**: `PreloadScene` ładuje paczkę danego poziomu (mapa + assety SVG + audio) z paskiem postępu.
 
 ## Zasady projektowania (GDD sekcja 4 + Dokumentacja sekcja 5)
 

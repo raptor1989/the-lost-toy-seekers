@@ -6,10 +6,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 „Poszukiwacze Zaginionych Zabawek" — kooperacyjna platformówka 2D dla dwójki dzieci (5 i 7 lat), pisana w **Phaser 3 + TypeScript + Vite** (Arcade Physics, mapy z Tiled). Dokumentacja projektowa jest źródłem prawdy i należy ją czytać przed większymi zmianami:
 
-- `Plan_Gry_Poszukiwacze_Zaginionych_Zabawek.md` — GDD: mechaniki, poziomy, UI.
-- `Dokumentacja_Implementacji_Techniczna.md` — architektura docelowa, rozwiązania mechanik, kamienie milowe M0–M6.
-- `docs/Plan_Generowania_Assetow.md` — pipeline grafik AI (Leonardo.ai), styleguide, konwencje nazw.
-- `docs/prompts.md` — żywy log wykonanych generacji (każdy asset musi mieć wpis).
+- `docs/Plan_Gry_Poszukiwacze_Zaginionych_Zabawek.md` — GDD: mechaniki, poziomy, UI.
+- `docs/Dokumentacja_Implementacji_Techniczna.md` — architektura docelowa, rozwiązania mechanik, kamienie milowe M0–M6 wraz z **tabelą stanu realizacji** (sekcja 8).
+- `docs/Styleguide_Wektorowy.md` — grafika: paleta, konwencje SVG, kolejność warstw postaci, QA.
 
 Dokumentacja i komentarze w kodzie są po polsku — utrzymuj ten język.
 
@@ -50,6 +49,18 @@ Kluczowa decyzja architektoniczna: **jedna generyczna `GameScene` sterowana dany
 
 ## Assety
 
-- Ścieżki: `public/assets/raw/` (oryginały, poza buildem) i `public/assets/atlas/` (atlasy używane przez grę).
+Grafiki **rysujemy wektorowo (SVG)**, nie generujemy AI — pipeline Leonardo.ai został porzucony
+(Dokumentacja, sekcja 4). Nie proponuj promptów do generatorów obrazu.
+
+- Ścieżka: `public/assets/svg/`. Bez atlasów, bez usuwania tła, bez postprocessingu.
+- Ładowanie: `this.load.svg(key, 'assets/svg/nazwa.svg', { width, height })` w `PreloadScene`.
 - Nazwy: `snake_case` po angielsku z prefiksami `char_`, `ghost_`, `world_` (+ `l1..l4`), `pickup_`, `reward_`, `ui_`, `fx_`.
-- Każda generacja AI musi być zalogowana w `docs/prompts.md` (prompt, seed, model) — bez wpisu asset nie wchodzi do gry.
+- **Paleta i grubości konturu wyłącznie z `docs/Styleguide_Wektorowy.md`** — spójność bierze się
+  z jednego źródła wartości. Nowy kolor = najpierw wpis w tabeli palety.
+- Podgląd: `npm run dev` → `/asset_preview.html`. Każdy nowy asset dopisz do tej strony
+  i obejrzyj w skali gry — to jedyny wiarygodny test czytelności.
+
+## Aktualizacja dokumentacji
+
+Po zamknięciu kamienia milowego **zaktualizuj tabelę stanu realizacji** w sekcji 8
+Dokumentacji (wraz z datą w nagłówku) oraz sekcję „Stan projektu" w `README.md`.

@@ -14,7 +14,7 @@
 | Bundler / dev-server | **Vite** | Natychmiastowy hot-reload — kluczowy przy strojeniu skoków i playtestach z dziećmi. |
 | Fizyka | **Arcade Physics** | AABB w zupełności wystarcza dla platformówki bez obrażeń; prostsza i szybsza niż Matter.js. |
 | Edytor poziomów | **Tiled** (format `.tmj` / JSON) | Wizualne układanie platform, warstwy obiektów (cukierki, duszki, checkpointy), natywny import w Phaser. |
-| Grafika | AI-generated (styl kredkowy wg. konceptów) + **TexturePacker / free-tex-packer** | Atlasy tekstur = mniej draw calls, jedna paczka na poziom. |
+| Grafika | **Rysowana wektorowo (SVG)**, ładowana przez `this.load.svg` | Zero pipeline'u: brak atlasów, usuwania tła i postprocessingu. Edycja assetu = edycja pliku tekstowego, wersjonowalna w gicie. Patrz [Styleguide_Wektorowy.md](Styleguide_Wektorowy.md). |
 | Audio | Wbudowane audio Phaser (Web Audio API) | Formaty: `.ogg` + fallback `.mp3`. Nagrania głosu rodzica jako zwykłe pliki audio. |
 | Zapis postępu | `localStorage` | Wystarczy do zapamiętania odzyskanych zabawek i ukończonych poziomów; zero backendu. |
 | Dystrybucja | Statyczny hosting (np. itch.io, GitHub Pages) lub uruchamianie lokalne | Gra działa w każdej przeglądarce, bez instalacji. Opcjonalnie później Electron/Tauri na desktop. |
@@ -32,8 +32,9 @@ the-lost-toy-seekers/
 ├── index.html
 ├── package.json / tsconfig.json / vite.config.ts
 ├── public/
+│   ├── asset_preview.html  # podgląd assetów (narzędzie dev, patrz Styleguide sekcja 7)
 │   └── assets/
-│       ├── atlas/          # atlasy tekstur (level1.png + level1.json, ui.png...)
+│       ├── svg/            # assety gry — pliki SVG (char_*, world_*, pickup_*, ui_*)
 │       ├── tilemaps/       # mapy z Tiled (level1.tmj ... level4.tmj)
 │       ├── audio/
 │       │   ├── sfx/        # skok, cukierek, chichot duszka, "plum" do wody
@@ -137,20 +138,36 @@ rescueZone.onOverlap(player, () => {
 
 ---
 
-## 4. Pipeline Assetów (AI → Gra)
+## 4. Pipeline Assetów (SVG → Gra)
 
-Styl docelowy wg. konceptów: **kredkowy rysunek, nocny ogród, ciepłe kolory** (patrz [Gemini_Generated_Image_6d2trv6d2trv6d2t.png](Gemini_Generated_Image_6d2trv6d2trv6d2t.png)).
+> **Decyzja zmieniona (2026-08-07).** Pierwotnie zakładano generowanie grafik w Leonardo.ai.
+> Odrzucone po testach: zbyt czasochłonne, brak kontroli nad wynikiem, dryf stylu między
+> generacjami. Assety rysujemy wektorowo. Nastrój i paleta z konceptu
+> [concept_night_garden_style.png](concept/concept_night_garden_style.png) zostają aktualne.
 
-1. **Spójność stylu:** jeden bazowy prompt-szablon (styl, paleta, "children's crayon storybook, night garden, soft outlines") + wariacje per asset. Zapisywać prompty w `docs/prompts.md` — to jedyny sposób na spójne dogenerowanie brakujących elementów za miesiąc.
-2. **Rodzaje assetów i wymagania techniczne:**
-   | Typ | Format | Uwagi |
+Zasady stylu, paleta, kolejność warstw postaci i checklista QA:
+**[Styleguide_Wektorowy.md](Styleguide_Wektorowy.md)** — to jest źródło prawdy dla grafiki.
+
+1. **Format:** pliki `.svg` w `public/assets/svg/`, ładowane w `PreloadScene`:
+   ```ts
+   this.load.svg('bear_idle', 'assets/svg/char_bear_idle.svg', { width: 128, height: 128 });
+   ```
+   Rozmiar rasteryzacji podaje się przy ładowaniu — jeden plik obsłuży HUD (64 px)
+   i `RewardScene` (512 px) bez utraty jakości.
+2. **Brak atlasów.** Liczba draw calls przy skali tej gry nie jest problemem, a atlasy
+   kosztowałyby krok budowania i utratę edytowalności. Jeśli kiedyś okaże się to wąskim
+   gardłem — atlas da się wygenerować z SVG bez zmiany źródeł.
+3. **Rodzaje assetów:**
+   | Typ | viewBox | Uwagi |
    |---|---|---|
-   | Tileset ziemi/platform | PNG, kafle 64×64, **z 1px extrude** | extrude eliminuje szwy między kaflami przy zoomie kamery |
-   | Tła paralaksy | PNG, 3 warstwy (niebo / drzewa / krzaki), tileable w poziomie | `TileSprite` + `scrollFactor` 0.1 / 0.3 / 0.6 |
-   | Postacie | klatki 128×128 → atlas | animacje: idle, run (4–6 kl.), jump, land; AI generuje pozy, dopracowanie w Aseprite/Krita |
-   | Duszki, cukierki, UI | pojedyncze PNG z alfa → atlas | usuwanie tła: rembg / Photoroom |
-3. **Pakowanie:** `free-tex-packer` (darmowy) → jeden atlas na poziom + wspólny atlas UI/postaci.
-4. **Audio:** SFX z freesound.org (CC0) + nagrania głosu rodzica (telefon wystarczy; normalizacja w Audacity, eksport `.ogg` 96 kbps).
+   | Moduły platform | `0 0 64 64` | budujemy z powtarzalnych sprite'ów-obiektów (karton, kępa trawy), nie z tilesetu |
+   | Tła paralaksy | `0 0 512 288` | 3 warstwy; `TileSprite` + `scrollFactor` 0.1 / 0.3 / 0.6 |
+   | Postacie | `0 0 128 128` | osobny plik na pozę: idle, run, jump, land; identyczna kolejność warstw |
+   | Duszki, znajdźki, UI | `0 0 96 96` / `0 0 64 64` | |
+4. **Podgląd:** `npm run dev` → `/asset_preview.html` — assety w skali gry, w powiększeniu
+   i na ciemnym tle. Każdy nowy asset dopisujemy do tej strony.
+5. **Audio:** SFX z freesound.org (CC0) + nagrania głosu rodzica (telefon wystarczy;
+   normalizacja w Audacity, eksport `.ogg` 96 kbps).
 
 ---
 
@@ -190,8 +207,34 @@ Styl docelowy wg. konceptów: **kredkowy rysunek, nocny ogród, ciepłe kolory**
 
 Kolejność zoptymalizowana pod zasadę: **najpierw grywalny prototyp, grafika na końcu** (rozszerzenie Kroków 1–5 z GDD).
 
-### M0 — Szkielet projektu (~1 wieczór)
+### Stan realizacji — *aktualizacja: 2026-08-07*
+
+| Etap | Stan | Uwagi |
+|---|---|---|
+| **M0** — Szkielet projektu | ✅ **ukończony** | Boot/Preload/Game, jeden gracz na strzałkach, platformy z prostokątów |
+| **M1** — Rdzeń ruchu i strojenie | ⬜ nierozpoczęty | **następny w kolejce** |
+| **M2** — Pętla rozgrywki | ⬜ nierozpoczęty | |
+| **M3** — Mechaniki kooperacji | ⬜ nierozpoczęty | |
+| **M4** — Poziomy w Tiled | ⬜ nierozpoczęty | |
+| **M5** — Art pass | 🟡 **rozpoczęty poza kolejnością** | Zmiana pipeline'u na SVG (sekcja 4). Gotowe: `char_bear_idle`, `world_box_small`, `pickup_candy_orange`, [Styleguide_Wektorowy.md](Styleguide_Wektorowy.md), podgląd assetów |
+| **M6** — Polish i playtesty | ⬜ nierozpoczęty | |
+
+> **Uwaga o kolejności:** M5 ruszył przed M1–M4, bo zmiana pipeline'u grafiki wymagała
+> weryfikacji na realnym assecie. To wyjątek, nie nowa kolejność — **priorytetem pozostaje M1**
+> (grywalność przed grafiką). Assety powstają w tle, w miarę potrzeb.
+
+**Legenda:** ✅ ukończony · 🟡 w trakcie · ⬜ nierozpoczęty.
+Po zamknięciu etapu zaktualizuj tabelę **i** datę w nagłówku.
+
+---
+
+### M0 — Szkielet projektu (~1 wieczór) ✅
 Vite + TS + Phaser, sceny Boot/Preload/Game, pusty poziom z kolorowych prostokątów, postać skacząca po platformach.
+
+**Zrealizowano:** [main.ts](../src/main.ts), [BootScene.ts](../src/scenes/BootScene.ts),
+[PreloadScene.ts](../src/scenes/PreloadScene.ts), [GameScene.ts](../src/scenes/GameScene.ts),
+[Player.ts](../src/objects/Player.ts), [constants.ts](../src/config/constants.ts).
+Tekstury to nadal generowane prostokąty — podmiana na SVG należy do M5.
 
 ### M1 — Rdzeń ruchu i strojenie (1–2 wieczory) ⭐ najważniejszy etap
 Dwóch graczy na klawiaturze, `CoopCamera`, `RescueSystem`. **Strojenie skoku z dziećmi na szarych klockach** — wartości do `constants.ts`. Kryterium ukończenia: 5-latek samodzielnie przechodzi testowy tor.
@@ -205,8 +248,12 @@ Magiczna latarka + obiekty ukryte, dźwignie/przyciski/pchane bloki, bąbelki i 
 ### M4 — Poziomy w Tiled (3–4 wieczory)
 Greybox wszystkich 4 poziomów zgodnie z GDD sekcja 4 + playtest każdego z dziećmi **przed** art passem (przesuwanie platform w Tiled jest darmowe, po oklejeniu grafiką — bolesne).
 
-### M5 — Art pass (2–4 wieczory, równolegle z generowaniem AI)
-Generowanie i pakowanie assetów (sekcja 4), podmiana greyboxu, paralaksa, animacje postaci, muzyka i SFX, nagrania głosowe.
+### M5 — Art pass (2–4 wieczory, równolegle z resztą) 🟡
+Rysowanie assetów SVG (sekcja 4), podmiana greyboxu, paralaksa, animacje postaci, muzyka i SFX, nagrania głosowe.
+
+**Zrealizowano:** [Styleguide_Wektorowy.md](Styleguide_Wektorowy.md), podgląd `/asset_preview.html`,
+assety `char_bear_idle`, `world_box_small`, `pickup_candy_orange`.
+**Następne:** pozostałe pozy misia (run/jump/land) z zatwierdzonej sylwetki, potem królik i duszek.
 
 ### M6 — Polish i playtesty finalne (1–2 wieczory)
 Checklista z sekcji 7, obserwacja dzieci przy pełnym przejściu, korekty trudności, build produkcyjny (`vite build`) i wrzucenie na hosting/itch.io.
@@ -219,7 +266,8 @@ Checklista z sekcji 7, obserwacja dzieci przy pełnym przejściu, korekty trudno
 
 | Ryzyko | Mitygacja |
 |---|---|
-| Niespójność grafik AI między sesjami generowania | Bank promptów + generowanie assetów jednego poziomu w jednej sesji; ewentualnie referencyjny obraz stylu |
+| ~~Niespójność grafik AI między sesjami~~ — **zmaterializowało się**, pipeline AI porzucony | Assety rysowane wektorowo ze wspólnej palety i stałych grubości konturu ([Styleguide_Wektorowy.md](Styleguide_Wektorowy.md)) — spójność wynika z jednego źródła wartości, nie z dyscypliny promptowania |
+| Rysowanie ~18 assetów SVG zajmie więcej czasu, niż zakłada M5 | Assety powstają na żądanie, poziom po poziomie; greybox z M4 jest w pełni grywalny bez grafiki |
 | Skoki za trudne dla 5-latka | Coyote time (~120 ms) + jump buffering (~150 ms) wbudowane od M1; projektowanie na 70% zasięgu skoku |
 | Wydajność Light2D na słabszym sprzęcie | Start od wariantu z maską; Light2D jako opcjonalne ulepszenie |
 | Dwóch graczy na jednej klawiaturze — ghosting klawiszy | Test konkretnej klawiatury wcześnie (M1); pady jako plan B |

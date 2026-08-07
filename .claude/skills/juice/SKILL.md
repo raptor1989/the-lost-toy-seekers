@@ -5,7 +5,7 @@ description: Dodaj efekty "soku" (juiciness) do mechaniki lub obiektu — squash
 
 # Juice — polerowanie efektów
 
-Checklista referencyjna: `Dokumentacja_Implementacji_Techniczna.md`, sekcja 7.
+Checklista referencyjna: `docs/Dokumentacja_Implementacji_Techniczna.md`, sekcja 7.
 
 ## Konwencje
 

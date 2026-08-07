@@ -5,7 +5,9 @@ description: Kontynuuj implementację gry wg planu kamieni milowych M0–M6 — 
 
 # Następny milestone
 
-Workflow kontynuacji prac zgodnie z `Dokumentacja_Implementacji_Techniczna.md`, sekcja 8.
+Workflow kontynuacji prac zgodnie z `docs/Dokumentacja_Implementacji_Techniczna.md`, sekcja 8.
+Stan realizacji etapów to tabela na początku tej sekcji — **czytaj ją przed wyborem kroku
+i aktualizuj po zamknięciu etapu** (razem z datą w nagłówku tabeli).
 
 ## Kroki
 
@@ -15,7 +17,7 @@ Workflow kontynuacji prac zgodnie z `Dokumentacja_Implementacji_Techniczna.md`, 
    - **M2** — import map Tiled, `Candy` + `UIScene` (HUD), `Ghost`, meta z nagrodą + `RewardScene`, `SaveManager`, `MenuScene`, manifest `config/levels.ts`.
    - **M3** — `FlashlightSystem` + `HiddenObject`, `interactive/` (Lever, PushBlock, przycisk tamy), Bubble, MushroomTrampoline.
    - **M4** — greybox 4 poziomów w Tiled (`public/assets/tilemaps/`).
-   - **M5** — art pass: atlasy, paralaksa, animacje, audio (`AudioManager`).
+   - **M5** — art pass: assety SVG, paralaksa, animacje, audio (`AudioManager`).
    - **M6** — polish wg checklisty sekcji 7 Dokumentacji + build produkcyjny.
 2. **Wybierz najmniejszy sensowny kawałek** następnego milestone'u (jeden wieczór pracy). Nie zaczynaj kolejnego milestone'u, jeśli poprzedni nie działa.
 3. **Przeczytaj odpowiednią sekcję Dokumentacji** (sekcja 3 opisuje rozwiązania każdej mechaniki — nie wymyślaj własnych, tam są już decyzje: np. pchanie bloków = snap do siatki 32 px, latarka = maska zamiast Light2D).

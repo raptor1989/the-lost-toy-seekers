@@ -1,28 +1,46 @@
 ---
 name: asset-pipeline
-description: Wprowadź asset graficzny/dźwiękowy do gry — prompt do Leonardo.ai, konwencje nazw, checklista QA, log w prompts.md, podpięcie w PreloadScene. Użyj przy dodawaniu lub podmianie grafik i dźwięków.
+description: Wprowadź asset graficzny/dźwiękowy do gry — rysowanie SVG wg styleguide'u, konwencje nazw, podgląd, checklista QA, podpięcie w PreloadScene. Użyj przy dodawaniu lub podmianie grafik i dźwięków.
 ---
 
-# Pipeline assetów (AI → gra)
+# Pipeline assetów (SVG → gra)
 
-Pełne zasady: `docs/Plan_Generowania_Assetow.md`. Ten skill to operacyjny skrót.
+Pełne zasady: `docs/Styleguide_Wektorowy.md`. Ten skill to operacyjny skrót.
 
-## Przy tworzeniu promptu dla użytkownika
+> Grafiki **rysujemy wektorowo**, nie generujemy AI. Pipeline Leonardo.ai został porzucony
+> (patrz Dokumentacja, sekcja 4) — nie proponuj promptów do generatorów obrazu.
 
-1. Zawsze zaczynaj od **Master Style Block** (Plan, sekcja 1) i dołącz wspólny **Negative Prompt**.
-2. Jeden asset = jeden prompt (wyjątki: character sheet, tła). Obiekty świata: obowiązkowo `side view` + `isolated on plain solid light background, no cast shadow on ground`.
-3. Nigdy nie proś o tekst/liczby na assecie — cyfry renderuje bitmap font w grze.
-4. Przypomnij o zasadach sesji: ten sam model, seed rodziny assetów z tabeli w `docs/prompts.md`, Style Reference z obrazu koncepcyjnego.
-5. Nie generujemy klasycznych tilesetów — platformy to powtarzalne sprite'y-moduły (karton, kępa trawy, kamień).
+## Przy rysowaniu nowego assetu
 
-## Przy wprowadzaniu gotowego pliku do repo
+1. **Paleta wyłącznie ze styleguide'u, sekcja 1.** Nowy kolor = najpierw wpis w tabeli palety,
+   dopiero potem użycie. Bez tego spójność się rozjeżdża.
+2. **Kontur**: grubość 3 dla sylwetki, 2–2.4 dla detali; `stroke-linejoin/linecap="round"`;
+   ustawiany raz na `<g>`, nie na każdym kształcie.
+3. **Postacie** — trzymaj kolejność warstw ze styleguide'u, sekcja 3, identycznie w każdej
+   pozie (inaczej postać „przeskakuje" w animacji). Pułapki dające efekt „krzywej" postaci:
+   rysy twarzy przesuwane osobno zamiast wspólnym offsetem, oczy na różnych wysokościach,
+   kończyny z zaokrąglonych prostokątów, brak rękawów, brak szpary między nogami.
+4. **Bryła i faktura**: gradient cienia + `feTurbulence` przycięte `clipPath` do sylwetki.
+   Przy zmianie kształtu zaktualizuj **obie** kopie ścieżek (kształt i `clipPath`).
+5. **viewBox** wg tabeli w styleguide, sekcja 5 (postać 128, duszek 96, moduł świata 64).
 
-1. **Miejsce**: oryginał (1024+) → `public/assets/raw/` (poza buildem); wersja do gry → `public/assets/atlas/` (docelowo w atlasie z free-tex-packer, extrude 1 px dla modułów świata).
-2. **Nazwa**: `snake_case` po angielsku, prefiksy `char_`, `ghost_`, `world_` (+ `l1..l4`), `pickup_`, `reward_`, `ui_`, `fx_` — inwentarz rozmiarów w Planie, sekcja 3 (postacie 128×128, duszki 96×96, nagrody 512×512...).
-3. **Checklista QA** (Plan, sekcja 7): spójny kontur i paleta, brak tekstu/watermarku/cienia na podłożu, side view, czysta alfa (test na ciemnym tle), rozmiar wg inwentarza.
-4. **Log**: dopisz wpis w `docs/prompts.md` wg szablonu (prompt, negative, model, seed, batch, postprocessing). Jeśli to pierwszy asset rodziny — uzupełnij tabelę seedów. **Bez wpisu asset nie wchodzi do gry.**
-5. **Podpięcie**: ładowanie w `PreloadScene` (docelowo per-poziomowa paczka z manifestu `levels.ts`); usuń odpowiadającą teksturę-placeholder z `createPlaceholderTextures()` dopiero, gdy wszystkie użycia przejdą na prawdziwy asset.
+## Przy wprowadzaniu assetu do repo
+
+1. **Miejsce**: `public/assets/svg/`. Bez atlasów, bez `raw/`, bez postprocessingu.
+2. **Nazwa**: `snake_case` po angielsku, prefiksy `char_`, `ghost_`, `world_` (+ `l1..l4`),
+   `pickup_`, `reward_`, `ui_`, `fx_`.
+3. **Podgląd**: dopisz asset do `public/asset_preview.html` (trzy konteksty: skala gry,
+   powiększenie, ciemne tło) i **obejrzyj go** — czytelność w skali docelowej jest
+   jedynym wiarygodnym testem.
+4. **Checklista QA** (styleguide, sekcja 7): paleta, grubości konturu, czytelność w skali
+   docelowej, sylwetka odcinająca się od granatu, `clipPath` zgodny z sylwetką.
+5. **Podpięcie**: w `PreloadScene` przez
+   `this.load.svg(key, 'assets/svg/nazwa.svg', { width, height })`;
+   usuń odpowiadającą teksturę-placeholder z `createPlaceholderTextures()` dopiero,
+   gdy wszystkie użycia przejdą na prawdziwy asset.
 
 ## Audio
 
-SFX z freesound.org (CC0) + nagrania głosu rodzica; format `.ogg` (+ fallback `.mp3`), normalizacja w Audacity. Katalogi: `public/assets/audio/{sfx,voice,music}/`. Wszystkie SFX odtwarzać z losowym pitch 0.95–1.05.
+SFX z freesound.org (CC0) + nagrania głosu rodzica; format `.ogg` (+ fallback `.mp3`),
+normalizacja w Audacity. Katalogi: `public/assets/audio/{sfx,voice,music}/`.
+Wszystkie SFX odtwarzać z losowym pitch 0.95–1.05.
