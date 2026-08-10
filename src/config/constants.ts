@@ -150,6 +150,18 @@ export const HUD_DIGIT_HEIGHT = 60;
 export const HUD_PUNCH_SCALE = 1.35;
 export const HUD_PUNCH_MS = 180;
 
+/** Wskaźnik odzyskanych zabawek — po jednym miejscu na poziom z manifestu. */
+export const HUD_TOY_SIZE = 68;
+export const HUD_TOY_GAP = 10;
+/** Nieodzyskana zabawka to przyciemniony kształt — „pusty kontur" z GDD sekcja 3. */
+export const HUD_TOY_LOCKED_ALPHA = 0.35;
+/**
+ * Jasne „gniazdo" pod każdą zabawką. Bez niego pusty kontur ginie na nocnym
+ * tle i dziecko nie widzi, ile zabawek jeszcze przed nim.
+ */
+export const HUD_TOY_SOCKET_PAD = 7;
+export const HUD_TOY_SOCKET_RADIUS = 14;
+
 // ---------------------------------------------------------------- sterowanie
 
 /** Martwa strefa gałki analogowej — pady dziecięce bywają rozkalibrowane. */

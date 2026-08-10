@@ -13,6 +13,7 @@ import {
 } from '../config/constants';
 import { getLevel, getNextLevel } from '../config/levels';
 import { CANDY_TEXTURE } from '../objects/Candy';
+import { saveLevelResult } from '../systems/SaveManager';
 import { createDigits } from '../utils/digits';
 
 /** Klucze tekstur generowanych w `PreloadScene` na użytek tej sceny. */
@@ -46,6 +47,10 @@ export class RewardScene extends Phaser.Scene {
 
     const level = getLevel(data.levelId);
 
+    // Zapis idzie przed animacjami: dziecko może w każdej chwili zamknąć kartę,
+    // a odzyskana zabawka ma zostać odzyskana.
+    saveLevelResult(level.id, data.candiesCollected);
+
     this.add
       .rectangle(0, 0, GAME_WIDTH, GAME_HEIGHT, level.backgroundColor, 0.96)
       .setOrigin(0, 0);
@@ -56,7 +61,7 @@ export class RewardScene extends Phaser.Scene {
     this.showContinueButton();
 
     // TODO(M5): fanfary, konfetti dźwiękowe i nagrany głos rodzica „Brawo!".
-    // TODO(M2): po dodaniu SaveManagera zapisać postęp, a „dalej" kierować do MenuScene.
+    // TODO(M2): „dalej" powinno wracać do MenuScene, gdy ta już powstanie.
   }
 
   private showConfetti(): void {

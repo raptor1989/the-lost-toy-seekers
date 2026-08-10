@@ -52,10 +52,11 @@ ratunkowy bez śmierci, skok z coyote time i buforowaniem.
 **M2 w trakcie.** Gotowy jest pipeline poziomów: mapy z Tiled wczytywane przez jedną
 generyczną `GameScene`, manifest w [`src/config/levels.ts`](src/config/levels.ts),
 cukierki i ikonowy HUD w równoległej `UIScene`, meta poziomu z zabawką i ekranem nagrody
-(konfetti, licznik cukierków).
+(konfetti, licznik cukierków) oraz zapis postępu w `localStorage` z paskiem odzyskanych
+zabawek w HUD.
 
-**Następny krok:** `SaveManager` (zapis postępu), menu wyboru poziomów i duszki-psotniki —
-wtedy M2 domyka pętlę „od menu do nagrody".
+**Następny krok:** menu wyboru poziomów i duszki-psotniki — wtedy M2 domyka pętlę
+„od menu do nagrody".
 
 ### Sterowanie
 
@@ -74,7 +75,7 @@ src/
 ├── config/      # constants.ts (strojenie) + levels.ts (manifest poziomów)
 ├── scenes/      # Boot, Preload, Game, UI, Reward (+ docelowo Menu)
 ├── objects/     # klasy sprite'ów: Player, Candy, Goal (+ docelowo Ghost...)
-├── systems/     # InputManager, CoopCamera, RescueSystem, GameState...
+├── systems/     # InputManager, CoopCamera, RescueSystem, GameState, SaveManager...
 └── utils/       # digits.ts — bitmapowe cyfry licznika
 public/assets/
 ├── svg/         # assety gry (char_*, world_*, pickup_*, ui_*)

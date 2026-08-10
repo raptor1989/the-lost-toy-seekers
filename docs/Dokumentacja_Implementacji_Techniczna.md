@@ -135,6 +135,16 @@ rescueZone.onOverlap(player, () => {
 
 * Cukierki: grupa Arcade z `overlap` → dźwięk + licznik + particle burst + tween "wessania" do HUD.
 * Nagroda-zabawka na końcu poziomu: przejście do `RewardScene` — duża grafika zabawki, konfetti, fanfary, głos rodzica "Brawo!", wypełnienie konturu zabawki w HUD. `SaveManager` zapisuje postęp.
+* **Co zapisujemy (`SaveManager`, klucz `poszukiwacze.postep`):** wyłącznie osiągnięcia —
+  ukończenie poziomu i najlepszy wynik zbiórki cukierków. Gorszy przebieg nigdy nie nadpisuje
+  lepszego; w tej grze nie da się niczego stracić, więc zapis też niczego nie odbiera.
+* **Brak `localStorage` nie jest błędem.** W oknie prywatnym albo przy zablokowanych danych
+  witryn postęp żyje w pamięci do końca sesji. Dziecko nie może zobaczyć komunikatu o błędzie
+  zapisu — gra ma po prostu działać.
+* Zapis z innej wersji formatu **ignorujemy zamiast migrować** — postęp jest tani do odtworzenia,
+  a migracje byłyby kosztem bez pokrycia.
+* Odblokowania liczymy z kolejności w manifeście: pierwszy poziom otwarty zawsze, każdy kolejny
+  po przejściu poprzedniego.
 
 ---
 
@@ -236,7 +246,7 @@ Kolejność zoptymalizowana pod zasadę: **najpierw grywalny prototyp, grafika n
 |---|---|---|
 | **M0** — Szkielet projektu | ✅ **ukończony** | Boot/Preload/Game, jeden gracz na strzałkach, platformy z prostokątów |
 | **M1** — Rdzeń ruchu i strojenie | ✅ **ukończony** | `InputManager`, `CoopCamera` z bańką, `RescueSystem`, coyote time + jump buffering, squash & stretch. **Playtest z dziećmi zaliczony** — 5-latek przechodzi tor testowy samodzielnie |
-| **M2** — Pętla rozgrywki | 🟡 **w trakcie** | Gotowe: pipeline map z Tiled, generyczna `GameScene`, manifest `levels.ts`, checkpointy z mapy, cukierki, `UIScene` z ikonowym HUD, meta poziomu + `RewardScene`. Zostało: `SaveManager`, `MenuScene`, duszki |
+| **M2** — Pętla rozgrywki | 🟡 **w trakcie** | Gotowe: pipeline map z Tiled, generyczna `GameScene`, manifest `levels.ts`, checkpointy z mapy, cukierki, `UIScene` z ikonowym HUD, meta poziomu + `RewardScene`, `SaveManager` z paskiem odzyskanych zabawek. Zostało: `MenuScene`, duszki |
 | **M3** — Mechaniki kooperacji | ⬜ nierozpoczęty | |
 | **M4** — Poziomy w Tiled | ⬜ nierozpoczęty | |
 | **M5** — Art pass | 🟡 **rozpoczęty poza kolejnością** | Zmiana pipeline'u na SVG (sekcja 4). Gotowe: `char_bear_idle`, `world_box_small`, `pickup_candy_orange`, `reward_teddy`, [Styleguide_Wektorowy.md](Styleguide_Wektorowy.md), podgląd assetów |
@@ -283,15 +293,16 @@ greybox [level1.tmj](../public/assets/tilemaps/level1.tmj) z warstwami `ground` 
 [UIScene.ts](../src/scenes/UIScene.ts) (ikonowy licznik z bitmapowymi cyframi),
 [GameState.ts](../src/systems/GameState.ts) (rejestr jako kanał między scenami),
 meta poziomu [Goal.ts](../src/objects/Goal.ts) + [RewardScene.ts](../src/scenes/RewardScene.ts)
-(konfetti, licznik cukierków, ikona „dalej") i pierwszy asset nagrody `reward_teddy`.
+(konfetti, licznik cukierków, ikona „dalej"), pierwszy asset nagrody `reward_teddy`
+oraz [SaveManager.ts](../src/systems/SaveManager.ts) z paskiem odzyskanych zabawek w HUD.
 
 **Decyzje z wdrożenia:** metę zalicza **którykolwiek** gracz — wymaganie obecności obojga
 zamieniłoby finał w ponaglanie młodszego przez starszego. Ekran nagrody przyjmuje „dalej"
 dopiero po `REWARD_INPUT_DELAY_MS`, bo trzymany przy dobiegnięciu skok przewijał nagrodę,
 zanim dziecko zdążyło ją zobaczyć.
 
-**Następne:** `SaveManager` (postęp w `localStorage` + wypełnianie konturów zabawek w HUD),
-`MenuScene` z rysunkową mapką ogrodu, `Ghost` z patrolem i chichotem.
+**Następne:** `MenuScene` z rysunkową mapką ogrodu (odblokowania czyta już `SaveManager`),
+`Ghost` z patrolem i chichotem.
 
 ### M3 — Mechaniki kooperacji (2–3 wieczory)
 Magiczna latarka + obiekty ukryte, dźwignie/przyciski/pchane bloki, bąbelki i pływające liście (poziom 2), trampoliny-grzyby (poziom 4).
