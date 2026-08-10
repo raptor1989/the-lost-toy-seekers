@@ -220,6 +220,18 @@ Zasady stylu, paleta, kolejność warstw postaci i checklista QA:
 
 * `UIScene` nad grą: licznik cukierków (ikona + bitmapowa liczba), portrety graczy (uśmiech ↔ zdziwienie przy wpadce), pasek postępu zabawek (4 kontury wypełniane kolorem).
 * Menu poziomów: rysunkowa mapka ogrodu, poziomy jako duże "przystanki" z obrazkiem motywu; zablokowane = szare z kłódką-chmurką. Klik/wybór padem — zero czytania.
+* **Stan przystanku mówi ten sam język, co pasek zabawek w HUD:** przejęty — zabawka w pełnym
+  kolorze na ciepłym talerzu; do zdobycia — sylwetka w kolorze konturu; zablokowany — sylwetka
+  z kłódką. Jedno spojrzenie wystarczy, żeby dziecko wiedziało, gdzie jeszcze nie było.
+* **Zaznaczenie skacze wyłącznie po odblokowanych przystankach.** Możliwość „wybrania" czegoś,
+  co nic nie robi, jest dla 5-latka gorsza niż brak takiej opcji. Kliknięcie zablokowanego
+  przystanku kiwa kłódką — informacja bez kary.
+* **Wybierać może każde z dzieci** (strzałki albo WASD, mysz równolegle). Do nawigacji potrzebne
+  są zbocza kierunków (`leftJustPressed` / `rightJustPressed` w `InputManager`) — trzymany
+  kierunek przewijałby wybór przez wszystkie poziomy naraz.
+* **Zwłokę wejściową scen liczy się `time.delayedCall`, nie porównaniem do `time.now`** —
+  w `create()` zegar sceny stoi jeszcze na zerze, więc warunek `time.now >= start + delay`
+  jest spełniony od pierwszej klatki i zwłoka nic nie daje.
 * Pauza: jeden duży przycisk ⏸ / `Esc` — obraz zamiera, delikatne rozmycie, dwie ikony: ▶ i 🏠.
 
 ---
@@ -246,7 +258,7 @@ Kolejność zoptymalizowana pod zasadę: **najpierw grywalny prototyp, grafika n
 |---|---|---|
 | **M0** — Szkielet projektu | ✅ **ukończony** | Boot/Preload/Game, jeden gracz na strzałkach, platformy z prostokątów |
 | **M1** — Rdzeń ruchu i strojenie | ✅ **ukończony** | `InputManager`, `CoopCamera` z bańką, `RescueSystem`, coyote time + jump buffering, squash & stretch. **Playtest z dziećmi zaliczony** — 5-latek przechodzi tor testowy samodzielnie |
-| **M2** — Pętla rozgrywki | 🟡 **w trakcie** | Gotowe: pipeline map z Tiled, generyczna `GameScene`, manifest `levels.ts`, checkpointy z mapy, cukierki, `UIScene` z ikonowym HUD, meta poziomu + `RewardScene`, `SaveManager` z paskiem odzyskanych zabawek. Zostało: `MenuScene`, duszki |
+| **M2** — Pętla rozgrywki | 🟡 **w trakcie** | Gotowe: pipeline map z Tiled, generyczna `GameScene`, manifest `levels.ts`, checkpointy z mapy, cukierki, `UIScene` z ikonowym HUD, meta poziomu + `RewardScene`, `SaveManager` z paskiem odzyskanych zabawek, `MenuScene`. **Pętla „od menu do nagrody" domknięta.** Zostało: duszki-psotniki |
 | **M3** — Mechaniki kooperacji | ⬜ nierozpoczęty | |
 | **M4** — Poziomy w Tiled | ⬜ nierozpoczęty | |
 | **M5** — Art pass | 🟡 **rozpoczęty poza kolejnością** | Zmiana pipeline'u na SVG (sekcja 4). Gotowe: `char_bear_idle`, `world_box_small`, `pickup_candy_orange`, `reward_teddy`, [Styleguide_Wektorowy.md](Styleguide_Wektorowy.md), podgląd assetów |
@@ -294,15 +306,18 @@ greybox [level1.tmj](../public/assets/tilemaps/level1.tmj) z warstwami `ground` 
 [GameState.ts](../src/systems/GameState.ts) (rejestr jako kanał między scenami),
 meta poziomu [Goal.ts](../src/objects/Goal.ts) + [RewardScene.ts](../src/scenes/RewardScene.ts)
 (konfetti, licznik cukierków, ikona „dalej"), pierwszy asset nagrody `reward_teddy`
-oraz [SaveManager.ts](../src/systems/SaveManager.ts) z paskiem odzyskanych zabawek w HUD.
+oraz [SaveManager.ts](../src/systems/SaveManager.ts) z paskiem odzyskanych zabawek w HUD
+i [MenuScene.ts](../src/scenes/MenuScene.ts) (mapka ogrodu, przystanki, kłódki).
+Pełna pętla działa: menu → poziom → meta → nagroda → menu, z zapisem po drodze.
 
 **Decyzje z wdrożenia:** metę zalicza **którykolwiek** gracz — wymaganie obecności obojga
 zamieniłoby finał w ponaglanie młodszego przez starszego. Ekran nagrody przyjmuje „dalej"
 dopiero po `REWARD_INPUT_DELAY_MS`, bo trzymany przy dobiegnięciu skok przewijał nagrodę,
 zanim dziecko zdążyło ją zobaczyć.
 
-**Następne:** `MenuScene` z rysunkową mapką ogrodu (odblokowania czyta już `SaveManager`),
-`Ghost` z patrolem i chichotem.
+**Następne:** `Ghost` z patrolem, chichotem i cukierkiem — ostatni element M2.
+Mapka ogrodu w menu jest na razie greyboxem (gwiazdy i kamienie rysowane kodem);
+rysunkowe tło należy do M5.
 
 ### M3 — Mechaniki kooperacji (2–3 wieczory)
 Magiczna latarka + obiekty ukryte, dźwignie/przyciski/pchane bloki, bąbelki i pływające liście (poziom 2), trampoliny-grzyby (poziom 4).

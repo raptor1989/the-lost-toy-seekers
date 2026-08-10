@@ -49,14 +49,12 @@ Koncept nastroju i palety: [docs/concept/](docs/concept/).
 pady przejmują automatycznie), wspólna kamera kooperacyjna z „magiczną bańką", system
 ratunkowy bez śmierci, skok z coyote time i buforowaniem.
 
-**M2 w trakcie.** Gotowy jest pipeline poziomów: mapy z Tiled wczytywane przez jedną
-generyczną `GameScene`, manifest w [`src/config/levels.ts`](src/config/levels.ts),
-cukierki i ikonowy HUD w równoległej `UIScene`, meta poziomu z zabawką i ekranem nagrody
-(konfetti, licznik cukierków) oraz zapis postępu w `localStorage` z paskiem odzyskanych
-zabawek w HUD.
+**M2 w trakcie — pętla rozgrywki domknięta.** Menu z mapką ogrodu → poziom z mapy Tiled
+(jedna generyczna `GameScene` + manifest w [`src/config/levels.ts`](src/config/levels.ts))
+→ cukierki i ikonowy HUD → meta z zabawką → ekran nagrody z konfetti → zapis postępu
+w `localStorage` i z powrotem do menu, gdzie odzyskana zabawka świeci pełnym kolorem.
 
-**Następny krok:** menu wyboru poziomów i duszki-psotniki — wtedy M2 domyka pętlę
-„od menu do nagrody".
+**Następny krok:** duszki-psotniki — ostatni element M2.
 
 ### Sterowanie
 
@@ -73,7 +71,7 @@ Aktualna tabela postępu: [sekcja 8 dokumentacji implementacyjnej](docs/Dokument
 ```
 src/
 ├── config/      # constants.ts (strojenie) + levels.ts (manifest poziomów)
-├── scenes/      # Boot, Preload, Game, UI, Reward (+ docelowo Menu)
+├── scenes/      # Boot, Preload, Menu, Game, UI, Reward
 ├── objects/     # klasy sprite'ów: Player, Candy, Goal (+ docelowo Ghost...)
 ├── systems/     # InputManager, CoopCamera, RescueSystem, GameState, SaveManager...
 └── utils/       # digits.ts — bitmapowe cyfry licznika

@@ -7,9 +7,10 @@ import {
   HUD_DIGIT_WIDTH,
   HUD_DIGIT_HEIGHT,
 } from '../config/constants';
-import { LEVELS, TILESET_TEXTURE_KEY, DEFAULT_LEVEL_ID } from '../config/levels';
+import { LEVELS, TILESET_TEXTURE_KEY } from '../config/levels';
 import { CANDY_TEXTURE } from '../objects/Candy';
 import { CONFETTI_TEXTURE, PLAY_TEXTURE } from './RewardScene';
+import { LOCK_TEXTURE } from './MenuScene';
 import { DIGIT_TEXTURE_PREFIX } from '../utils/digits';
 
 // Ładuje paczkę assetów i pokazuje pasek postępu.
@@ -47,7 +48,7 @@ export class PreloadScene extends Phaser.Scene {
 
     this.createPlaceholderTextures();
     this.createDigitTextures();
-    this.scene.start('Game', { levelId: DEFAULT_LEVEL_ID });
+    this.scene.start('Menu');
   }
 
   private showProgressBar(): void {
@@ -97,6 +98,20 @@ export class PreloadScene extends Phaser.Scene {
     g.fillStyle(0x4a3226, 1);
     g.fillTriangle(38, 26, 38, 70, 72, 48);
     g.generateTexture(PLAY_TEXTURE, 96, 96);
+    g.clear();
+
+    // Kłódka na zablokowanym poziomie — jedyny komunikat „jeszcze nie teraz".
+    g.lineStyle(7, 0x4a3226, 1);
+    g.beginPath();
+    g.arc(48, 40, 19, Math.PI, 0);
+    g.strokePath();
+    g.fillStyle(0xf7f0e3, 1);
+    g.fillRoundedRect(18, 40, 60, 46, 12);
+    g.strokeRoundedRect(18, 40, 60, 46, 12);
+    g.fillStyle(0x4a3226, 1);
+    g.fillCircle(48, 58, 7);
+    g.fillRect(44.5, 58, 7, 15);
+    g.generateTexture(LOCK_TEXTURE, 96, 96);
 
     g.destroy();
   }

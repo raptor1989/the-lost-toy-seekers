@@ -9,9 +9,22 @@ export interface PlayerInput {
   right: boolean;
   /** Skok wciśnięty w TEJ klatce (zbocze narastające) — nie „trzymany". */
   jumpJustPressed: boolean;
+  /**
+   * Zbocza kierunków — w grze nieużywane (postać ma się poruszać, dopóki
+   * trzymasz klawisz), ale niezbędne w menu, gdzie trzymany kierunek
+   * przewijałby wybór przez wszystkie poziomy naraz.
+   */
+  leftJustPressed: boolean;
+  rightJustPressed: boolean;
 }
 
-const NEUTRAL: PlayerInput = { left: false, right: false, jumpJustPressed: false };
+const NEUTRAL: PlayerInput = {
+  left: false,
+  right: false,
+  jumpJustPressed: false,
+  leftJustPressed: false,
+  rightJustPressed: false,
+};
 
 interface KeyTriple {
   left: Phaser.Input.Keyboard.Key;
@@ -27,8 +40,10 @@ interface KeyTriple {
 export class InputManager {
   private readonly scene: Phaser.Scene;
   private readonly keys: Record<PlayerId, KeyTriple>;
-  /** Poprzedni stan przycisku skoku na padzie — pad nie ma odpowiednika JustDown. */
+  /** Poprzedni stan przycisków na padzie — pad nie ma odpowiednika JustDown. */
   private readonly padJumpWasDown: Record<PlayerId, boolean> = { 1: false, 2: false };
+  private readonly padLeftWasDown: Record<PlayerId, boolean> = { 1: false, 2: false };
+  private readonly padRightWasDown: Record<PlayerId, boolean> = { 1: false, 2: false };
 
   constructor(scene: Phaser.Scene) {
     this.scene = scene;
@@ -68,20 +83,28 @@ export class InputManager {
       left: k.left.isDown,
       right: k.right.isDown,
       jumpJustPressed: Phaser.Input.Keyboard.JustDown(k.jump),
+      leftJustPressed: Phaser.Input.Keyboard.JustDown(k.left),
+      rightJustPressed: Phaser.Input.Keyboard.JustDown(k.right),
     };
   }
 
   private readPad(id: PlayerId, pad: Phaser.Input.Gamepad.Gamepad): PlayerInput {
     const stickX = pad.leftStick.x;
     const jumpDown = pad.A || pad.B;
+    const leftDown = pad.left || stickX < -GAMEPAD_DEADZONE;
+    const rightDown = pad.right || stickX > GAMEPAD_DEADZONE;
 
     const input: PlayerInput = {
-      left: pad.left || stickX < -GAMEPAD_DEADZONE,
-      right: pad.right || stickX > GAMEPAD_DEADZONE,
+      left: leftDown,
+      right: rightDown,
       jumpJustPressed: jumpDown && !this.padJumpWasDown[id],
+      leftJustPressed: leftDown && !this.padLeftWasDown[id],
+      rightJustPressed: rightDown && !this.padRightWasDown[id],
     };
 
     this.padJumpWasDown[id] = jumpDown;
+    this.padLeftWasDown[id] = leftDown;
+    this.padRightWasDown[id] = rightDown;
     return input;
   }
 

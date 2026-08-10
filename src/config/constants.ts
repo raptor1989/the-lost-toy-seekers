@@ -123,6 +123,35 @@ export const GOAL_BOB_MS = 1600;
 /** Ile trwa „hop" zabawki, zanim otworzy się ekran nagrody. */
 export const GOAL_CELEBRATION_MS = 700;
 
+// ---------------------------------------------------------------- menu poziomów
+// Wybór poziomu bez czytania: duże „przystanki" na mapce ogrodu (GDD sekcja 3).
+
+/** Kolor nocnego nieba z palety (Styleguide) — tło mapki ogrodu. */
+export const MENU_BACKGROUND = 0x1e3a6e;
+/** Średnica przystanku. Celowo duża — 5-latek trafia myszą w koło, nie w ikonkę. */
+export const MENU_STOP_SIZE = 168;
+export const MENU_STOP_GAP = 76;
+/** Zabawka wewnątrz przystanku. */
+export const MENU_TOY_SIZE = 108;
+export const MENU_LOCK_SIZE = 72;
+/**
+ * Ścieżka łącząca przystanki, rysowana jako kamienie do przeskakiwania.
+ * Ciągła linia czytała się jak patyk wbity w przystanek — kamienie od razu
+ * mówią „tędy się idzie".
+ */
+export const MENU_PATH_STONE_RADIUS = 12;
+/** Odstęp między kamieniami liczony wzdłuż ścieżki — stała liczba kamieni zlewałaby się na krótkiej trasie. */
+export const MENU_PATH_STONE_SPACING = 52;
+/** Nieodzyskana zabawka na jasnym talerzu przystanku — cień w kolorze konturu. */
+export const MENU_TOY_LOCKED_ALPHA = 0.5;
+/** Falowanie ścieżki w pionie — mapka ma wyglądać jak rysunek, nie jak lista. */
+export const MENU_PATH_AMPLITUDE = 54;
+/** Puls obwódki wokół wybranego przystanku. */
+export const MENU_SELECT_PULSE_MS = 700;
+export const MENU_SELECT_RING_WIDTH = 8;
+/** Zwłoka przed przyjmowaniem sterowania — patrz `REWARD_INPUT_DELAY_MS`. */
+export const MENU_INPUT_DELAY_MS = 350;
+
 // ---------------------------------------------------------------- ekran nagrody
 
 export const REWARD_TOY_SIZE = 360;

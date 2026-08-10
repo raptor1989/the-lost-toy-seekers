@@ -23,6 +23,10 @@ npx tsc --noEmit  # sam typecheck, bez builda
 
 Brak testów i lintera — weryfikacja to `tsc` + ręczne uruchomienie gry (`npm run dev`).
 
+**Sterowanie grą z Playwrighta:** nie używaj `keyboard.press()` — wysyła keydown i keyup
+w tej samej klatce, a Phaser kasuje wtedy flagę `JustDown` (skok i wybór w menu nie
+zadziałają). Rozdziel wciśnięcie: `keyboard.down(k)` → `waitForTimeout(~100)` → `keyboard.up(k)`.
+
 **Sprzątanie po weryfikacji:** jeśli uruchomisz serwer dev albo przeglądarkę, żeby coś
 sprawdzić, **zamknij je przed końcem tury** i usuń pliki robocze (zrzuty ekranu,
 `.playwright-cli/`). Nie zostawiaj wiszących procesów — użytkownik nie ma ich sprzątać za Ciebie.

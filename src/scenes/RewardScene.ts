@@ -61,7 +61,6 @@ export class RewardScene extends Phaser.Scene {
     this.showContinueButton();
 
     // TODO(M5): fanfary, konfetti dźwiękowe i nagrany głos rodzica „Brawo!".
-    // TODO(M2): „dalej" powinno wracać do MenuScene, gdy ta już powstanie.
   }
 
   private showConfetti(): void {
@@ -147,7 +146,12 @@ export class RewardScene extends Phaser.Scene {
     });
   }
 
-  /** Następny poziom z manifestu, a jeśli to był ostatni — ten sam jeszcze raz. */
+  /**
+   * Prosto w kolejny poziom, a po ostatnim — do menu.
+   *
+   * Odbijanie dzieci do menu po każdym poziomie zrywałoby rozpęd; menu jest od
+   * wracania do już przejętych miejsc, nie od przechodzenia gry.
+   */
   private continueGame(): void {
     if (!this.continueArmed) {
       return;
@@ -155,6 +159,10 @@ export class RewardScene extends Phaser.Scene {
     this.continueArmed = false;
 
     const next = getNextLevel(this.data_.levelId);
-    this.scene.start('Game', { levelId: next?.id ?? this.data_.levelId });
+    if (next) {
+      this.scene.start('Game', { levelId: next.id });
+    } else {
+      this.scene.start('Menu');
+    }
   }
 }

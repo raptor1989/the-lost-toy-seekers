@@ -3,6 +3,7 @@ import { GAME_WIDTH, GAME_HEIGHT, GRAVITY } from './config/constants';
 import { BootScene } from './scenes/BootScene';
 import { PreloadScene } from './scenes/PreloadScene';
 import { GameScene } from './scenes/GameScene';
+import { MenuScene } from './scenes/MenuScene';
 import { UIScene } from './scenes/UIScene';
 import { RewardScene } from './scenes/RewardScene';
 
@@ -28,5 +29,5 @@ new Phaser.Game({
     gamepad: true,
   },
   // UIScene startuje równolegle nad GameScene (uruchamia ją GameScene).
-  scene: [BootScene, PreloadScene, GameScene, UIScene, RewardScene],
+  scene: [BootScene, PreloadScene, MenuScene, GameScene, UIScene, RewardScene],
 });
