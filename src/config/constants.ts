@@ -9,9 +9,14 @@
 export const GAME_WIDTH = 1280;
 export const GAME_HEIGHT = 720;
 
-// Świat jest szerszy od ekranu, żeby kamera kooperacyjna miała co robić.
-export const WORLD_WIDTH = 2800;
-export const WORLD_HEIGHT = 900;
+/**
+ * Rozmiar kafla map Tiled. Od M2 granice świata bierzemy z wczytanej mapy,
+ * a nie ze stałych — poziom decyduje o rozmiarze świata, nie kod.
+ */
+export const TILE_SIZE = 32;
+
+/** Ile pikseli pod dolną krawędzią mapy leży linia upadku (`RescueSystem`). */
+export const FALL_LINE_MARGIN = 120;
 
 // ---------------------------------------------------------------- fizyka gracza
 
@@ -78,9 +83,48 @@ export const RESCUE_ARC_HEIGHT = 220;
 
 /**
  * Jak często zapisywany jest „ostatni bezpieczny grunt" jako checkpoint.
- * Rozwiązanie na czas M1 — od M2 checkpointy będą obiektami z warstwy Tiled.
+ * Działa równolegle z checkpointami z warstwy Tiled — patrz `RescueSystem`.
  */
 export const CHECKPOINT_SAMPLE_MS = 400;
+
+/** Bok kwadratowej strefy checkpointu z warstwy `objects` (px). */
+export const CHECKPOINT_ZONE_SIZE = 96;
+
+// ---------------------------------------------------------------- warstwy renderowania
+// Kolejność rysowania w GameScene — od tła do postaci.
+
+export const DEPTH_DECOR = -10;
+export const DEPTH_TILES = 0;
+export const DEPTH_PICKUPS = 5;
+export const DEPTH_PLAYERS = 10;
+
+// ---------------------------------------------------------------- cukierki
+
+export const CANDY_SIZE = 40;
+/**
+ * ⚙ Strefa zbierania jest celowo większa od grafiki — 5-latek nie musi trafiać
+ * co do piksela, a „prawie dotknąłem" jest dla dziecka tym samym co dotknąłem.
+ */
+export const CANDY_PICKUP_SIZE = 56;
+/** Unoszenie w górę i w dół — cukierek „żyje", zanim ktokolwiek go dotknie. */
+export const CANDY_BOB_DISTANCE = 8;
+export const CANDY_BOB_MS = 1200;
+/** Pełny obrót cukierka (ms). */
+export const CANDY_SPIN_MS = 2600;
+/** Lot zebranego cukierka do licznika w HUD. */
+export const CANDY_FLIGHT_MS = 420;
+
+// ---------------------------------------------------------------- HUD (UIScene)
+// Zero tekstu: ikona cukierka + bitmapowe cyfry (GDD sekcja 3).
+
+export const HUD_MARGIN = 28;
+export const HUD_ICON_SIZE = 64;
+/** Rozmiar generowanych tekstur cyfr — do M5, potem cyfry rysowane w SVG. */
+export const HUD_DIGIT_WIDTH = 40;
+export const HUD_DIGIT_HEIGHT = 60;
+/** „Kopnięcie" licznika przy zdobyciu cukierka. */
+export const HUD_PUNCH_SCALE = 1.35;
+export const HUD_PUNCH_MS = 180;
 
 // ---------------------------------------------------------------- sterowanie
 

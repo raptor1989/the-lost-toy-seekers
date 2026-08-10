@@ -3,6 +3,7 @@ import { GAME_WIDTH, GAME_HEIGHT, GRAVITY } from './config/constants';
 import { BootScene } from './scenes/BootScene';
 import { PreloadScene } from './scenes/PreloadScene';
 import { GameScene } from './scenes/GameScene';
+import { UIScene } from './scenes/UIScene';
 
 new Phaser.Game({
   type: Phaser.AUTO,
@@ -25,5 +26,6 @@ new Phaser.Game({
   input: {
     gamepad: true,
   },
-  scene: [BootScene, PreloadScene, GameScene],
+  // UIScene startuje równolegle nad GameScene (uruchamia ją GameScene).
+  scene: [BootScene, PreloadScene, GameScene, UIScene],
 });

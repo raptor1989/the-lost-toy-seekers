@@ -45,13 +45,16 @@ Koncept nastroju i palety: [docs/concept/](docs/concept/).
 
 ## Stan projektu
 
-**M0 ukończony.** **M1 — kod gotowy, czeka na playtest**: dwóch graczy (strzałki + WASD,
+**M0 i M1 ukończone** (playtest z dziećmi zaliczony): dwóch graczy (strzałki + WASD,
 pady przejmują automatycznie), wspólna kamera kooperacyjna z „magiczną bańką", system
 ratunkowy bez śmierci, skok z coyote time i buforowaniem.
 
-**Następny krok: zagrać z dziećmi** i dostroić wartości oznaczone ⚙
-w [`src/config/constants.ts`](src/config/constants.ts). Kryterium zamknięcia M1: 5-latek
-samodzielnie przechodzi tor testowy.
+**M2 w trakcie.** Gotowy jest pipeline poziomów: mapy z Tiled wczytywane przez jedną
+generyczną `GameScene`, manifest w [`src/config/levels.ts`](src/config/levels.ts),
+cukierki i ikonowy HUD w równoległej `UIScene`.
+
+**Następny krok:** duszki-psotniki, meta poziomu z nagrodą (`RewardScene`), `SaveManager`
+i menu wyboru poziomów — wtedy M2 domyka pętlę „od menu do nagrody".
 
 ### Sterowanie
 
@@ -67,10 +70,10 @@ Aktualna tabela postępu: [sekcja 8 dokumentacji implementacyjnej](docs/Dokument
 
 ```
 src/
-├── config/      # constants.ts — JEDYNE miejsce strojenia fizyki
-├── scenes/      # Boot, Preload, Game (+ docelowo Menu, UI, Reward)
-├── objects/     # klasy sprite'ów: Player, Ghost, Candy...
-├── systems/     # InputManager, CoopCamera, RescueSystem...
+├── config/      # constants.ts (strojenie) + levels.ts (manifest poziomów)
+├── scenes/      # Boot, Preload, Game, UI (+ docelowo Menu, Reward)
+├── objects/     # klasy sprite'ów: Player, Candy (+ docelowo Ghost...)
+├── systems/     # InputManager, CoopCamera, RescueSystem, GameState...
 └── utils/
 public/assets/
 ├── svg/         # assety gry (char_*, world_*, pickup_*, ui_*)

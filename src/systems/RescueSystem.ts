@@ -16,9 +16,12 @@ import { quadraticBezier } from './CoopCamera';
  * swój własny checkpoint** — inaczej młodszy ciągle lądowałby tam, gdzie akurat
  * jest starszy.
  *
- * Do czasu wczytywania checkpointów z warstwy Tiled (M2) checkpointem jest
- * ostatni bezpieczny grunt, na którym gracz stabilnie stał — próbkowany co
- * {@link CHECKPOINT_SAMPLE_MS}.
+ * Checkpoint działa dwutorowo:
+ *  - obiekty `checkpoint` z warstwy Tiled ustawiają go jawnie (kotwice bezpieczeństwa,
+ *    działają od pierwszej klatki, zanim gracz gdziekolwiek stanie),
+ *  - między nimi doprecyzowuje go ostatni bezpieczny grunt, próbkowany co
+ *    {@link CHECKPOINT_SAMPLE_MS} — dzięki temu dziecko wraca tam, skąd spadło,
+ *    a nie na początek odcinka.
  */
 export class RescueSystem {
   private readonly scene: Phaser.Scene;
@@ -38,7 +41,7 @@ export class RescueSystem {
     players.forEach((p) => this.checkpoints.set(p, new Phaser.Math.Vector2(p.x, p.y)));
   }
 
-  /** Jawne ustawienie checkpointu — od M2 wywoływane przez obiekty z warstwy Tiled. */
+  /** Jawne ustawienie checkpointu — wywoływane przez obiekty `checkpoint` z warstwy Tiled. */
   setCheckpoint(player: Player, x: number, y: number): void {
     this.checkpoints.set(player, new Phaser.Math.Vector2(x, y));
   }

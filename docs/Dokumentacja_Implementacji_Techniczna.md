@@ -179,7 +179,28 @@ Zasady stylu, paleta, kolejność warstw postaci i checklista QA:
   * `objects` (object layer: spawny graczy, cukierki, duszki + punkty patrolu, checkpointy, interaktywne, `hidden` dla latarki, strefa mety z zabawką),
   * `decor` (czysto wizualna).
 * `GameScene` czyta mapę generycznie — **projektant poziomu (Ty) nie dotyka kodu**, tylko Tiled.
-* Metryki platform wynikają ze strojenia skoku (Krok 2 poniżej): maks. odległość skoku i wysokość zapisane w `constants.ts` i **naniesione jako szablon-linijka w Tiled**, żeby każdy skok był fizycznie wykonalny dla 5-latka (projektować na ~70% maksymalnego zasięgu skoku).
+* Metryki platform wynikają ze strojenia skoku (Krok 2 poniżej): maks. odległość skoku i wysokość zapisane w `constants.ts` i **naniesione jako właściwości mapy w Tiled** (`bezpieczny_skok_w_gore_kafle`, `bezpieczna_przepasc_kafle`), żeby każdy skok był fizycznie wykonalny dla 5-latka (projektować na ~70% maksymalnego zasięgu skoku).
+
+### Konwencje przyjęte przy wdrożeniu (M2)
+
+* **Nazwy obiektów** wpisuje się w Tiled w pole **Name** (nie Class) — Phaser zawsze wystawia
+  `name`, więc jest to najpewniejszy klucz. Rozpoznawane nazwy trzyma `config/levels.ts`
+  (`OBJECT`): `player1`, `player2`, `checkpoint`, `candy`.
+* **Punkty spawnu i checkpointów stawia się na podłodze** — `GameScene` sama podnosi postać
+  o połowę jej wysokości. Punkt cukierka to jego środek.
+* **Nie sumować skoku w górę i w bok.** Reguła 70% dotyczy każdej osi z osobna; schodek
+  „3 kafle w górę i 4 w bok" jest poza zasięgiem 5-latka, mimo że każda z tych wartości
+  osobno mieści się w limicie. Wspinaczki budujemy z **przylegających** stopni, przepaście
+  zostawiamy płaskie.
+* **Platformy `oneway`** dostają kolizję wyłącznie z górną krawędzią
+  (`tile.setCollision(false, false, true, false)`) — wskoczenie pod platformę i otarcie się
+  o nią bokiem nie może kończyć się zakleszczeniem.
+* **Tileset:** `addTilesetImage` wywołane bez jawnych argumentów **zeruje margines i odstęp**
+  z pliku `.tmj`; przepisujemy je z `map.tilesets`. Sam obrazek tilesetu musi mieć
+  **wytłoczone brzegi** (extrude: kolor kafla wchodzi 1 px w margines) — inaczej przy płynnym
+  zoomie kamery kooperacyjnej na styku kafli pojawia się kratka.
+* Greybox używa `public/assets/tilemaps/tileset_greybox.png` (4 kafle: powierzchnia gruntu,
+  wypełnienie, platforma, kępka trawy) — placeholder do podmiany w M5.
 
 ---
 
@@ -207,21 +228,22 @@ Zasady stylu, paleta, kolejność warstw postaci i checklista QA:
 
 Kolejność zoptymalizowana pod zasadę: **najpierw grywalny prototyp, grafika na końcu** (rozszerzenie Kroków 1–5 z GDD).
 
-### Stan realizacji — *aktualizacja: 2026-08-07*
+### Stan realizacji — *aktualizacja: 2026-08-10*
 
 | Etap | Stan | Uwagi |
 |---|---|---|
 | **M0** — Szkielet projektu | ✅ **ukończony** | Boot/Preload/Game, jeden gracz na strzałkach, platformy z prostokątów |
-| **M1** — Rdzeń ruchu i strojenie | 🟡 **kod gotowy, czeka na playtest** | `InputManager`, `CoopCamera` z bańką, `RescueSystem`, coyote time + jump buffering, squash & stretch. **Do zamknięcia brakuje strojenia z dziećmi** — kryterium: 5-latek samodzielnie przechodzi tor testowy |
-| **M2** — Pętla rozgrywki | ⬜ nierozpoczęty | |
+| **M1** — Rdzeń ruchu i strojenie | ✅ **ukończony** | `InputManager`, `CoopCamera` z bańką, `RescueSystem`, coyote time + jump buffering, squash & stretch. **Playtest z dziećmi zaliczony** — 5-latek przechodzi tor testowy samodzielnie |
+| **M2** — Pętla rozgrywki | 🟡 **w trakcie** | Gotowe: pipeline map z Tiled, generyczna `GameScene`, manifest `levels.ts`, checkpointy z mapy, cukierki, `UIScene` z ikonowym HUD. Zostało: duszki, meta z nagrodą + `RewardScene`, `SaveManager`, `MenuScene` |
 | **M3** — Mechaniki kooperacji | ⬜ nierozpoczęty | |
 | **M4** — Poziomy w Tiled | ⬜ nierozpoczęty | |
 | **M5** — Art pass | 🟡 **rozpoczęty poza kolejnością** | Zmiana pipeline'u na SVG (sekcja 4). Gotowe: `char_bear_idle`, `world_box_small`, `pickup_candy_orange`, [Styleguide_Wektorowy.md](Styleguide_Wektorowy.md), podgląd assetów |
 | **M6** — Polish i playtesty | ⬜ nierozpoczęty | |
 
 > **Uwaga o kolejności:** M5 ruszył przed M1–M4, bo zmiana pipeline'u grafiki wymagała
-> weryfikacji na realnym assecie. To wyjątek, nie nowa kolejność — **priorytetem pozostaje M1**
-> (grywalność przed grafiką). Assety powstają w tle, w miarę potrzeb.
+> weryfikacji na realnym assecie. To wyjątek, nie nowa kolejność — **priorytetem pozostaje M2**
+> (grywalność przed grafiką). Assety powstają w tle, w miarę potrzeb: `pickup_candy_orange`
+> trafił już do gry, reszta świata to nadal greybox.
 
 **Legenda:** ✅ ukończony · 🟡 w trakcie · ⬜ nierozpoczęty.
 Po zamknięciu etapu zaktualizuj tabelę **i** datę w nagłówku.
@@ -236,7 +258,7 @@ Vite + TS + Phaser, sceny Boot/Preload/Game, pusty poziom z kolorowych prostoką
 [Player.ts](../src/objects/Player.ts), [constants.ts](../src/config/constants.ts).
 Tekstury to nadal generowane prostokąty — podmiana na SVG należy do M5.
 
-### M1 — Rdzeń ruchu i strojenie (1–2 wieczory) ⭐ najważniejszy etap 🟡
+### M1 — Rdzeń ruchu i strojenie (1–2 wieczory) ⭐ najważniejszy etap ✅
 Dwóch graczy na klawiaturze, `CoopCamera`, `RescueSystem`. **Strojenie skoku z dziećmi na szarych klockach** — wartości do `constants.ts`. Kryterium ukończenia: 5-latek samodzielnie przechodzi testowy tor.
 
 **Zrealizowano:** [InputManager.ts](../src/systems/InputManager.ts) (strzałki / WASD / pady),
@@ -244,14 +266,23 @@ Dwóch graczy na klawiaturze, `CoopCamera`, `RescueSystem`. **Strojenie skoku z 
 [RescueSystem.ts](../src/systems/RescueSystem.ts) (brak śmierci, checkpoint per gracz),
 [Player.ts](../src/objects/Player.ts) (coyote time, jump buffering, squash & stretch)
 + [PlayerOne](../src/objects/PlayerOne.ts) / [PlayerTwo](../src/objects/PlayerTwo.ts),
-tor testowy z linijką zasięgu skoku w [GameScene.ts](../src/scenes/GameScene.ts).
+tor testowy z linijką zasięgu skoku (zastąpiony w M2 mapą z Tiled).
 
-**Pozostało do zamknięcia etapu:** playtest z dziećmi i strojenie wartości ⚙
-w [constants.ts](../src/config/constants.ts). Checkpointy to na razie „ostatni bezpieczny
-grunt" próbkowany co `CHECKPOINT_SAMPLE_MS` — w M2 zastąpią je obiekty z warstwy Tiled.
+**Zamknięty po playteście z dziećmi (2026-08-10)** — wartości ⚙
+w [constants.ts](../src/config/constants.ts) sprawdziły się bez korekt.
 
-### M2 — Pętla rozgrywki (2–3 wieczory)
+### M2 — Pętla rozgrywki (2–3 wieczory) 🟡
 Import map z Tiled, cukierki + HUD, duszki, meta z nagrodą, `SaveManager`, menu wyboru poziomów. Kryterium: pełne przejście "szarego" poziomu 1 od menu do nagrody.
+
+**Zrealizowano:** [levels.ts](../src/config/levels.ts) (manifest poziomów + nazwy warstw
+i obiektów), generyczna [GameScene.ts](../src/scenes/GameScene.ts) sterowana danymi z mapy,
+greybox [level1.tmj](../public/assets/tilemaps/level1.tmj) z warstwami `ground` / `oneway` /
+`objects` / `decor`, checkpointy z warstwy `objects`, [Candy.ts](../src/objects/Candy.ts),
+[UIScene.ts](../src/scenes/UIScene.ts) (ikonowy licznik z bitmapowymi cyframi) i
+[GameState.ts](../src/systems/GameState.ts) (rejestr jako kanał między scenami).
+
+**Następne:** `Ghost` z patrolem i chichotem, strefa mety + `RewardScene`, `SaveManager`
+(postęp w `localStorage`), `MenuScene` z rysunkową mapką ogrodu.
 
 ### M3 — Mechaniki kooperacji (2–3 wieczory)
 Magiczna latarka + obiekty ukryte, dźwignie/przyciski/pchane bloki, bąbelki i pływające liście (poziom 2), trampoliny-grzyby (poziom 4).

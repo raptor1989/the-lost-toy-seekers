@@ -1,0 +1,67 @@
+// Manifest poziomów — JEDYNE miejsce, w którym gra dowiaduje się, jakie ma poziomy.
+//
+// Dodanie poziomu = nowa mapa `.tmj` w `public/assets/tilemaps/` + wpis poniżej.
+// Zero nowego kodu scen: `GameScene` jest generyczna i czyta mapę (Dokumentacja
+// sekcja 2.1 i 5).
+
+/** Nazwa tilesetu **wewnątrz plików `.tmj`** — musi się zgadzać z tym, co zapisał Tiled. */
+export const TILESET_NAME = 'greybox';
+
+/** Klucz tekstury tilesetu w Phaserze (ładowany w `PreloadScene`). */
+export const TILESET_TEXTURE_KEY = 'tiles_greybox';
+
+/** Nazwy warstw wymagane w każdej mapie (Dokumentacja sekcja 5). */
+export const LAYER = {
+  /** Kafle kolidujące ze wszystkich stron. */
+  ground: 'ground',
+  /** Platformy przenikalne od dołu — kolizja tylko z górną krawędzią. */
+  oneway: 'oneway',
+  /** Warstwa obiektów: spawny, checkpointy, cukierki, duszki, meta. */
+  objects: 'objects',
+  /** Czysta dekoracja, bez kolizji. */
+  decor: 'decor',
+} as const;
+
+/**
+ * Nazwy obiektów na warstwie `objects`. W Tiled wpisuje się je w pole **Name**
+ * (nie Class) — Phaser zawsze wystawia `name`, więc jest to najpewniejszy klucz.
+ *
+ * Punkty spawnu i checkpointów stawiamy **na podłodze** — `GameScene` sama
+ * podnosi postać o połowę jej wysokości.
+ */
+export const OBJECT = {
+  playerOne: 'player1',
+  playerTwo: 'player2',
+  checkpoint: 'checkpoint',
+  candy: 'candy',
+} as const;
+
+export interface LevelDefinition {
+  /** Identyfikator używany przy `scene.start('Game', { levelId })`. */
+  id: string;
+  /** Klucz mapy w cache'u Phasera. */
+  mapKey: string;
+  /** Ścieżka do `.tmj` względem `public/`. */
+  mapFile: string;
+  /** Kolor tła kadru, dopóki nie ma paralaksy (M5). */
+  backgroundColor: number;
+}
+
+export const LEVELS: readonly LevelDefinition[] = [
+  {
+    id: 'level1',
+    mapKey: 'map_level1',
+    mapFile: 'assets/tilemaps/level1.tmj',
+    backgroundColor: 0x1b1436,
+  },
+];
+
+export const DEFAULT_LEVEL_ID = LEVELS[0].id;
+
+export function getLevel(id: string): LevelDefinition {
+  const level = LEVELS.find((l) => l.id === id);
+  if (!level) {
+    throw new Error(`Nieznany poziom: "${id}". Dodaj wpis w config/levels.ts.`);
+  }
+  return level;
+}
