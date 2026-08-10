@@ -8,7 +8,7 @@
  "orientation": "orthogonal",
  "renderorder": "right-down",
  "nextlayerid": 5,
- "nextobjectid": 31,
+ "nextobjectid": 32,
  "tiledversion": "1.10.2",
  "version": "1.10",
  "type": "map",
@@ -8002,6 +8002,18 @@
      "visible": true,
      "x": 2512,
      "y": 458,
+     "width": 0,
+     "height": 0
+    },
+    {
+     "id": 31,
+     "name": "goal",
+     "type": "",
+     "point": true,
+     "rotation": 0,
+     "visible": true,
+     "x": 2480,
+     "y": 480,
      "width": 0,
      "height": 0
     }

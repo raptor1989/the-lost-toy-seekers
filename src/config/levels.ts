@@ -34,6 +34,8 @@ export const OBJECT = {
   playerTwo: 'player2',
   checkpoint: 'checkpoint',
   candy: 'candy',
+  /** Meta poziomu — stoi na niej odzyskiwana zabawka. */
+  goal: 'goal',
 } as const;
 
 export interface LevelDefinition {
@@ -45,6 +47,10 @@ export interface LevelDefinition {
   mapFile: string;
   /** Kolor tła kadru, dopóki nie ma paralaksy (M5). */
   backgroundColor: number;
+  /** Klucz tekstury zabawki odzyskiwanej na tym poziomie (GDD sekcja 4). */
+  rewardKey: string;
+  /** Ścieżka do SVG zabawki względem `public/`. */
+  rewardFile: string;
 }
 
 export const LEVELS: readonly LevelDefinition[] = [
@@ -53,6 +59,8 @@ export const LEVELS: readonly LevelDefinition[] = [
     mapKey: 'map_level1',
     mapFile: 'assets/tilemaps/level1.tmj',
     backgroundColor: 0x1b1436,
+    rewardKey: 'reward_teddy',
+    rewardFile: 'assets/svg/reward_teddy.svg',
   },
 ];
 
@@ -64,4 +72,10 @@ export function getLevel(id: string): LevelDefinition {
     throw new Error(`Nieznany poziom: "${id}". Dodaj wpis w config/levels.ts.`);
   }
   return level;
+}
+
+/** Kolejny poziom w manifeście albo `null`, jeśli to był ostatni. */
+export function getNextLevel(id: string): LevelDefinition | null {
+  const index = LEVELS.findIndex((l) => l.id === id);
+  return index >= 0 ? (LEVELS[index + 1] ?? null) : null;
 }

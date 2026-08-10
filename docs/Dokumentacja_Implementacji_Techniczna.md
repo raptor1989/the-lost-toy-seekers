@@ -185,9 +185,11 @@ Zasady stylu, paleta, kolejność warstw postaci i checklista QA:
 
 * **Nazwy obiektów** wpisuje się w Tiled w pole **Name** (nie Class) — Phaser zawsze wystawia
   `name`, więc jest to najpewniejszy klucz. Rozpoznawane nazwy trzyma `config/levels.ts`
-  (`OBJECT`): `player1`, `player2`, `checkpoint`, `candy`.
-* **Punkty spawnu i checkpointów stawia się na podłodze** — `GameScene` sama podnosi postać
-  o połowę jej wysokości. Punkt cukierka to jego środek.
+  (`OBJECT`): `player1`, `player2`, `checkpoint`, `candy`, `goal`.
+* **Punkty stawiane na podłodze** (spawny, checkpointy, meta) `GameScene` podnosi o połowę
+  wysokości stawianego obiektu. Punkt cukierka to jego środek.
+* **Meta jest opcjonalna** — mapa bez obiektu `goal` uruchamia się normalnie (przydatne przy
+  torach testowych).
 * **Nie sumować skoku w górę i w bok.** Reguła 70% dotyczy każdej osi z osobna; schodek
   „3 kafle w górę i 4 w bok" jest poza zasięgiem 5-latka, mimo że każda z tych wartości
   osobno mieści się w limicie. Wspinaczki budujemy z **przylegających** stopni, przepaście
@@ -234,10 +236,10 @@ Kolejność zoptymalizowana pod zasadę: **najpierw grywalny prototyp, grafika n
 |---|---|---|
 | **M0** — Szkielet projektu | ✅ **ukończony** | Boot/Preload/Game, jeden gracz na strzałkach, platformy z prostokątów |
 | **M1** — Rdzeń ruchu i strojenie | ✅ **ukończony** | `InputManager`, `CoopCamera` z bańką, `RescueSystem`, coyote time + jump buffering, squash & stretch. **Playtest z dziećmi zaliczony** — 5-latek przechodzi tor testowy samodzielnie |
-| **M2** — Pętla rozgrywki | 🟡 **w trakcie** | Gotowe: pipeline map z Tiled, generyczna `GameScene`, manifest `levels.ts`, checkpointy z mapy, cukierki, `UIScene` z ikonowym HUD. Zostało: duszki, meta z nagrodą + `RewardScene`, `SaveManager`, `MenuScene` |
+| **M2** — Pętla rozgrywki | 🟡 **w trakcie** | Gotowe: pipeline map z Tiled, generyczna `GameScene`, manifest `levels.ts`, checkpointy z mapy, cukierki, `UIScene` z ikonowym HUD, meta poziomu + `RewardScene`. Zostało: `SaveManager`, `MenuScene`, duszki |
 | **M3** — Mechaniki kooperacji | ⬜ nierozpoczęty | |
 | **M4** — Poziomy w Tiled | ⬜ nierozpoczęty | |
-| **M5** — Art pass | 🟡 **rozpoczęty poza kolejnością** | Zmiana pipeline'u na SVG (sekcja 4). Gotowe: `char_bear_idle`, `world_box_small`, `pickup_candy_orange`, [Styleguide_Wektorowy.md](Styleguide_Wektorowy.md), podgląd assetów |
+| **M5** — Art pass | 🟡 **rozpoczęty poza kolejnością** | Zmiana pipeline'u na SVG (sekcja 4). Gotowe: `char_bear_idle`, `world_box_small`, `pickup_candy_orange`, `reward_teddy`, [Styleguide_Wektorowy.md](Styleguide_Wektorowy.md), podgląd assetów |
 | **M6** — Polish i playtesty | ⬜ nierozpoczęty | |
 
 > **Uwaga o kolejności:** M5 ruszył przed M1–M4, bo zmiana pipeline'u grafiki wymagała
@@ -278,11 +280,18 @@ Import map z Tiled, cukierki + HUD, duszki, meta z nagrodą, `SaveManager`, menu
 i obiektów), generyczna [GameScene.ts](../src/scenes/GameScene.ts) sterowana danymi z mapy,
 greybox [level1.tmj](../public/assets/tilemaps/level1.tmj) z warstwami `ground` / `oneway` /
 `objects` / `decor`, checkpointy z warstwy `objects`, [Candy.ts](../src/objects/Candy.ts),
-[UIScene.ts](../src/scenes/UIScene.ts) (ikonowy licznik z bitmapowymi cyframi) i
-[GameState.ts](../src/systems/GameState.ts) (rejestr jako kanał między scenami).
+[UIScene.ts](../src/scenes/UIScene.ts) (ikonowy licznik z bitmapowymi cyframi),
+[GameState.ts](../src/systems/GameState.ts) (rejestr jako kanał między scenami),
+meta poziomu [Goal.ts](../src/objects/Goal.ts) + [RewardScene.ts](../src/scenes/RewardScene.ts)
+(konfetti, licznik cukierków, ikona „dalej") i pierwszy asset nagrody `reward_teddy`.
 
-**Następne:** `Ghost` z patrolem i chichotem, strefa mety + `RewardScene`, `SaveManager`
-(postęp w `localStorage`), `MenuScene` z rysunkową mapką ogrodu.
+**Decyzje z wdrożenia:** metę zalicza **którykolwiek** gracz — wymaganie obecności obojga
+zamieniłoby finał w ponaglanie młodszego przez starszego. Ekran nagrody przyjmuje „dalej"
+dopiero po `REWARD_INPUT_DELAY_MS`, bo trzymany przy dobiegnięciu skok przewijał nagrodę,
+zanim dziecko zdążyło ją zobaczyć.
+
+**Następne:** `SaveManager` (postęp w `localStorage` + wypełnianie konturów zabawek w HUD),
+`MenuScene` z rysunkową mapką ogrodu, `Ghost` z patrolem i chichotem.
 
 ### M3 — Mechaniki kooperacji (2–3 wieczory)
 Magiczna latarka + obiekty ukryte, dźwignie/przyciski/pchane bloki, bąbelki i pływające liście (poziom 2), trampoliny-grzyby (poziom 4).
@@ -294,7 +303,9 @@ Greybox wszystkich 4 poziomów zgodnie z GDD sekcja 4 + playtest każdego z dzie
 Rysowanie assetów SVG (sekcja 4), podmiana greyboxu, paralaksa, animacje postaci, muzyka i SFX, nagrania głosowe.
 
 **Zrealizowano:** [Styleguide_Wektorowy.md](Styleguide_Wektorowy.md), podgląd `/asset_preview.html`,
-assety `char_bear_idle`, `world_box_small`, `pickup_candy_orange`.
+assety `char_bear_idle`, `world_box_small`, `pickup_candy_orange`, `reward_teddy` (nagroda
+poziomu 1 — pluszak celowo odróżniony od postaci Gracza 1: siedzi na wprost, ma guzikowe
+oczy, kokardę i łatkę, zamiast ubrania i plecaka).
 **Następne:** pozostałe pozy misia (run/jump/land) z zatwierdzonej sylwetki, potem królik i duszek.
 
 ### M6 — Polish i playtesty finalne (1–2 wieczory)

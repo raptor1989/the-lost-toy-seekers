@@ -9,7 +9,8 @@ import {
 } from '../config/constants';
 import { LEVELS, TILESET_TEXTURE_KEY, DEFAULT_LEVEL_ID } from '../config/levels';
 import { CANDY_TEXTURE } from '../objects/Candy';
-import { DIGIT_TEXTURE_PREFIX } from './UIScene';
+import { CONFETTI_TEXTURE, PLAY_TEXTURE } from './RewardScene';
+import { DIGIT_TEXTURE_PREFIX } from '../utils/digits';
 
 // Ładuje paczkę assetów i pokazuje pasek postępu.
 // Postacie i kafle to nadal placeholdery (podmiana na SVG należy do M5);
@@ -25,8 +26,13 @@ export class PreloadScene extends Phaser.Scene {
     // Tileset greyboxu — wspólny dla wszystkich map z Tiled.
     this.load.image(TILESET_TEXTURE_KEY, 'assets/tilemaps/tileset_greybox.png');
 
-    // Mapy prosto z manifestu: nowy poziom nie wymaga zmiany tej sceny.
-    LEVELS.forEach((level) => this.load.tilemapTiledJSON(level.mapKey, level.mapFile));
+    // Mapy i zabawki-nagrody prosto z manifestu: nowy poziom nie wymaga zmiany tej sceny.
+    LEVELS.forEach((level) => {
+      this.load.tilemapTiledJSON(level.mapKey, level.mapFile);
+      // Jeden plik obsługuje i ekran nagrody, i zabawkę stojącą na mecie —
+      // rasteryzujemy w największej potrzebnej skali (Dokumentacja sekcja 4).
+      this.load.svg(level.rewardKey, level.rewardFile, { width: 512, height: 512 });
+    });
 
     this.load.svg(CANDY_TEXTURE, 'assets/svg/pickup_candy_orange.svg', {
       width: 64,
@@ -75,6 +81,22 @@ export class PreloadScene extends Phaser.Scene {
     g.fillStyle(0x4a90d9, 1);
     g.fillRect(0, 0, PLAYER_WIDTH, PLAYER_HEIGHT);
     g.generateTexture('player_two', PLAYER_WIDTH, PLAYER_HEIGHT);
+    g.clear();
+
+    // Konfetti — biały prostokącik barwiony per cząstka w RewardScene.
+    g.fillStyle(0xffffff, 1);
+    g.fillRoundedRect(0, 0, 14, 9, 3);
+    g.generateTexture(CONFETTI_TEXTURE, 14, 9);
+    g.clear();
+
+    // Ikona „dalej": zero tekstu, jeden duży trójkąt na jasnym krążku (GDD sekcja 3).
+    g.fillStyle(0xf7f0e3, 1);
+    g.fillCircle(48, 48, 44);
+    g.lineStyle(4, 0x4a3226, 1);
+    g.strokeCircle(48, 48, 44);
+    g.fillStyle(0x4a3226, 1);
+    g.fillTriangle(38, 26, 38, 70, 72, 48);
+    g.generateTexture(PLAY_TEXTURE, 96, 96);
 
     g.destroy();
   }

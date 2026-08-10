@@ -3,6 +3,8 @@ import {
   PLAYER_HEIGHT,
   FALL_LINE_MARGIN,
   CHECKPOINT_ZONE_SIZE,
+  GOAL_SIZE,
+  GOAL_CELEBRATION_MS,
   DEPTH_DECOR,
   DEPTH_TILES,
   DEPTH_PLAYERS,
@@ -19,6 +21,7 @@ import {
 import { PlayerOne } from '../objects/PlayerOne';
 import { PlayerTwo } from '../objects/PlayerTwo';
 import { Candy } from '../objects/Candy';
+import { Goal } from '../objects/Goal';
 import type { Player } from '../objects/Player';
 import { InputManager } from '../systems/InputManager';
 import { CoopCamera } from '../systems/CoopCamera';
@@ -75,6 +78,7 @@ export class GameScene extends Phaser.Scene {
 
     this.spawnCheckpoints(map);
     this.spawnCandies(map);
+    this.spawnGoal(map);
 
     this.startHud();
   }
@@ -185,7 +189,7 @@ export class GameScene extends Phaser.Scene {
     this.candies = this.add.group();
     this.candiesCollected = 0;
 
-    for (const point of this.findObjects(map, OBJECT.candy, false)) {
+    for (const point of this.findObjects(map, OBJECT.candy, 0)) {
       this.candies.add(new Candy(this, point.x, point.y));
     }
     this.candiesTotal = this.candies.getLength();
@@ -198,7 +202,31 @@ export class GameScene extends Phaser.Scene {
   private countCandy(): void {
     this.candiesCollected += 1;
     setCandyState(this, { collected: this.candiesCollected, total: this.candiesTotal });
-    // TODO(M2): po zebraniu wszystkich cukierków — bonus przy mecie w RewardScene.
+  }
+
+  /** Meta jest opcjonalna — poziom bez obiektu `goal` da się mimo to uruchomić. */
+  private spawnGoal(map: Phaser.Tilemaps.Tilemap): void {
+    const [point] = this.findObjects(map, OBJECT.goal, GOAL_SIZE / 2);
+    if (!point) {
+      return;
+    }
+
+    const goal = new Goal(this, point.x, point.y, this.level.rewardKey);
+    this.physics.add.overlap(this.players, goal, () => {
+      if (goal.reach(() => this.finishLevel())) {
+        // Na czas świętowania odbieramy kontrolę, żeby postać nie odbiegła z kadru.
+        this.players.forEach((player) => player.disableControlFor(GOAL_CELEBRATION_MS));
+      }
+    });
+  }
+
+  private finishLevel(): void {
+    this.scene.stop('UI');
+    this.scene.start('Reward', {
+      levelId: this.level.id,
+      candiesCollected: this.candiesCollected,
+      candiesTotal: this.candiesTotal,
+    });
   }
 
   // ------------------------------------------------------------------ HUD
@@ -214,24 +242,23 @@ export class GameScene extends Phaser.Scene {
   // ------------------------------------------------------------------ odczyt warstwy `objects`
 
   /**
-   * Punkty spawnu i checkpointów projektant stawia **na podłodze**, więc dla
-   * postaci podnosimy je o połowę jej wysokości. Cukierki (`groundLevel = false`)
-   * biorą pozycję wprost — punkt jest ich środkiem.
+   * Punkty, które projektant stawia **na podłodze** (spawny, checkpointy, meta),
+   * podnosimy o połowę wysokości stawianego obiektu — inaczej wszystko wrastałoby
+   * w grunt. Cukierki podajemy z `liftY = 0`, bo ich punkt jest wprost środkiem.
    */
   private findObjects(
     map: Phaser.Tilemaps.Tilemap,
     name: string,
-    groundLevel = true,
+    liftY = PLAYER_HEIGHT / 2,
   ): Phaser.Math.Vector2[] {
     const layer = map.getObjectLayer(LAYER.objects);
     if (!layer) {
       throw new Error(`Mapa "${this.level.mapKey}" nie ma warstwy "${LAYER.objects}".`);
     }
 
-    const lift = groundLevel ? PLAYER_HEIGHT / 2 : 0;
     return layer.objects
       .filter((object) => object.name === name)
-      .map((object) => new Phaser.Math.Vector2(object.x ?? 0, (object.y ?? 0) - lift));
+      .map((object) => new Phaser.Math.Vector2(object.x ?? 0, (object.y ?? 0) - liftY));
   }
 
   private requireObject(map: Phaser.Tilemaps.Tilemap, name: string): Phaser.Math.Vector2 {

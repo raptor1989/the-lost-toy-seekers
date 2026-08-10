@@ -4,6 +4,7 @@ import { BootScene } from './scenes/BootScene';
 import { PreloadScene } from './scenes/PreloadScene';
 import { GameScene } from './scenes/GameScene';
 import { UIScene } from './scenes/UIScene';
+import { RewardScene } from './scenes/RewardScene';
 
 new Phaser.Game({
   type: Phaser.AUTO,
@@ -27,5 +28,5 @@ new Phaser.Game({
     gamepad: true,
   },
   // UIScene startuje równolegle nad GameScene (uruchamia ją GameScene).
-  scene: [BootScene, PreloadScene, GameScene, UIScene],
+  scene: [BootScene, PreloadScene, GameScene, UIScene, RewardScene],
 });

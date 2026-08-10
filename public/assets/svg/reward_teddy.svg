@@ -1,0 +1,117 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <!--
+    Nagroda poziomu 1 — „Ulubiony Miś" (GDD sekcja 4).
+    To PLUSZAK, nie postać Gracza 1: żeby się nie myliły, siedzi na wprost
+    (bez skrętu 3/4), ma guzikowe oczy, kokardę i przyszytą łatkę, a zamiast
+    ubrania — samo futro. Sylwetka symetryczna względem x=128.
+    Kolejność warstw od tyłu: uszy → nogi → ręce → tułów → brzuszek
+    → głowa → wnętrza uszu → kokarda → twarz.
+    Paleta i grubości konturu: patrz docs/Styleguide_Wektorowy.md
+  -->
+  <defs>
+    <!-- miękki cień od lewej — daje bryłę bez twardej krawędzi -->
+    <linearGradient id="shade" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0"   stop-color="#4A3226" stop-opacity="0.24"/>
+      <stop offset="0.5" stop-color="#4A3226" stop-opacity="0"/>
+    </linearGradient>
+    <!-- ziarno papieru — namiastka faktury kredki -->
+    <filter id="grain" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+    </filter>
+    <!-- rumieńce muszą kończyć się na obrysie głowy -->
+    <clipPath id="tHead">
+      <ellipse cx="128" cy="92" rx="62" ry="56"/>
+    </clipPath>
+    <!-- sylwetka: te same ścieżki co niżej, inaczej cień urwie się w połowie -->
+    <clipPath id="tToy">
+      <circle cx="76" cy="40" r="25"/>
+      <circle cx="180" cy="40" r="25"/>
+      <path d="M92,196 C74,190 52,194 44,206 C38,218 48,228 66,228 C84,228 94,218 96,208 Z"/>
+      <path d="M164,196 C182,190 204,194 212,206 C218,218 208,228 190,228 C172,228 162,218 160,208 Z"/>
+      <path d="M84,140 C66,146 54,164 56,180 C58,192 72,194 78,184 C82,172 84,154 88,144 Z"/>
+      <path d="M172,140 C190,146 202,164 200,180 C198,192 184,194 178,184 C174,172 172,154 168,144 Z"/>
+      <path d="M86,132 C74,158 72,192 84,208 C104,220 152,220 172,208 C184,192 182,158 170,132 Z"/>
+      <ellipse cx="128" cy="92" rx="62" ry="56"/>
+    </clipPath>
+  </defs>
+
+  <g stroke="#4A3226" stroke-width="3" stroke-linejoin="round" stroke-linecap="round">
+
+    <!-- ===== uszy (za głową) ===== -->
+    <circle cx="76" cy="40" r="25" fill="#C8894B"/>
+    <circle cx="180" cy="40" r="25" fill="#C8894B"/>
+
+    <!-- ===== nogi rozłożone na boki — poza siedząca ===== -->
+    <path d="M92,196 C74,190 52,194 44,206 C38,218 48,228 66,228 C84,228 94,218 96,208 Z" fill="#C8894B"/>
+    <path d="M164,196 C182,190 204,194 212,206 C218,218 208,228 190,228 C172,228 162,218 160,208 Z" fill="#C8894B"/>
+    <ellipse cx="58" cy="211" rx="14" ry="10" fill="#E0A882" stroke-width="2.2"/>
+    <ellipse cx="198" cy="211" rx="14" ry="10" fill="#E0A882" stroke-width="2.2"/>
+
+    <!-- ===== ręce (za tułowiem, dlatego ciemniejsze) ===== -->
+    <path d="M84,140 C66,146 54,164 56,180 C58,192 72,194 78,184 C82,172 84,154 88,144 Z" fill="#A96F36"/>
+    <path d="M172,140 C190,146 202,164 200,180 C198,192 184,194 178,184 C174,172 172,154 168,144 Z" fill="#A96F36"/>
+    <ellipse cx="67" cy="184" rx="11" ry="8" fill="#E0A882" stroke-width="2.2"/>
+    <ellipse cx="189" cy="184" rx="11" ry="8" fill="#E0A882" stroke-width="2.2"/>
+
+    <!-- ===== tułów ===== -->
+    <path d="M86,132 C74,158 72,192 84,208 C104,220 152,220 172,208 C184,192 182,158 170,132 Z" fill="#C8894B"/>
+
+    <!-- brzuszek z jaśniejszego futra -->
+    <ellipse cx="128" cy="180" rx="36" ry="31" fill="#EFD6B2" stroke-width="2.4"/>
+
+    <!-- łatka przyszyta na nodze — pluszak, który był już mocno kochany -->
+    <rect x="176" y="196" width="26" height="22" rx="6" fill="#E0A882" stroke-width="2.2"/>
+    <path d="M180,201 L186,196 M180,209 L190,196 M184,213 L196,197 M191,214 L200,202 M197,215 L202,209"
+          fill="none" stroke-width="1.6" stroke-opacity="0.7"/>
+
+    <!-- ===== głowa ===== -->
+    <ellipse cx="128" cy="92" rx="62" ry="56" fill="#C8894B"/>
+
+    <!-- wnętrza uszu (na głowie, żeby nie zlewały się z konturem) -->
+    <circle cx="76" cy="40" r="12" fill="#E0A882" stroke-width="2.2"/>
+    <circle cx="180" cy="40" r="12" fill="#E0A882" stroke-width="2.2"/>
+
+    <!-- ===== kokarda pod brodą ===== -->
+    <path d="M119,150 C103,139 88,148 93,159 C98,169 113,163 119,158 Z" fill="#E15240"/>
+    <path d="M137,150 C153,139 168,148 163,159 C158,169 143,163 137,158 Z" fill="#E15240"/>
+    <ellipse cx="128" cy="154" rx="10" ry="9" fill="#C23F2F" stroke-width="2.4"/>
+
+    <!-- ===== twarz — symetryczna, na wprost ===== -->
+    <g clip-path="url(#tHead)">
+      <ellipse cx="84" cy="106" rx="14" ry="9" fill="#F2908E" stroke="none" opacity="0.85"/>
+      <ellipse cx="172" cy="106" rx="14" ry="9" fill="#F2908E" stroke="none" opacity="0.85"/>
+    </g>
+
+    <!-- pyszczek -->
+    <ellipse cx="128" cy="110" rx="33" ry="24" fill="#EFD6B2"/>
+
+    <!-- nosek + uśmiech -->
+    <path d="M114,98 C119,93 137,93 142,98 C142,108 135,113 128,113 C121,113 114,108 114,98 Z"
+          fill="#3A2820" stroke="none"/>
+    <path d="M128,113 C128,120 120,124 115,119" fill="none" stroke-width="2.6"/>
+    <path d="M128,113 C128,120 136,124 141,119" fill="none" stroke-width="2.6"/>
+
+    <!--
+      Guzikowe oczy: ciemny krążek + dwie dziurki guzika.
+      Pierwsza wersja miała dziurki ułożone w „X" — czytało się to jak oczy
+      postaci nieprzytomnej, więc dziurki leżą teraz poziomo, obok siebie.
+    -->
+    <circle cx="102" cy="84" r="10" fill="#3A2820" stroke-width="2.4"/>
+    <circle cx="154" cy="84" r="10" fill="#3A2820" stroke-width="2.4"/>
+    <circle cx="99" cy="86" r="1.8" fill="#E0A882" stroke="none"/>
+    <circle cx="105" cy="86" r="1.8" fill="#E0A882" stroke="none"/>
+    <circle cx="151" cy="86" r="1.8" fill="#E0A882" stroke="none"/>
+    <circle cx="157" cy="86" r="1.8" fill="#E0A882" stroke="none"/>
+    <circle cx="98.5" cy="79.5" r="3" fill="#FFFFFF" stroke="none"/>
+    <circle cx="150.5" cy="79.5" r="3" fill="#FFFFFF" stroke="none"/>
+
+    <!-- szew pluszaka biegnący przez czoło -->
+    <path d="M128,36 L128,58" fill="none" stroke-width="2" stroke-dasharray="5 6" stroke-opacity="0.6"/>
+  </g>
+
+  <!-- ===== bryła i faktura (na wierzchu, przycięte do sylwetki) ===== -->
+  <rect width="256" height="256" fill="url(#shade)" clip-path="url(#tToy)"/>
+  <rect width="256" height="256" filter="url(#grain)" clip-path="url(#tToy)"
+        opacity="0.14" style="mix-blend-mode:multiply"/>
+</svg>

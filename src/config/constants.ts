@@ -114,6 +114,30 @@ export const CANDY_SPIN_MS = 2600;
 /** Lot zebranego cukierka do licznika w HUD. */
 export const CANDY_FLIGHT_MS = 420;
 
+// ---------------------------------------------------------------- meta poziomu
+
+/** Rozmiar zabawki stojącej na mecie (w świecie gry). */
+export const GOAL_SIZE = 96;
+export const GOAL_BOB_DISTANCE = 10;
+export const GOAL_BOB_MS = 1600;
+/** Ile trwa „hop" zabawki, zanim otworzy się ekran nagrody. */
+export const GOAL_CELEBRATION_MS = 700;
+
+// ---------------------------------------------------------------- ekran nagrody
+
+export const REWARD_TOY_SIZE = 360;
+export const REWARD_INTRO_MS = 620;
+export const REWARD_BOB_DISTANCE = 14;
+export const REWARD_BOB_MS = 2400;
+export const REWARD_CONFETTI_PER_SECOND = 26;
+export const REWARD_CONFETTI_LIFESPAN_MS = 3200;
+/**
+ * ⚙ Chwila, zanim ekran zacznie przyjmować „dalej" — bez tego przypadkowe
+ * trzymanie skoku przy dobiegnięciu do mety przewinęłoby nagrodę, zanim
+ * dziecko zdąży ją zobaczyć.
+ */
+export const REWARD_INPUT_DELAY_MS = 1400;
+
 // ---------------------------------------------------------------- HUD (UIScene)
 // Zero tekstu: ikona cukierka + bitmapowe cyfry (GDD sekcja 3).
 

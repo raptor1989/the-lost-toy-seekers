@@ -1,16 +1,8 @@
 import Phaser from 'phaser';
-import {
-  HUD_MARGIN,
-  HUD_ICON_SIZE,
-  HUD_DIGIT_WIDTH,
-  HUD_PUNCH_SCALE,
-  HUD_PUNCH_MS,
-} from '../config/constants';
+import { HUD_MARGIN, HUD_ICON_SIZE, HUD_PUNCH_SCALE, HUD_PUNCH_MS } from '../config/constants';
 import { CANDY_TEXTURE } from '../objects/Candy';
 import { getCandyState, onCandyStateChange, type CandyState } from '../systems/GameState';
-
-/** Prefiks tekstur cyfr generowanych w `PreloadScene`. */
-export const DIGIT_TEXTURE_PREFIX = 'digit_';
+import { createDigits } from '../utils/digits';
 
 /**
  * HUD jako osobna scena-nakładka nad `GameScene` — dzięki temu nie podlega
@@ -51,16 +43,8 @@ export class UIScene extends Phaser.Scene {
     this.digits.forEach((d) => d.destroy());
     this.digits = [];
 
-    const glyphs = String(value).split('');
-    glyphs.forEach((glyph, index) => {
-      const digit = this.add.image(
-        HUD_ICON_SIZE + 8 + index * HUD_DIGIT_WIDTH,
-        HUD_ICON_SIZE / 2,
-        `${DIGIT_TEXTURE_PREFIX}${glyph}`,
-      );
-      this.counter.add(digit);
-      this.digits.push(digit);
-    });
+    this.digits = createDigits(this, value, HUD_ICON_SIZE + 8, HUD_ICON_SIZE / 2);
+    this.counter.add(this.digits);
   }
 
   /** „Kopnięcie" licznika — potwierdza dziecku, że jego cukierek dotarł na miejsce. */
