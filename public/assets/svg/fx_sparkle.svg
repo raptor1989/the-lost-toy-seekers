@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!--
+    Brokat — cząsteczka „puf" po duszku i posypka przy zdobyciu cukierka.
+    Bez konturu: przy 32 px kontur zjadłby cały kształt, a cząsteczka ma być
+    błyskiem, nie obiektem.
+  -->
+  <path d="M32,4 C35,24 40,29 60,32 C40,35 35,40 32,60 C29,40 24,35 4,32 C24,29 29,24 32,4 Z"
+        fill="#FFD166"/>
+  <circle cx="32" cy="32" r="5" fill="#FFFFFF" opacity="0.85"/>
+</svg>

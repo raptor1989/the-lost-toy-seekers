@@ -9,6 +9,7 @@ import {
 } from '../config/constants';
 import { LEVELS, TILESET_TEXTURE_KEY } from '../config/levels';
 import { CANDY_TEXTURE } from '../objects/Candy';
+import { GHOST_TEXTURE, SPARKLE_TEXTURE } from '../objects/Ghost';
 import { CONFETTI_TEXTURE, PLAY_TEXTURE } from './RewardScene';
 import { LOCK_TEXTURE } from './MenuScene';
 import { DIGIT_TEXTURE_PREFIX } from '../utils/digits';
@@ -39,6 +40,11 @@ export class PreloadScene extends Phaser.Scene {
       width: 64,
       height: 64,
     });
+    this.load.svg(GHOST_TEXTURE, 'assets/svg/ghost_mischief_idle.svg', {
+      width: 96,
+      height: 96,
+    });
+    this.load.svg(SPARKLE_TEXTURE, 'assets/svg/fx_sparkle.svg', { width: 32, height: 32 });
   }
 
   create(): void {

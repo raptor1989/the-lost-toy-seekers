@@ -6,6 +6,8 @@ import {
   CANDY_BOB_MS,
   CANDY_SPIN_MS,
   CANDY_FLIGHT_MS,
+  GHOST_CANDY_POP_HEIGHT,
+  GHOST_CANDY_POP_MS,
   DEPTH_PICKUPS,
   HUD_MARGIN,
   HUD_ICON_SIZE,
@@ -76,6 +78,34 @@ export class Candy extends Phaser.Physics.Arcade.Sprite {
     });
 
     return true;
+  }
+
+  /**
+   * Wyskok cukierka upuszczonego przez duszka — bez niego cukierek pojawia się
+   * znikąd i dziecko nie łączy go z duszkiem, którego właśnie dotknęło.
+   */
+  popOut(): void {
+    this.scene.tweens.killTweensOf(this);
+    const restY = this.y;
+    const body = this.body as Phaser.Physics.Arcade.Body;
+
+    // Na czas wyskoku cukierek jest niezbieralny: gracz stoi dokładnie tam, gdzie
+    // był duszek, więc bez tego łapałby go w tej samej klatce i dziecko nigdy
+    // by nie zobaczyło, skąd cukierek się wziął.
+    body.enable = false;
+
+    this.scene.tweens.add({
+      targets: this,
+      y: restY - GHOST_CANDY_POP_HEIGHT,
+      duration: GHOST_CANDY_POP_MS,
+      yoyo: true,
+      ease: 'Quad.easeOut',
+      onComplete: () => {
+        this.y = restY;
+        body.enable = true;
+        this.startIdleMotion();
+      },
+    });
   }
 
   private startIdleMotion(): void {

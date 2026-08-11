@@ -125,6 +125,20 @@ rescueZone.onOverlap(player, () => {
 * Patrol: ruch wahadłowy między dwoma punktami z warstwy Tiled — bez pathfindingu, zbędna złożoność.
 * Przy kontakcie: chichot (losowy z 3 wariantów), spawn `Candy` z podskokiem, emitter cząsteczek "brokat", znikanie. Respawn po 10–15 s w chmurce, by poziom nie pustoszał.
 
+**Decyzje z wdrożenia (M2):**
+
+* **Duszek wraca tylko na wolne miejsce.** Gracz stoi dokładnie tam, gdzie duszek zniknął,
+  więc bez sprawdzenia duszek odradzałby się pod stopami i od razu wpadał w kolejny kontakt —
+  cukierek co kilkanaście sekund za samo stanie. Zbieranie ma być nagrodą za ruch, nie za bezruch.
+* **Upuszczony cukierek jest niezbieralny na czas wyskoku.** Inaczej gracz łapie go w tej samej
+  klatce i dziecko nie widzi, skąd cukierek się wziął.
+* **Patrol z jednego licznika, nie z dwóch tweenów.** Unoszenie („pływanie") i patrol sterują tą
+  samą współrzędną `y`; dwa równoległe tweeny szarpałyby duszka.
+* **Brokat musi być duży.** Pierwsza wersja z małymi cząsteczkami czytała się jak kurz — „puf"
+  jest nagrodą i ma być widoczny z drugiego końca kanapy.
+* Trasę patrolu rysuje się w Tiled **polilinią o dwóch punktach** (obiekt `ghost`). Zwykły punkt
+  też zadziała — dostaje domyślny odcinek `GHOST_PATROL_DEFAULT`.
+
 ### 3.5. Elementy kooperacji (dźwignie, bloki, tama)
 
 * Wspólny interfejs `Interactive` z metodą `activate(player)` — dźwignie i przyciski filtrują, który gracz może ich użyć (`allowedPlayer` z właściwości obiektu w Tiled).
@@ -195,7 +209,7 @@ Zasady stylu, paleta, kolejność warstw postaci i checklista QA:
 
 * **Nazwy obiektów** wpisuje się w Tiled w pole **Name** (nie Class) — Phaser zawsze wystawia
   `name`, więc jest to najpewniejszy klucz. Rozpoznawane nazwy trzyma `config/levels.ts`
-  (`OBJECT`): `player1`, `player2`, `checkpoint`, `candy`, `goal`.
+  (`OBJECT`): `player1`, `player2`, `checkpoint`, `candy`, `goal`, `ghost`.
 * **Punkty stawiane na podłodze** (spawny, checkpointy, meta) `GameScene` podnosi o połowę
   wysokości stawianego obiektu. Punkt cukierka to jego środek.
 * **Meta jest opcjonalna** — mapa bez obiektu `goal` uruchamia się normalnie (przydatne przy
@@ -252,16 +266,16 @@ Zasady stylu, paleta, kolejność warstw postaci i checklista QA:
 
 Kolejność zoptymalizowana pod zasadę: **najpierw grywalny prototyp, grafika na końcu** (rozszerzenie Kroków 1–5 z GDD).
 
-### Stan realizacji — *aktualizacja: 2026-08-10*
+### Stan realizacji — *aktualizacja: 2026-08-11*
 
 | Etap | Stan | Uwagi |
 |---|---|---|
 | **M0** — Szkielet projektu | ✅ **ukończony** | Boot/Preload/Game, jeden gracz na strzałkach, platformy z prostokątów |
 | **M1** — Rdzeń ruchu i strojenie | ✅ **ukończony** | `InputManager`, `CoopCamera` z bańką, `RescueSystem`, coyote time + jump buffering, squash & stretch. **Playtest z dziećmi zaliczony** — 5-latek przechodzi tor testowy samodzielnie |
-| **M2** — Pętla rozgrywki | 🟡 **w trakcie** | Gotowe: pipeline map z Tiled, generyczna `GameScene`, manifest `levels.ts`, checkpointy z mapy, cukierki, `UIScene` z ikonowym HUD, meta poziomu + `RewardScene`, `SaveManager` z paskiem odzyskanych zabawek, `MenuScene`. **Pętla „od menu do nagrody" domknięta.** Zostało: duszki-psotniki |
+| **M2** — Pętla rozgrywki | ✅ **ukończony** | Pipeline map z Tiled, generyczna `GameScene`, manifest `levels.ts`, checkpointy z mapy, cukierki, `UIScene` z ikonowym HUD, meta poziomu + `RewardScene`, `SaveManager` z paskiem odzyskanych zabawek, `MenuScene`, duszki-psotniki. **Kryterium spełnione: pełne przejście szarego poziomu 1 od menu do nagrody.** Czeka na playtest z dziećmi |
 | **M3** — Mechaniki kooperacji | ⬜ nierozpoczęty | |
 | **M4** — Poziomy w Tiled | ⬜ nierozpoczęty | |
-| **M5** — Art pass | 🟡 **rozpoczęty poza kolejnością** | Zmiana pipeline'u na SVG (sekcja 4). Gotowe: `char_bear_idle`, `world_box_small`, `pickup_candy_orange`, `reward_teddy`, [Styleguide_Wektorowy.md](Styleguide_Wektorowy.md), podgląd assetów |
+| **M5** — Art pass | 🟡 **rozpoczęty poza kolejnością** | Zmiana pipeline'u na SVG (sekcja 4). Gotowe: `char_bear_idle`, `world_box_small`, `pickup_candy_orange`, `reward_teddy`, `ghost_mischief_idle`, `fx_sparkle`, [Styleguide_Wektorowy.md](Styleguide_Wektorowy.md), podgląd assetów |
 | **M6** — Polish i playtesty | ⬜ nierozpoczęty | |
 
 > **Uwaga o kolejności:** M5 ruszył przed M1–M4, bo zmiana pipeline'u grafiki wymagała
@@ -295,7 +309,7 @@ tor testowy z linijką zasięgu skoku (zastąpiony w M2 mapą z Tiled).
 **Zamknięty po playteście z dziećmi (2026-08-10)** — wartości ⚙
 w [constants.ts](../src/config/constants.ts) sprawdziły się bez korekt.
 
-### M2 — Pętla rozgrywki (2–3 wieczory) 🟡
+### M2 — Pętla rozgrywki (2–3 wieczory) ✅
 Import map z Tiled, cukierki + HUD, duszki, meta z nagrodą, `SaveManager`, menu wyboru poziomów. Kryterium: pełne przejście "szarego" poziomu 1 od menu do nagrody.
 
 **Zrealizowano:** [levels.ts](../src/config/levels.ts) (manifest poziomów + nazwy warstw
@@ -315,7 +329,11 @@ zamieniłoby finał w ponaglanie młodszego przez starszego. Ekran nagrody przyj
 dopiero po `REWARD_INPUT_DELAY_MS`, bo trzymany przy dobiegnięciu skok przewijał nagrodę,
 zanim dziecko zdążyło ją zobaczyć.
 
-**Następne:** `Ghost` z patrolem, chichotem i cukierkiem — ostatni element M2.
+Duszki-psotniki: [Ghost.ts](../src/objects/Ghost.ts) z patrolem, cukierkiem i brokatem
+(assety `ghost_mischief_idle`, `fx_sparkle`).
+
+**Etap zamknięty — czeka na playtest z dziećmi.** Do dostrojenia przy okazji playtestu:
+gęstość cukierków, tempo patrolu duszków i czas ich powrotu (wartości ⚙ w `constants.ts`).
 Mapka ogrodu w menu jest na razie greyboxem (gwiazdy i kamienie rysowane kodem);
 rysunkowe tło należy do M5.
 
@@ -331,7 +349,9 @@ Rysowanie assetów SVG (sekcja 4), podmiana greyboxu, paralaksa, animacje postac
 **Zrealizowano:** [Styleguide_Wektorowy.md](Styleguide_Wektorowy.md), podgląd `/asset_preview.html`,
 assety `char_bear_idle`, `world_box_small`, `pickup_candy_orange`, `reward_teddy` (nagroda
 poziomu 1 — pluszak celowo odróżniony od postaci Gracza 1: siedzi na wprost, ma guzikowe
-oczy, kokardę i łatkę, zamiast ubrania i plecaka).
+oczy, kokardę i łatkę, zamiast ubrania i plecaka), `ghost_mischief_idle` (blada lawenda,
+nie błękit — żeby nie mylił się z Graczem 2; szeroki uśmiech i uniesione brwi, bo duszek
+ma być zabawny, nie straszny) i `fx_sparkle`.
 **Następne:** pozostałe pozy misia (run/jump/land) z zatwierdzonej sylwetki, potem królik i duszek.
 
 ### M6 — Polish i playtesty finalne (1–2 wieczory)

@@ -5,6 +5,7 @@ import {
   CHECKPOINT_ZONE_SIZE,
   GOAL_SIZE,
   GOAL_CELEBRATION_MS,
+  GHOST_PATROL_DEFAULT,
   DEPTH_DECOR,
   DEPTH_TILES,
   DEPTH_PLAYERS,
@@ -22,6 +23,7 @@ import { PlayerOne } from '../objects/PlayerOne';
 import { PlayerTwo } from '../objects/PlayerTwo';
 import { Candy } from '../objects/Candy';
 import { Goal } from '../objects/Goal';
+import { Ghost } from '../objects/Ghost';
 import type { Player } from '../objects/Player';
 import { InputManager } from '../systems/InputManager';
 import { CoopCamera } from '../systems/CoopCamera';
@@ -78,6 +80,7 @@ export class GameScene extends Phaser.Scene {
 
     this.spawnCheckpoints(map);
     this.spawnCandies(map);
+    this.spawnGhosts(map);
     this.spawnGoal(map);
 
     this.startHud();
@@ -201,6 +204,32 @@ export class GameScene extends Phaser.Scene {
 
   private countCandy(): void {
     this.candiesCollected += 1;
+    this.publishCandyState();
+  }
+
+  private spawnGhosts(map: Phaser.Tilemaps.Tilemap): void {
+    const ghosts = this.add.group();
+
+    for (const patrol of this.findPatrols(map, OBJECT.ghost)) {
+      ghosts.add(new Ghost(this, patrol.from, patrol.to));
+    }
+
+    this.physics.add.overlap(this.players, ghosts, (_player, ghostObject) => {
+      (ghostObject as Ghost).bump((x, y) => this.dropCandy(x, y));
+    });
+  }
+
+  /** Cukierek zostawiony przez duszka dolicza się do puli poziomu jak każdy inny. */
+  private dropCandy(x: number, y: number): void {
+    const candy = new Candy(this, x, y);
+    candy.popOut();
+    this.candies.add(candy);
+
+    this.candiesTotal += 1;
+    this.publishCandyState();
+  }
+
+  private publishCandyState(): void {
     setCandyState(this, { collected: this.candiesCollected, total: this.candiesTotal });
   }
 
@@ -259,6 +288,46 @@ export class GameScene extends Phaser.Scene {
     return layer.objects
       .filter((object) => object.name === name)
       .map((object) => new Phaser.Math.Vector2(object.x ?? 0, (object.y ?? 0) - liftY));
+  }
+
+  /**
+   * Trasy patrolu z warstwy `objects`.
+   *
+   * Projektant rysuje w Tiled **polilinię o dwóch punktach** — to najkrótsza
+   * droga do „lataj tam i z powrotem" bez dodatkowych właściwości do wypełnienia.
+   * Zwykły punkt też jest obsłużony: dostaje domyślny odcinek w poziomie, żeby
+   * szybki szkic poziomu nie wymagał precyzji.
+   */
+  private findPatrols(
+    map: Phaser.Tilemaps.Tilemap,
+    name: string,
+  ): { from: Phaser.Math.Vector2; to: Phaser.Math.Vector2 }[] {
+    const layer = map.getObjectLayer(LAYER.objects);
+    if (!layer) {
+      throw new Error(`Mapa "${this.level.mapKey}" nie ma warstwy "${LAYER.objects}".`);
+    }
+
+    return layer.objects
+      .filter((object) => object.name === name)
+      .map((object) => {
+        const originX = object.x ?? 0;
+        const originY = object.y ?? 0;
+        const line = object.polyline;
+
+        if (line && line.length >= 2) {
+          const last = line[line.length - 1];
+          return {
+            from: new Phaser.Math.Vector2(originX + line[0].x, originY + line[0].y),
+            to: new Phaser.Math.Vector2(originX + last.x, originY + last.y),
+          };
+        }
+
+        const half = GHOST_PATROL_DEFAULT / 2;
+        return {
+          from: new Phaser.Math.Vector2(originX - half, originY),
+          to: new Phaser.Math.Vector2(originX + half, originY),
+        };
+      });
   }
 
   private requireObject(map: Phaser.Tilemaps.Tilemap, name: string): Phaser.Math.Vector2 {

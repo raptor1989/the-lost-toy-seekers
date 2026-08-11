@@ -36,6 +36,12 @@ export const OBJECT = {
   candy: 'candy',
   /** Meta poziomu — stoi na niej odzyskiwana zabawka. */
   goal: 'goal',
+  /**
+   * Duszek-Psotnik. Najlepiej rysować **polilinią o dwóch punktach** — duszek
+   * lata wahadłowo między nimi. Zwykły punkt też zadziała: dostanie wtedy
+   * domyślny zasięg patrolu z `constants.ts`.
+   */
+  ghost: 'ghost',
 } as const;
 
 export interface LevelDefinition {

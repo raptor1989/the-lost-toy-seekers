@@ -35,7 +35,7 @@ Jeśli proces przeżył zatrzymanie zadania, dobij go po porcie:
 
 ## Stan projektu vs architektura docelowa
 
-Projekt jest realizowany milestone'ami M0–M6 (Dokumentacja, sekcja 8 — tam jest tabela stanu realizacji, czytaj ją przed zmianami). **M0 ukończony, M1 ma gotowy kod i czeka na playtest z dziećmi**: dwóch graczy przez `InputManager`, `CoopCamera` z „magiczną bańką", `RescueSystem`, skok z coyote time i buforowaniem. Tekstury to nadal placeholdery generowane w `PreloadScene` — podmiana na SVG należy do M5.
+Projekt jest realizowany milestone'ami M0–M6 (Dokumentacja, sekcja 8 — tam jest tabela stanu realizacji, czytaj ją przed zmianami). **M0–M2 ukończone**: dwóch graczy przez `InputManager`, `CoopCamera` z „magiczną bańką", `RescueSystem`, skok z coyote time i buforowaniem, a na tym pełna pętla menu → poziom z Tiled → cukierki i duszki → meta → nagroda → zapis. Postacie i kafle to nadal placeholdery (prostokąty z `PreloadScene`, greyboxowy tileset) — podmiana na SVG należy do M5.
 
 Docelowa struktura `src/` (sekcja 2.1 Dokumentacji) — twórz nowe pliki zgodnie z nią:
 

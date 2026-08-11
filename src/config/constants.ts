@@ -114,6 +114,32 @@ export const CANDY_SPIN_MS = 2600;
 /** Lot zebranego cukierka do licznika w HUD. */
 export const CANDY_FLIGHT_MS = 420;
 
+// ---------------------------------------------------------------- duszki-psotniki
+// Nie zadają obrażeń (GDD sekcja 2.2) — kontakt to nagroda, nie kara.
+
+export const GHOST_SIZE = 96;
+/** Prędkość wahadłowego patrolu (px/s). Wolno — duszek ma być łatwy do dogonienia. */
+export const GHOST_SPEED = 70;
+/** Zasięg patrolu, gdy mapa podaje sam punkt zamiast dwupunktowej polilinii. */
+export const GHOST_PATROL_DEFAULT = 192;
+export const GHOST_BOB_DISTANCE = 6;
+export const GHOST_BOB_MS = 1500;
+/** Ile cząsteczek brokatu leci przy zniknięciu. */
+export const GHOST_POOF_PARTICLES = 20;
+export const GHOST_POOF_LIFESPAN_MS = 700;
+/** Wyskok cukierka upuszczonego przez duszka. */
+export const GHOST_CANDY_POP_HEIGHT = 48;
+export const GHOST_CANDY_POP_MS = 260;
+/**
+ * ⚙ Duszek wraca w chmurce po tym czasie, żeby poziom nie pustoszał
+ * (Dokumentacja 3.4). Losowo z przedziału — jednakowy rytm byłby mechaniczny.
+ */
+export const GHOST_RESPAWN_MIN_MS = 10000;
+export const GHOST_RESPAWN_MAX_MS = 15000;
+export const GHOST_RESPAWN_POP_MS = 420;
+/** Co ile sprawdzać ponownie, gdy w miejscu powrotu stoi gracz. */
+export const GHOST_RESPAWN_RETRY_MS = 1200;
+
 // ---------------------------------------------------------------- meta poziomu
 
 /** Rozmiar zabawki stojącej na mecie (w świecie gry). */

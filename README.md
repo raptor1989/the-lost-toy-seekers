@@ -49,12 +49,14 @@ Koncept nastroju i palety: [docs/concept/](docs/concept/).
 pady przejmują automatycznie), wspólna kamera kooperacyjna z „magiczną bańką", system
 ratunkowy bez śmierci, skok z coyote time i buforowaniem.
 
-**M2 w trakcie — pętla rozgrywki domknięta.** Menu z mapką ogrodu → poziom z mapy Tiled
+**M0–M2 ukończone.** Pełna pętla rozgrywki: menu z mapką ogrodu → poziom z mapy Tiled
 (jedna generyczna `GameScene` + manifest w [`src/config/levels.ts`](src/config/levels.ts))
-→ cukierki i ikonowy HUD → meta z zabawką → ekran nagrody z konfetti → zapis postępu
-w `localStorage` i z powrotem do menu, gdzie odzyskana zabawka świeci pełnym kolorem.
+→ cukierki, duszki-psotniki i ikonowy HUD → meta z zabawką → ekran nagrody z konfetti
+→ zapis postępu w `localStorage` i z powrotem do menu, gdzie odzyskana zabawka świeci
+pełnym kolorem.
 
-**Następny krok:** duszki-psotniki — ostatni element M2.
+**Następny krok: playtest z dziećmi**, a potem M3 — magiczna latarka Gracza 2, ukryte
+obiekty i elementy interaktywne (dźwignie, pchane bloki).
 
 ### Sterowanie
 
@@ -72,7 +74,7 @@ Aktualna tabela postępu: [sekcja 8 dokumentacji implementacyjnej](docs/Dokument
 src/
 ├── config/      # constants.ts (strojenie) + levels.ts (manifest poziomów)
 ├── scenes/      # Boot, Preload, Menu, Game, UI, Reward
-├── objects/     # klasy sprite'ów: Player, Candy, Goal (+ docelowo Ghost...)
+├── objects/     # klasy sprite'ów: Player, Candy, Ghost, Goal
 ├── systems/     # InputManager, CoopCamera, RescueSystem, GameState, SaveManager...
 └── utils/       # digits.ts — bitmapowe cyfry licznika
 public/assets/

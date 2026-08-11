@@ -28,6 +28,9 @@ nie z „wyczucia".
 | Karton | `#C89257` / `#DCA96D` / `#6B4A2A` (kontur) | |
 | Cukierek | `#F2913A` + `#FFD166`, kontur `#7A3E12` | |
 | Trawa | `#4E9A52` | |
+| Duszek — ciało | `#D6CBF2` | blada lawenda; **nie** błękit, żeby nie mylił się z Graczem 2 |
+| Duszek — cień | `#B9A9E0` | falowany dół, wnętrze buzi |
+| Brokat | `#FFD166` | cząsteczki „puf" po duszku |
 
 Gracz 2 (królik) dostanie własną, **chłodną** rodzinę (kremowe futro, niebieski plecak,
 miętowa koszulka) — dopisz ją tutaj przy pierwszym assecie.
