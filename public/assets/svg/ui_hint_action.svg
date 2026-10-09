@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!--
+    Podpowiedź „wciśnij swój dolny klawisz" (Dokumentacja 3.5) — gruba strzałka
+    w dół. Pokazywana w 28 px nad dźwignią, podskakuje tweenem. Biała #FFFFFF,
+    bo `setTint` barwi ją kolorem uprawnionego gracza (albo brokatem dla obojga);
+    cień to półprzezroczysta czerń. Kontur 5, bardzo prosty kształt — w 28 px
+    liczy się tylko sylwetka.
+  -->
+  <defs>
+    <clipPath id="hint_action_clip"><path d="M22,6 H42 V30 H58 L32,58 L6,30 H22 Z"/></clipPath>
+  </defs>
+  <path d="M22,6 H42 V30 H58 L32,58 L6,30 H22 Z" fill="#FFFFFF"
+        stroke="#4A3226" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/>
+  <!-- cień po prawej i na dole: strzałka minus jej kopia przesunięta w górę-lewo -->
+  <path clip-path="url(#hint_action_clip)" fill="#000000" fill-opacity="0.16" fill-rule="evenodd"
+        d="M22,6 H42 V30 H58 L32,58 L6,30 H22 Z M18.5,2.5 H38.5 V26.5 H54.5 L28.5,54.5 L2.5,26.5 H18.5 Z"/>
+</svg>

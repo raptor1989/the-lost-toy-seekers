@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!--
+    Znacznik „to się pcha" (Dokumentacja 3.5) — strzałka w obie strony nad
+    pchanym klockiem. Pokazywana w 30 px. Biała #FFFFFF, bo `setTint` barwi ją
+    kolorem uprawnionego gracza; cień to półprzezroczysta czerń. Jedna gruba
+    dwugrotowa strzałka zamiast dwóch cienkich — w 30 px dwie zlałyby się w plamę.
+  -->
+  <defs>
+    <clipPath id="hint_push_clip"><path d="M5,32 L21,16 V25 H43 V16 L59,32 L43,48 V39 H21 V48 Z"/></clipPath>
+  </defs>
+  <path d="M5,32 L21,16 V25 H43 V16 L59,32 L43,48 V39 H21 V48 Z" fill="#FFFFFF"
+        stroke="#4A3226" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/>
+  <!-- cień na dole: strzałka minus jej kopia przesunięta w górę -->
+  <path clip-path="url(#hint_push_clip)" fill="#000000" fill-opacity="0.16" fill-rule="evenodd"
+        d="M5,32 L21,16 V25 H43 V16 L59,32 L43,48 V39 H21 V48 Z M5,28.5 L21,12.5 V21.5 H43 V12.5 L59,28.5 L43,44.5 V35.5 H21 V44.5 Z"/>
+</svg>

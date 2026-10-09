@@ -27,6 +27,7 @@ npm run dev       # dev-server z hot-reload
 | `npm run preview` | podgląd builda produkcyjnego |
 | `npx tsc --noEmit` | sam typecheck |
 | `npm run sfx` | wygenerowanie placeholderów dźwięków (`tools/generate-sfx.mjs`) |
+| `npm run assets` | odtworzenie generowanych grafik: postacie, tilesety, tła, mapka menu (`tools/build-*.mjs`) |
 
 Brak testów i lintera — weryfikacja to `tsc` plus ręczne uruchomienie gry.
 
@@ -68,6 +69,12 @@ Na poziomie 1 każda mechanika ma swój poligon (docelowe rozmieszczenie — M4)
 
 Gra ma też już **dźwięki**: na razie syntezowane placeholdery (skok, cukierek, śmieszne
 wpadki, chichot duszka, fanfara), do podmiany na nagrania bez zmian w kodzie.
+
+**Grafika (M5) jest narysowana i czeka na podpięcie:** oba misie (duży brązowy z czerwonym
+plecakiem i mały miodowy z magiczną latarką) we wszystkich pozach, duszek, cukierki, cztery
+zabawki-nagrody, tilesety i tła paralaksy czterech poziomów, elementy interaktywne, ikonowe UI
+i mapka ogrodu do menu. Postacie, tilesety i tła powstają z generatorów (`npm run assets`),
+a wszystko można obejrzeć w `/asset_preview.html` — w tym makietę kadru poziomu.
 
 **Następny krok:** playtest M2–M3 z dziećmi, potem M4 — greybox czterech poziomów z GDD.
 

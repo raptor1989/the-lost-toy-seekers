@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!--
+    Deska ukrytego mostu odkrywanego latarką (Dokumentacja 3.3, `HiddenObject`).
+    Kafel 32 px w grze, kładziony `TileSprite`em w poziomie — most bywa szeroki,
+    więc deska musi się zazębiać lewą i prawą krawędzią: kontur biegnie tylko
+    górą i dołem, słoje zaczynają się i kończą na tym samym y z poziomą styczną,
+    ziarno ze `stitchTiles`. Żadnych pionowych krawędzi. Jasny wierzch, ciemniejszy
+    spód, sęk pośrodku. Magiczny blask: cienka kremowa linia wzdłuż górnej
+    krawędzi i dwie iskierki — przy alfie 0.15 (schowany) nie widać ich,
+    po zaświeceniu deska „świeci" od góry. Gra pokazuje most mocno przezroczysty,
+    więc kontrast góra/dół jest celowo mocny.
+  -->
+  <defs>
+    <linearGradient id="hplank_body" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#DCA96D"/>
+      <stop offset="0.3" stop-color="#C89257"/>
+      <stop offset="1" stop-color="#A8743F"/>
+    </linearGradient>
+    <filter id="hplank_grain" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+    </filter>
+  </defs>
+
+  <!-- deska od krawędzi do krawędzi -->
+  <rect width="64" height="64" fill="url(#hplank_body)"/>
+
+  <!-- słoje: równe końce, pozioma styczna — zszywają się w poziomie -->
+  <g fill="none" stroke="#A8743F" stroke-width="1.8" stroke-opacity="0.55" stroke-linecap="round">
+    <path d="M0,22 C12,22 18,26 30,24 C44,21.5 52,22 64,22"/>
+    <path d="M0,44 C10,44 22,40 36,42 C48,43.5 54,44 64,44"/>
+    <path d="M0,33 C8,33 14,34.5 24,34"/>
+  </g>
+
+  <!-- sęk -->
+  <ellipse cx="44" cy="33" rx="4.2" ry="2.8" fill="#A8743F" stroke="#6B4A2A" stroke-width="1.4" stroke-opacity="0.8"/>
+  <ellipse cx="44" cy="33" rx="1.6" ry="1" fill="#6B4A2A" fill-opacity="0.8"/>
+
+  <!-- kontur tylko góra / dół -->
+  <path d="M0,1.5 H64 M0,62.5 H64" fill="none" stroke="#4A3226" stroke-width="3"/>
+
+  <!-- magiczny blask wzdłuż górnej krawędzi + iskierki -->
+  <path d="M0,5 H64" fill="none" stroke="#FFF2B2" stroke-width="2" stroke-opacity="0.5"/>
+  <g fill="#FFF2B2" opacity="0.6">
+    <path d="M14,8 C14.6,11.4 15.6,12.4 19,13 C15.6,13.6 14.6,14.6 14,18 C13.4,14.6 12.4,13.6 9,13 C12.4,12.4 13.4,11.4 14,8 Z"/>
+    <path d="M52,48 C52.5,50.5 53.5,51.5 56,52 C53.5,52.5 52.5,53.5 52,56 C51.5,53.5 50.5,52.5 48,52 C50.5,51.5 51.5,50.5 52,48 Z"/>
+  </g>
+
+  <!-- ziarno papieru -->
+  <rect width="64" height="64" filter="url(#hplank_grain)" opacity="0.13" style="mix-blend-mode:multiply"/>
+</svg>

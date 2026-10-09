@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <!--
+    Pchany klocek (Dokumentacja 3.5). Rysowany w 128, ładowany w 64 px i skalowany
+    do rozmiaru z mapy (zwykle 2×2 kafle) — zaczepiony w lewym-górnym rogu, więc
+    bryła wypełnia cały kwadrat: to, co widać, to dokładnie to, z czym koliduje.
+    Drewniany klocek-zabawka: jaśniejsza górna ścianka i ciemniejszy prawy bok
+    (lekka perspektywa zabawkowa, bez wychodzenia poza kwadrat), cztery kołki
+    w rogach i wycięta gwiazdka na przedniej ściance — symbol, nie litera.
+    Gwiazdka to dwie warstwy: jaśniejsza faza + ciemny otwór przesunięty w dół,
+    żeby czytała się jako wgłębienie. Kontur 5 (2,5 px w grze) — ma być ciężki.
+  -->
+  <defs>
+    <radialGradient id="pblock_face" cx="0.35" cy="0.3" r="0.95">
+      <stop offset="0" stop-color="#DCA96D"/>
+      <stop offset="0.5" stop-color="#C89257"/>
+      <stop offset="1" stop-color="#A8743F"/>
+    </radialGradient>
+    <filter id="pblock_grain" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+    </filter>
+    <clipPath id="pblock_clip"><rect x="3" y="3" width="122" height="122" rx="12"/></clipPath>
+  </defs>
+
+  <g stroke="#4A3226" stroke-width="5" stroke-linejoin="round" stroke-linecap="round">
+    <!-- bryła -->
+    <rect x="3" y="3" width="122" height="122" rx="12" fill="url(#pblock_face)"/>
+
+    <g clip-path="url(#pblock_clip)" stroke="none">
+      <!-- prawy bok w cieniu -->
+      <rect x="110" y="3" width="15" height="122" fill="#A8743F"/>
+      <!-- górna ścianka w świetle -->
+      <rect x="3" y="3" width="122" height="22" fill="#DCA96D"/>
+      <!-- dociążenie dołu -->
+      <rect x="3" y="112" width="122" height="13" fill="#6B4A2A" fill-opacity="0.3"/>
+      <!-- słoje -->
+      <g fill="none" stroke="#A8743F" stroke-width="2" stroke-opacity="0.35">
+        <path d="M14,36 C20,60 12,80 18,112"/>
+        <path d="M100,34 C94,56 104,84 98,110"/>
+        <path d="M30,12 C50,16 70,9 95,13"/>
+      </g>
+    </g>
+
+    <!-- krawędzie ścianek -->
+    <path d="M3,25 H125 M110,25 V125" fill="none" stroke-width="3" stroke-opacity="0.75"/>
+
+    <!-- kołki w rogach przedniej ścianki -->
+    <g stroke-width="3" fill="#A8743F">
+      <circle cx="19" cy="40" r="4.5"/>
+      <circle cx="95" cy="40" r="4.5"/>
+      <circle cx="19" cy="110" r="4.5"/>
+      <circle cx="95" cy="110" r="4.5"/>
+    </g>
+
+    <!-- wycięta gwiazdka: faza + otwór -->
+    <path d="M57,46 L64.64,65.48 L85.53,66.73 L69.36,80.02 L74.63,100.27 L57,89 L39.37,100.27 L44.64,80.02 L28.47,66.73 L49.36,65.48 Z"
+          fill="#A8743F" stroke-width="3.5"/>
+    <path d="M57,46 L64.64,65.48 L85.53,66.73 L69.36,80.02 L74.63,100.27 L57,89 L39.37,100.27 L44.64,80.02 L28.47,66.73 L49.36,65.48 Z"
+          fill="#6B4A2A" stroke="none" transform="translate(57 79) scale(0.72) translate(-57 -76)"/>
+  </g>
+
+  <!-- ziarno papieru -->
+  <rect width="128" height="128" filter="url(#pblock_grain)" clip-path="url(#pblock_clip)" opacity="0.13" style="mix-blend-mode:multiply"/>
+</svg>

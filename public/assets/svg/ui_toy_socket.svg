@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <!--
+    „Gniazdo" na zabawkę w pasku postępu HUD (prawy górny róg): jedno na poziom.
+    Gra pokazuje je w ok. 82 px i kładzie na nim zabawkę (68 px) — odzyskaną w pełnym
+    kolorze, nieodzyskaną jako przyciemnioną sylwetkę. Gniazdo jest jasnym kremem
+    z ciemnym konturem, żeby ciemna sylwetka nie ginęła na nocnym tle.
+    Wklęsłe: miękki cień wewnętrzny u góry i po bokach, odblask przy dolnej krawędzi.
+    Kontur 5 (ok. 3 px w grze).
+    Paleta i grubości konturu: docs/Styleguide_Wektorowy.md
+  -->
+  <defs>
+    <linearGradient id="ui_toy_socket_fill" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#F7F0E3"/>
+      <stop offset="0.6" stop-color="#F7F0E3"/>
+      <stop offset="1" stop-color="#EFD6B2"/>
+    </linearGradient>
+    <linearGradient id="ui_toy_socket_top" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#4A3226" stop-opacity="0.16"/>
+      <stop offset="0.35" stop-color="#4A3226" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="ui_toy_socket_blur" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="2"/>
+    </filter>
+    <filter id="ui_toy_socket_inner" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="4"/>
+    </filter>
+    <filter id="ui_toy_socket_grain" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+    </filter>
+    <clipPath id="ui_toy_socket_shape"><rect x="8" y="6" width="112" height="112" rx="22"/></clipPath>
+  </defs>
+
+  <!-- cień pod gniazdem -->
+  <rect x="8" y="10" width="112" height="112" rx="22" fill="#14284F" opacity="0.45" filter="url(#ui_toy_socket_blur)"/>
+
+  <g stroke="#4A3226" stroke-width="5" stroke-linejoin="round" stroke-linecap="round">
+    <rect x="8" y="6" width="112" height="112" rx="22" fill="url(#ui_toy_socket_fill)"/>
+    <!-- wklęsłość: miękki cień wewnętrzny wzdłuż brzegu + mocniej u góry -->
+    <g clip-path="url(#ui_toy_socket_shape)" stroke="none">
+      <rect x="8" y="6" width="112" height="112" rx="22" fill="none" stroke="#4A3226" stroke-width="14" stroke-opacity="0.2" filter="url(#ui_toy_socket_inner)"/>
+      <rect x="8" y="6" width="112" height="112" fill="url(#ui_toy_socket_top)"/>
+    </g>
+    <!-- odblask przy dolnej i prawej krawędzi -->
+    <path d="M40,110 L96,110 A14,14 0 0 0 110,96 L110,48" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-opacity="0.5"/>
+  </g>
+
+  <!-- ziarno papieru — tylko na gnieździe -->
+  <rect width="128" height="128" filter="url(#ui_toy_socket_grain)" clip-path="url(#ui_toy_socket_shape)" opacity="0.12" style="mix-blend-mode:multiply"/>
+</svg>

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 288" width="512" height="288">
+  <!--
+    Chmury — warstwa kafelkowana w poziomie (TileSprite, scrollFactor ~0.2), przezroczyste tło.
+    PLIK GENEROWANY przez tools/build-backgrounds.mjs — nie edytuj ręcznie.
+    Obrys w nocy głębokiej, nie w brązie: brązowy kontur jest zarezerwowany dla świata gry
+    (platformy, obiekty, postacie), żeby dziecko od razu widziało, co jest „do grania".
+  -->
+  <g opacity="0.9"><g fill="#14284F"><circle cx="74" cy="88" r="21"/><circle cx="102" cy="74" r="27"/><circle cx="132" cy="82" r="23"/><circle cx="154" cy="92" r="17"/><circle cx="110" cy="94" r="21"/></g><g fill="#9DB7E0"><circle cx="74" cy="88" r="18"/><circle cx="102" cy="74" r="24"/><circle cx="132" cy="82" r="20"/><circle cx="154" cy="92" r="14"/><circle cx="110" cy="94" r="18"/></g><g fill="#DCE8F7" opacity="0.85"><circle cx="98.4" cy="67.3" r="14.4"/><circle cx="129" cy="76.4" r="12"/></g><g fill="#14284F"><circle cx="364" cy="196" r="17"/><circle cx="388" cy="184" r="23"/><circle cx="412" cy="194" r="19"/><circle cx="390" cy="202" r="17"/></g><g fill="#9DB7E0"><circle cx="364" cy="196" r="14"/><circle cx="388" cy="184" r="20"/><circle cx="412" cy="194" r="16"/><circle cx="390" cy="202" r="14"/></g><g fill="#DCE8F7" opacity="0.85"><circle cx="385" cy="178.4" r="12"/></g></g>
+</svg>

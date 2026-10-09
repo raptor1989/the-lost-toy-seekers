@@ -401,6 +401,71 @@ Zasady stylu, paleta, kolejność warstw postaci i checklista QA:
    męczyłby przy dłuższym świeceniu. Dźwięki da się przesłuchać w `/asset_preview.html`
    z głośnościami z gry.
 
+### 4.1. Art pass (M5, 2026-10-09) — co powstało i jak to podpiąć
+
+Komplet grafik narysowany **poza kodem** (równolegle z M3), do podpięcia w `PreloadScene`
+jednym przebiegiem. Podgląd wszystkiego, w tym makiety kadru poziomu i menu:
+`/asset_preview.html`.
+
+**Decyzje:**
+
+* **Oboje bohaterowie są misiami.** Koncept pokazuje misia i misie są głównym assetem —
+  pomysł królika dla Gracza 2 porzucony. Gracz 1: duży brązowy miś, czerwony plecak,
+  niebieska apaszka (jak w koncepcie). Gracz 2: mniejszy miodowy miś z **magiczną latarką
+  w łapie** (umiejętność widać w sylwetce), morski plecak, miętowa apaszka. Kolor
+  rozpoznawczy Gracza 2 to morski `#2FA8A0` — `PLAYER_TWO_COLOR` w `constants.ts`
+  do zmiany z błękitu przy integracji.
+* **Generatory zamiast ręcznych plików** tam, gdzie liczy się powtarzalność:
+  `tools/build-characters.mjs` (oba misie × 6 póz + portrety z jednego zestawu części —
+  identyczna kolejność warstw i sylwetka między klatkami z konstrukcji),
+  `tools/build-tilesets.mjs` (kafle z okresowymi wzorami, więc zazębiają się bezszwowo,
+  z wytłoczeniem 1 px), `tools/build-backgrounds.mjs` (warstwy paralaksy, elementy
+  przecinające krawędź duplikowane), `tools/build-menu.mjs` (mapka ogrodu).
+  `npm run assets` odtwarza wszystko; wynikowe SVG są artefaktami.
+* **Tileset to jeden SVG per poziom** w układzie greyboxu (4 kolumny, kafel 32, margines 1,
+  odstęp 2) ładowany przez `load.svg` w rozmiarze 1:1 (`width/height` z pliku) i podany
+  do `addTilesetImage`. Gidy 1–4 zachowują znaczenie greyboxu (powierzchnia, wypełnienie,
+  oneway, kępka), więc istniejące mapy działają po samej podmianie obrazka; kolejne wiersze
+  (narożniki, krawędzie, dół wyspy, końce półek, kartony/klocki, dekoracje) odblokowuje
+  w Tiled aktualizacja `tilecount`/`imageheight` tilesetu. Legenda gidów jest
+  w komentarzu każdego pliku.
+* **Tło ma obrys w nocy głębokiej `#14284F` i przygaszone barwy**; brązowy kontur
+  `#4A3226` i pełne nasycenie są zarezerwowane dla świata gry (platformy, obiekty,
+  postacie). Pierwsza makieta pokazała, że żywopłot w pełnych zieleniach „zjada" misie —
+  dziecko musi od razu widzieć, co jest do grania.
+* **Elementy barwione tintem** (gałka dźwigni, płytka, strzałki) mają powierzchnię czysto
+  białą, a cień jako czerń z opacity ≤0,25 — tint mnoży kolory, więc szarość czy brąz
+  dałyby brudny ton.
+
+**Warstwy sceny (od tyłu):** `world_bg_sky.svg` 1280×720 statycznie (scrollFactor 0,
+zamiast `backgroundColor` z manifestu) → `world_bg_stars.svg` 512×288 `TileSprite`
+(~0,1) → `world_bg_clouds.svg` (~0,2) → `world_l<N>_bg_*.svg` horyzont poziomu
+(~0,5, zaczepiony u dołu kadru; dolne 14 px jednolite, więc może sięgać pod kafle)
+→ kafle z `world_l<N>_tileset.svg` → obiekty → postacie. Menu: niebo + gwiazdy
++ `world_menu_garden.svg` (środek kadru pusty na przystanki).
+
+**Klucze i rozmiary do `load.svg`:** postacie `char_bear1_*` / `char_bear2_*`
+(idle, run1, run2, jump, cheer, oops; 128 px, stopy na y≈124 — zaczepiać na stopach jak
+dotąd; Gracz 2 jest w pliku mniejszy o 14 %), portrety `char_bear*_face_smile|oops`
+(128, pod `ui_portrait_frame`), duszek `ghost_mischief_idle|giggle` (96), cukierki
+`pickup_candy_orange|pink|blue` (64, w grze 40), nagrody `reward_teddy|car|robot|chest`
+(512 jak dotąd, poziomy 2–4 w manifeście), interaktywne: `world_gate_tile` 32,
+`world_lever_base` 28×14, `world_lever_handle` 10×40, `world_plate` 64×10,
+`ui_hint_action` i `ui_hint_push` 64, `world_push_block` 64, `world_leaf` 96×28,
+`world_soap_bubble` 80, `world_hidden_plank` 32 — wszystkie w rozmiarach obecnych
+placeholderów, więc podmiana nie rusza fizyki; UI: `ui_digit_0..9` 40×60, `ui_play`,
+`ui_pause`, `ui_home` 96, `ui_lock` 72, `ui_portrait_frame` 96, `ui_toy_socket`,
+`ui_candy_counter_bg`; efekty: `fx_sparkle`, `fx_firefly`, `fx_dust` 32,
+`fx_bubble` 128 (bańka kamery — gracz w środku). Dla kafli i tilesetów zostaje filtr
+`NEAREST`, dla reszty domyślny liniowy.
+
+**Kolejność integracji (jeden wieczór):** PreloadScene (ładowanie + usunięcie
+placeholderów) → tileset L1 w `level1.tmj` → paralaksa w `GameScene` → animacje
+postaci (idle/run/jump z `anims`, `oops` w `RescueSystem`, `cheer` na mecie)
+→ portrety i cyfry w `UIScene` → mapka w `MenuScene` → sprawdzenie na realnym
+poziomie, czy 96-pikselowy miś nie zasłania za dużo (rozmiar wyświetlania to stała
+w `constants.ts`, nie zmiana assetu).
+
 ---
 
 ## 5. Pipeline Poziomów (Tiled)
@@ -522,7 +587,7 @@ Kolejność zoptymalizowana pod zasadę: **najpierw grywalny prototyp, grafika n
 | **M2** — Pętla rozgrywki | ✅ **ukończony** | Pipeline map z Tiled, generyczna `GameScene`, manifest `levels.ts`, checkpointy z mapy, cukierki, `UIScene` z ikonowym HUD, meta poziomu + `RewardScene`, `SaveManager` z paskiem odzyskanych zabawek, `MenuScene`, duszki-psotniki. **Kryterium spełnione: pełne przejście szarego poziomu 1 od menu do nagrody.** Czeka na playtest z dziećmi |
 | **M3** — Mechaniki kooperacji | ✅ **ukończony** | Magiczna latarka Gracza 2 (`FlashlightSystem`) i obiekty odkrywane światłem (`HiddenObject`); dźwignie, przyciski tamy i bramy; pchane bloki; pływające liście i mydlane bąbelki (`MovingPlatform`); grzyby-trampoliny — wszystko w `objects/interactive/` + `InteractionSystem`, z poligonami na poziomie 1. **Zweryfikowane w grze** (każda mechanika + pętla menu → nagroda → menu) i przeglądem `kid-check`. Czeka na playtest z dziećmi |
 | **M4** — Poziomy w Tiled | ⬜ nierozpoczęty | |
-| **M5** — Art pass | 🟡 **rozpoczęty poza kolejnością** | Zmiana pipeline'u na SVG (sekcja 4). Gotowe: `char_bear_idle`, `world_box_small`, `pickup_candy_orange`, `reward_teddy`, `ghost_mischief_idle`, `fx_sparkle`, [Styleguide_Wektorowy.md](Styleguide_Wektorowy.md), podgląd assetów. Greybox dźwięku: 14 syntezowanych SFX + `AudioManager` (sekcja 4). Brak: nagrania głosu, muzyka |
+| **M5** — Art pass | 🟡 **grafika gotowa, czeka na integrację** | Zmiana pipeline'u na SVG (sekcja 4). **Komplet grafik narysowany (2026-10-09, sekcja 4.1):** oba misie w 6 pozach + portrety, duszek ×2, cukierki ×3, 4 nagrody, tilesety i horyzonty paralaksy 4 poziomów, niebo/gwiazdy/chmury, elementy interaktywne, UI (cyfry, przyciski, ramka portretu, kłódka), efekty, mapka menu — generatory w `tools/build-*.mjs`, podgląd w `/asset_preview.html`. Greybox dźwięku: 14 syntezowanych SFX + `AudioManager`. **Brak:** podpięcie w `PreloadScene`/scenach (rysowane równolegle z M3 poza `src/`; integracja to następny krok — plan w 4.1), nagrania głosu, muzyka |
 | **M6** — Polish i playtesty | ⬜ nierozpoczęty | |
 
 > **Uwaga o kolejności:** M5 ruszył przed M1–M4, bo zmiana pipeline'u grafiki wymagała
@@ -715,7 +780,10 @@ poziomu 1 — pluszak celowo odróżniony od postaci Gracza 1: siedzi na wprost,
 oczy, kokardę i łatkę, zamiast ubrania i plecaka), `ghost_mischief_idle` (blada lawenda,
 nie błękit — żeby nie mylił się z Graczem 2; szeroki uśmiech i uniesione brwi, bo duszek
 ma być zabawny, nie straszny) i `fx_sparkle`.
-**Następne:** pozostałe pozy misia (run/jump/land) z zatwierdzonej sylwetki, potem królik i duszek.
+**Art pass (2026-10-09):** komplet grafik — lista, decyzje i plan podpięcia w sekcji 4.1.
+Postacie, tilesety, tła i mapka menu są generowane (`npm run assets`); `char_bear_idle`
+i `world_box_small` z pierwszej próby zastąpione przez `char_bear1_*` i kafle kartonów
+w tilesecie. **Następne:** integracja w scenach po zamknięciu M3.
 
 **Dźwięk (2026-10-09):** greybox dźwięku (sekcja 4) — 14 syntezowanych efektów podpiętych
 we wszystkich miejscach dawnych `TODO(M5)`: skok, cukierek, trzy warianty wpadki, trzy

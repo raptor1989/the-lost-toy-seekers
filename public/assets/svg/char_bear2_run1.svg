@@ -1,0 +1,160 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <!--
+    Gracz 2 — mały miodowy miś z magiczną latarką, poza „run1".
+    PLIK GENEROWANY przez tools/build-characters.mjs — nie edytuj ręcznie.
+    Skręt 3/4 w prawo jednym wspólnym przesunięciem rysów twarzy (x+3).
+    Kolejność warstw od tyłu: plecak → nogi → dalsza łapa → tułów → brzuszek → apaszka
+    → bliższa łapa (+ latarka) → uszy → głowa → wnętrza uszu → twarz.
+    Paleta i grubości konturu: docs/Styleguide_Wektorowy.md
+  -->
+  <defs>
+    <radialGradient id="bear2_run1_headShade" cx="0.38" cy="0.26" r="0.78">
+      <stop offset="0" stop-color="#F6DBA6"/>
+      <stop offset="0.45" stop-color="#E9BE78"/>
+      <stop offset="1" stop-color="#C99A52"/>
+    </radialGradient>
+    <radialGradient id="bear2_run1_bodyShade" cx="0.42" cy="0.25" r="0.8">
+      <stop offset="0" stop-color="#F6DBA6"/>
+      <stop offset="0.5" stop-color="#E9BE78"/>
+      <stop offset="1" stop-color="#C99A52"/>
+    </radialGradient>
+    <radialGradient id="bear2_run1_glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#FFF2B2" stop-opacity="0.9"/>
+      <stop offset="0.5" stop-color="#FFD166" stop-opacity="0.45"/>
+      <stop offset="1" stop-color="#FFD166" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="bear2_run1_shade" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#4A3226" stop-opacity="0.2"/>
+      <stop offset="0.5" stop-color="#4A3226" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="bear2_run1_grain" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+    </filter>
+    <clipPath id="bear2_run1_head"><g transform="rotate(4 64 65)"><path d="M95,45 C95,43.3 94.5,41.8 94.5,40 C94.6,38.2 96,35.8 95.4,34.3 C94.8,32.7 92.1,31.8 90.8,30.5 C89.6,29.2 88.9,27.6 87.7,26.4 C86.6,25.1 85.3,23.9 83.9,22.8 C82.6,21.7 81.1,20.7 79.5,19.9 C77.9,19 76.3,18.3 74.6,17.7 C72.9,17.2 71.2,16.7 69.4,16.4 C67.6,16.1 65.8,16.2 64,16 C62.2,15.8 60.2,14.9 58.4,15 C56.5,15.2 54.8,16.2 53.1,16.9 C51.4,17.7 50,18.7 48.2,19.3 C46.4,20 43.7,19.7 42.4,20.8 C41.1,22 41.1,24.7 40.3,26.4 C39.4,28 38.4,29.2 37.2,30.5 C35.9,31.8 33.2,32.7 32.6,34.3 C32,35.8 33.4,38.2 33.5,40 C33.5,41.8 33,43.3 33,45 C33,46.7 33.5,48.3 33.5,50 C33.4,51.8 32.2,54.1 32.8,55.7 C33.4,57.2 35.9,58.2 37.2,59.5 C38.4,60.8 39.1,62.4 40.3,63.6 C41.4,64.9 42.7,66.1 44.1,67.2 C45.4,68.3 46.9,69.3 48.5,70.1 C50.1,71 51.7,71.7 53.4,72.3 C55.1,72.8 56.8,73.3 58.6,73.6 C60.4,73.9 62.2,74 64,74 C65.8,74 67.6,73.9 69.4,73.6 C71.2,73.3 72.9,72.8 74.6,72.3 C76.3,71.7 77.9,71 79.5,70.1 C81.1,69.3 82.6,68.3 83.9,67.2 C85.3,66.1 86.6,64.9 87.7,63.6 C88.9,62.4 89.6,60.8 90.8,59.5 C92.1,58.2 94.6,57.2 95.2,55.7 C95.8,54.1 94.6,51.8 94.5,50 C94.5,48.3 95,46.7 95,45 Z"/></g></clipPath>
+    <clipPath id="bear2_run1_char">
+    <rect x="23" y="67" width="27" height="38" rx="11"/>
+    <path d="M-7.5,0 C-9,8 -9.5,17 -7,23 C-4,27.5 11,27.5 13,23 C14,19 12,13 9,8 C8,4 8,1 7.5,0 Z" transform="translate(55 99) rotate(-32)"/>
+    <path d="M-7.5,0 C-9,8 -9.5,17 -7,23 C-4,27.5 11,27.5 13,23 C14,19 12,13 9,8 C8,4 8,1 7.5,0 Z" transform="translate(73 99) rotate(34)"/>
+    <path d="M-6.5,-2 C-9,8 -9.5,20 -6,27 C-2.5,33 6.5,33 9,27 C11.5,20 10,8 6.5,-2 Z" transform="translate(50 77) rotate(38)"/>
+    <path d="M48,71 C43,81 41,93 45,101 C51,108 81,108 87,101 C91,93 89,81 84,71 Z"/>
+    <path d="M-6.5,-2 C-9,8 -9.5,20 -6,27 C-2.5,33 6.5,33 9,27 C11.5,20 10,8 6.5,-2 Z" transform="translate(83 77) rotate(-34)"/>
+    <g transform="rotate(4 64 65)">
+      <circle cx="40" cy="20" r="12"/>
+      <circle cx="90" cy="19" r="13"/>
+      <path d="M95,45 C95,43.3 94.5,41.8 94.5,40 C94.6,38.2 96,35.8 95.4,34.3 C94.8,32.7 92.1,31.8 90.8,30.5 C89.6,29.2 88.9,27.6 87.7,26.4 C86.6,25.1 85.3,23.9 83.9,22.8 C82.6,21.7 81.1,20.7 79.5,19.9 C77.9,19 76.3,18.3 74.6,17.7 C72.9,17.2 71.2,16.7 69.4,16.4 C67.6,16.1 65.8,16.2 64,16 C62.2,15.8 60.2,14.9 58.4,15 C56.5,15.2 54.8,16.2 53.1,16.9 C51.4,17.7 50,18.7 48.2,19.3 C46.4,20 43.7,19.7 42.4,20.8 C41.1,22 41.1,24.7 40.3,26.4 C39.4,28 38.4,29.2 37.2,30.5 C35.9,31.8 33.2,32.7 32.6,34.3 C32,35.8 33.4,38.2 33.5,40 C33.5,41.8 33,43.3 33,45 C33,46.7 33.5,48.3 33.5,50 C33.4,51.8 32.2,54.1 32.8,55.7 C33.4,57.2 35.9,58.2 37.2,59.5 C38.4,60.8 39.1,62.4 40.3,63.6 C41.4,64.9 42.7,66.1 44.1,67.2 C45.4,68.3 46.9,69.3 48.5,70.1 C50.1,71 51.7,71.7 53.4,72.3 C55.1,72.8 56.8,73.3 58.6,73.6 C60.4,73.9 62.2,74 64,74 C65.8,74 67.6,73.9 69.4,73.6 C71.2,73.3 72.9,72.8 74.6,72.3 C76.3,71.7 77.9,71 79.5,70.1 C81.1,69.3 82.6,68.3 83.9,67.2 C85.3,66.1 86.6,64.9 87.7,63.6 C88.9,62.4 89.6,60.8 90.8,59.5 C92.1,58.2 94.6,57.2 95.2,55.7 C95.8,54.1 94.6,51.8 94.5,50 C94.5,48.3 95,46.7 95,45 Z"/>
+    </g></clipPath>
+  </defs>
+
+  <g transform="translate(64 124) scale(0.86) translate(-64 -124)">
+  <g stroke="#4A3226" stroke-width="3" stroke-linejoin="round" stroke-linecap="round">
+    
+    <g>
+      <rect x="23" y="67" width="27" height="38" rx="11" fill="#2FA8A0"/>
+      <path d="M23,82 C23,72 29,67 36.5,67 C44,67 50,72 50,82 Z" fill="#22867F"/>
+      <rect x="27" y="86" width="19" height="15" rx="6" fill="#22867F"/>
+      <rect x="27" y="86" width="19" height="5" rx="2.5" fill="#D2F6F0" stroke="none" opacity="0.6"/>
+      <rect x="32.5" y="78" width="8" height="6" rx="2" fill="#3A2820" stroke-width="2"/>
+      <rect x="30" y="70" width="13" height="4" rx="2" fill="#6ED1C8" stroke="none" opacity="0.8"/>
+    </g>
+
+    <!-- nogi -->
+    
+    <g transform="translate(55 99) rotate(-32)">
+      <path d="M-7.5,0 C-9,8 -9.5,17 -7,23 C-4,27.5 11,27.5 13,23 C14,19 12,13 9,8 C8,4 8,1 7.5,0 Z" fill="#C99A52"/>
+      <path d="M3,24 C4,20.5 10,20.5 11.5,24" fill="none" stroke="#C99A52" stroke-width="2" stroke-opacity="0.8"/>
+    </g>
+    
+    <g transform="translate(73 99) rotate(34)">
+      <path d="M-7.5,0 C-9,8 -9.5,17 -7,23 C-4,27.5 11,27.5 13,23 C14,19 12,13 9,8 C8,4 8,1 7.5,0 Z" fill="#E9BE78"/>
+      <path d="M3,24 C4,20.5 10,20.5 11.5,24" fill="none" stroke="#C99A52" stroke-width="2" stroke-opacity="0.8"/>
+    </g>
+
+    <!-- dalsza łapa -->
+    
+    <g transform="translate(50 77) rotate(38)">
+      <path d="M-6.5,-2 C-9,8 -9.5,20 -6,27 C-2.5,33 6.5,33 9,27 C11.5,20 10,8 6.5,-2 Z" fill="#C99A52"/>
+      <path d="M-5,27 C-5,31 5,31 5,27" fill="none" stroke="#C99A52" stroke-width="2" stroke-opacity="0.8"/>
+    </g>
+
+    <!-- tułów + brzuszek -->
+    <path d="M48,71 C43,81 41,93 45,101 C51,108 81,108 87,101 C91,93 89,81 84,71 Z" fill="url(#bear2_run1_bodyShade)"/>
+    <ellipse cx="68" cy="92" rx="12" ry="9.5" fill="#FBF0DA" stroke="none" opacity="0.9"/>
+
+    <!-- szelki plecaka (na tułowiu, pod apaszką) -->
+    <path d="M51,71 C49,81 48,91 49,101 L55,101 C55,91 56,81 58,71 Z" fill="#22867F" stroke-width="2.4"/>
+    <path d="M76,71 C79,81 80,91 79,101 L83,101 C84,91 84,81 82,71 Z" fill="#22867F" stroke-width="2.4"/>
+
+    
+    <g>
+      <path d="M46,67 C52,75 76,75 84,67 C86,71 86,74 84,76 C74,83 54,83 46,76 C44,74 44,71 46,67 Z" fill="#8FE3D6"/>
+      <path d="M58,77 C62,87 66,93 70,97 C73,91 76,83 79,76 Z" fill="#8FE3D6"/>
+      <path d="M62,80 C65,87 68,91 70,94" fill="none" stroke="#4FBFB0" stroke-width="2" stroke-opacity="0.7"/>
+      <path d="M50,70 C58,76 72,76 80,70" fill="none" stroke="#D2F6F0" stroke-width="2.4" stroke-opacity="0.8"/>
+      <ellipse cx="85" cy="73" rx="4.5" ry="4" fill="#4FBFB0" stroke-width="2.2"/>
+      <path d="M87,70 C93,61 99,62 101,66 C97,72 92,74 88,75 Z" fill="#8FE3D6" stroke-width="2.4"/>
+      <path d="M88,75 C93,76 98,78 100,82 C96,83 91,80 87,77 Z" fill="#4FBFB0" stroke-width="2.4"/>
+    </g>
+
+    
+    <!-- bliższa łapa (uniesiona rysowana przed głową, żeby nie znikała za nią) -->
+    <g transform="translate(83 77) rotate(-34)">
+      <path d="M-6.5,-2 C-9,8 -9.5,20 -6,27 C-2.5,33 6.5,33 9,27 C11.5,20 10,8 6.5,-2 Z" fill="#E9BE78"/>
+      <path d="M-5,27 C-5,31 5,31 5,27" fill="none" stroke="#C99A52" stroke-width="2" stroke-opacity="0.8"/>
+      
+      <g transform="translate(0 30)">
+        <circle cx="0" cy="8" r="11" fill="url(#bear2_run1_glow)" stroke="none"/>
+        <rect x="-4" y="-2" width="8" height="5" rx="1.5" fill="#22867F" stroke-width="2"/>
+        <path d="M-6.5,3 L6.5,3 L5,14 L-5,14 Z" fill="#FFD166" stroke-width="2.4"/>
+        <path d="M-2.5,6 L2.5,6 L2,11 L-2,11 Z" fill="#FFF2B2" stroke="none"/>
+        <rect x="-5.5" y="13" width="11" height="3" rx="1.5" fill="#22867F" stroke-width="2"/>
+      </g>
+    </g>
+
+    <!-- uszy, głowa, wnętrza uszu -->
+    <g transform="rotate(4 64 65)">
+      <circle cx="40" cy="20" r="12" fill="#D9AC63"/>
+      <circle cx="90" cy="19" r="13" fill="#E9BE78"/>
+      <path d="M95,45 C95,43.3 94.5,41.8 94.5,40 C94.6,38.2 96,35.8 95.4,34.3 C94.8,32.7 92.1,31.8 90.8,30.5 C89.6,29.2 88.9,27.6 87.7,26.4 C86.6,25.1 85.3,23.9 83.9,22.8 C82.6,21.7 81.1,20.7 79.5,19.9 C77.9,19 76.3,18.3 74.6,17.7 C72.9,17.2 71.2,16.7 69.4,16.4 C67.6,16.1 65.8,16.2 64,16 C62.2,15.8 60.2,14.9 58.4,15 C56.5,15.2 54.8,16.2 53.1,16.9 C51.4,17.7 50,18.7 48.2,19.3 C46.4,20 43.7,19.7 42.4,20.8 C41.1,22 41.1,24.7 40.3,26.4 C39.4,28 38.4,29.2 37.2,30.5 C35.9,31.8 33.2,32.7 32.6,34.3 C32,35.8 33.4,38.2 33.5,40 C33.5,41.8 33,43.3 33,45 C33,46.7 33.5,48.3 33.5,50 C33.4,51.8 32.2,54.1 32.8,55.7 C33.4,57.2 35.9,58.2 37.2,59.5 C38.4,60.8 39.1,62.4 40.3,63.6 C41.4,64.9 42.7,66.1 44.1,67.2 C45.4,68.3 46.9,69.3 48.5,70.1 C50.1,71 51.7,71.7 53.4,72.3 C55.1,72.8 56.8,73.3 58.6,73.6 C60.4,73.9 62.2,74 64,74 C65.8,74 67.6,73.9 69.4,73.6 C71.2,73.3 72.9,72.8 74.6,72.3 C76.3,71.7 77.9,71 79.5,70.1 C81.1,69.3 82.6,68.3 83.9,67.2 C85.3,66.1 86.6,64.9 87.7,63.6 C88.9,62.4 89.6,60.8 90.8,59.5 C92.1,58.2 94.6,57.2 95.2,55.7 C95.8,54.1 94.6,51.8 94.5,50 C94.5,48.3 95,46.7 95,45 Z" fill="url(#bear2_run1_headShade)"/>
+      <circle cx="41" cy="21" r="5.5" fill="#F0C9A8" stroke-width="2.2"/>
+      <circle cx="90.5" cy="20" r="6.2" fill="#F0C9A8" stroke-width="2.2"/>
+    </g>
+
+    
+    <g fill="none" stroke="#C99A52" stroke-width="1.6" stroke-opacity="0.45">
+      <path d="M39,41 l-2,4 M41,59 l-2,3 M90,59 l2,3 M50,21 l-2,-2 M78,20 l2,-2"/>
+      <path d="M49,91 l-3,3 M84,93 l3,3"/>
+    </g>
+
+    <!-- twarz (wspólny środek przesunięty o F) -->
+    <g transform="rotate(4 64 65)">
+      
+    <g clip-path="url(#bear2_run1_head)">
+      <ellipse cx="46" cy="51" rx="7.5" ry="4.8" fill="#F2908E" stroke="none" opacity="0.85"/>
+      <ellipse cx="92" cy="50" rx="7.5" ry="4.8" fill="#F2908E" stroke="none" opacity="0.85"/>
+    </g>
+      <ellipse cx="68" cy="53" rx="17" ry="12.5" fill="#FBF0DA"/>
+      <path d="M61,46.5 C65,43.5 71,43.5 75,46.5 C75,52 71,55 68,55 C65,55 61,52 61,46.5 Z" fill="#3A2820" stroke="none"/>
+    <ellipse cx="65" cy="46.5" rx="2" ry="1.2" fill="#FFFFFF" stroke="none" opacity="0.55"/>
+      
+      <path d="M60,57 C64,64 72,64 76,57 Z" fill="#3A2820" stroke-width="2.4"/>
+      <path d="M64,61.5 C66,59.5 70,59.5 72,61.5 C71,63.5 65,63.5 64,61.5 Z" fill="#E15240" stroke="none"/>
+      
+      <circle cx="55" cy="41" r="7" fill="#3A2820" stroke="none"/>
+      <circle cx="52.8" cy="38.5" r="2.8" fill="#FFFFFF" stroke="none"/>
+      <circle cx="57.1" cy="43.1" r="1.3" fill="#FFFFFF" stroke="none" opacity="0.9"/>
+      <circle cx="82" cy="41" r="7" fill="#3A2820" stroke="none"/>
+      <circle cx="79.8" cy="38.5" r="2.8" fill="#FFFFFF" stroke="none"/>
+      <circle cx="84.1" cy="43.1" r="1.3" fill="#FFFFFF" stroke="none" opacity="0.9"/>
+      <path d="M49,32 C53,29.5 59,29.5 61,31" fill="none" stroke-width="2.4" stroke-opacity="0.7"/>
+       <path d="M76,31 C78,29.5 84,29.5 88,32" fill="none" stroke-width="2.4" stroke-opacity="0.7"/>
+    </g>
+
+    
+  </g>
+
+  <!-- bryła i faktura — przycięte do sylwetki -->
+  <rect width="128" height="128" fill="url(#bear2_run1_shade)" clip-path="url(#bear2_run1_char)"/>
+  <rect width="128" height="128" filter="url(#bear2_run1_grain)" clip-path="url(#bear2_run1_char)" opacity="0.13" style="mix-blend-mode:multiply"/>
+  </g>
+</svg>

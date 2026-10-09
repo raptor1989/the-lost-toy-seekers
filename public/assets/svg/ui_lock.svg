@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" width="192" height="192">
+  <!--
+    Kłódka na zablokowanym poziomie w menu — jedyny komunikat „jeszcze nie teraz".
+    Gra pokazuje ją w 72 px. Ma być łagodna, nie groźna: złota (złoto + złoto jasne
+    z palety), pulchna, z zaokrąglonym kabłąkiem (zamkniętym) i małą iskierką —
+    „tu czeka coś fajnego", a nie „zakaz". Kontur 8 (3 px w grze).
+    Kabłąk to oś obrysowana grubą kreską konturu i cieńszą złotą, jak cyfry; dlatego
+    ziarno papieru przycina maska (clipPath nie widzi obrysów).
+    Paleta i grubości konturu: docs/Styleguide_Wektorowy.md
+  -->
+  <defs>
+    <radialGradient id="ui_lock_body" cx="0.32" cy="0.25" r="0.9">
+      <stop offset="0" stop-color="#F2C94C"/>
+      <stop offset="0.55" stop-color="#D9A440"/>
+      <stop offset="1" stop-color="#D9A440"/>
+    </radialGradient>
+    <linearGradient id="ui_lock_shade" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0.45" stop-color="#4A3226" stop-opacity="0"/>
+      <stop offset="1" stop-color="#4A3226" stop-opacity="0.24"/>
+    </linearGradient>
+    <linearGradient id="ui_lock_shackle" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#F2C94C"/>
+      <stop offset="0.6" stop-color="#D9A440"/>
+      <stop offset="1" stop-color="#D9A440"/>
+    </linearGradient>
+    <filter id="ui_lock_blur" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3"/>
+    </filter>
+    <filter id="ui_lock_grain" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+    </filter>
+    <clipPath id="ui_lock_bodyClip"><rect x="40" y="84" width="112" height="86" rx="26"/></clipPath>
+    <mask id="ui_lock_all">
+      <rect x="40" y="84" width="112" height="86" rx="26" fill="#FFFFFF"/>
+      <path d="M64,92 L64,62 C64,28 128,28 128,62 L128,92" fill="none" stroke="#FFFFFF" stroke-width="28" stroke-linecap="round"/>
+    </mask>
+  </defs>
+
+  <!-- cień pod kłódką -->
+  <rect x="40" y="90" width="112" height="86" rx="26" fill="#14284F" opacity="0.5" filter="url(#ui_lock_blur)"/>
+
+  <g stroke="#4A3226" stroke-width="8" stroke-linejoin="round" stroke-linecap="round">
+    <!-- kabłąk: kontur → złoto → cień prawej nogi → blik -->
+    <path d="M64,92 L64,62 C64,28 128,28 128,62 L128,92" fill="none" stroke-width="28"/>
+    <path d="M64,92 L64,62 C64,28 128,28 128,62 L128,92" fill="none" stroke="url(#ui_lock_shackle)" stroke-width="12"/>
+    <path d="M128,92 L128,62 C128,48 121,40 112,37" fill="none" stroke="#4A3226" stroke-width="12" stroke-opacity="0.18"/>
+    <path d="M64,82 L64,64 C64,50 73,41 86,39" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-opacity="0.6"/>
+
+    <!-- korpus -->
+    <rect x="40" y="84" width="112" height="86" rx="26" fill="url(#ui_lock_body)"/>
+    <rect x="40" y="84" width="112" height="86" rx="26" fill="url(#ui_lock_shade)" stroke="none" clip-path="url(#ui_lock_bodyClip)"/>
+    <ellipse cx="66" cy="102" rx="15" ry="7.5" fill="#FFFFFF" stroke="none" opacity="0.55" transform="rotate(-30 66 102)"/>
+
+    <!-- dziurka na klucz -->
+    <circle cx="96" cy="122" r="13" fill="#3A2820" stroke-width="5"/>
+    <path d="M89,128 L86,150 Q86,154 90,154 L102,154 Q106,154 106,150 L103,128 Z" fill="#3A2820" stroke-width="5"/>
+    <circle cx="96" cy="122" r="13" fill="#3A2820" stroke="none"/>
+    <path d="M90,128 L102,128 L103,137 L89,137 Z" fill="#3A2820" stroke="none"/>
+
+    <!-- iskierka — „tu czeka coś fajnego" -->
+    <path d="M164,20 Q166,34 180,36 Q166,38 164,52 Q162,38 148,36 Q162,34 164,20 Z" fill="#FFD166" stroke="none"/>
+    <path d="M164,29 Q165,35 171,36 Q165,37 164,43 Q163,37 157,36 Q163,35 164,29 Z" fill="#FFF2B2" stroke="none"/>
+    <circle cx="28" cy="70" r="3.5" fill="#FFD166" stroke="none"/>
+  </g>
+
+  <!-- ziarno papieru — korpus i kabłąk -->
+  <rect width="192" height="192" filter="url(#ui_lock_grain)" mask="url(#ui_lock_all)" opacity="0.12" style="mix-blend-mode:multiply"/>
+</svg>

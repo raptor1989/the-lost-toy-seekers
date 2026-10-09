@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!--
+    Brama-krata chowana do góry (Dokumentacja 3.5, GDD poziomy 2 i 3).
+    Kafel 32 px w grze, kładziony `TileSprite`em w pionie i w poziomie, więc wzór
+    zazębia się na wszystkich czterech krawędziach: dwie pionowe sztaby biegną
+    od y=0 do y=64 (łączą się z kaflem nad i pod), pozioma belka od x=0 do x=64
+    (łączy się z kaflem obok). Dlatego sztaby ani belka nie mają zamkniętego
+    konturu — ich „obrys" to ciemne tło #4A3226 prześwitujące między nimi.
+    Ma wyglądać jak zabawkowa bramka z drewienek: ciepłe drewno, złote guziki
+    okuć na skrzyżowaniach, zero szpikulców. Ziarno papieru ze `stitchTiles`,
+    żeby i ono zszywało się na krawędziach kafla.
+  -->
+  <defs>
+    <linearGradient id="gate_bar" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#DCA96D"/>
+      <stop offset="0.4" stop-color="#C89257"/>
+      <stop offset="1" stop-color="#A8743F"/>
+    </linearGradient>
+    <linearGradient id="gate_beam" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#DCA96D"/>
+      <stop offset="0.45" stop-color="#C89257"/>
+      <stop offset="1" stop-color="#A8743F"/>
+    </linearGradient>
+    <filter id="gate_grain" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+    </filter>
+  </defs>
+
+  <!-- ciemne tło = kontur między sztabami -->
+  <rect width="64" height="64" fill="#4A3226"/>
+
+  <!-- sztaby pionowe — od krawędzi do krawędzi -->
+  <rect x="6" y="0" width="20" height="64" fill="url(#gate_bar)"/>
+  <rect x="38" y="0" width="20" height="64" fill="url(#gate_bar)"/>
+
+  <!-- słoje: początek i koniec na tym samym x, z pionową styczną — zszywają się w pionie -->
+  <g fill="none" stroke="#A8743F" stroke-width="1.6" stroke-opacity="0.45" stroke-linecap="round">
+    <path d="M17,0 C17,10 14.5,16 15.5,24 M15.5,40 C14.5,48 17,54 17,64"/>
+    <path d="M49,0 C49,10 51.5,16 50.5,24 M50.5,40 C51.5,48 49,54 49,64"/>
+  </g>
+
+  <!-- belka pozioma — od krawędzi do krawędzi, na wierzchu sztab -->
+  <rect x="0" y="25" width="64" height="14" fill="url(#gate_beam)"/>
+  <path d="M0,25 H64 M0,39 H64" fill="none" stroke="#4A3226" stroke-width="2"/>
+  <path d="M0,28 H64" fill="none" stroke="#DCA96D" stroke-width="1.4" stroke-opacity="0.6"/>
+
+  <!-- złote okucia na skrzyżowaniach -->
+  <g stroke="#4A3226" stroke-width="2" stroke-linejoin="round">
+    <circle cx="16" cy="32" r="4.6" fill="#D9A440"/>
+    <circle cx="48" cy="32" r="4.6" fill="#D9A440"/>
+  </g>
+  <circle cx="14.8" cy="30.6" r="1.6" fill="#F2C94C"/>
+  <circle cx="46.8" cy="30.6" r="1.6" fill="#F2C94C"/>
+
+  <!-- ziarno papieru -->
+  <rect width="64" height="64" filter="url(#gate_grain)" opacity="0.12" style="mix-blend-mode:multiply"/>
+</svg>

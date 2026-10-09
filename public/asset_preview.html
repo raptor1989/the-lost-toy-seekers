@@ -4,77 +4,221 @@
 <meta charset="utf-8">
 <title>Podgląd assetów — Poszukiwacze Zaginionych Zabawek</title>
 <style>
-  :root { --grass: #4E9A52; }
   body { margin:0; font-family: system-ui, sans-serif; background: #101a2e; color:#e8eefc; }
   header { padding: 20px 24px 4px; }
   h1 { font-size: 18px; margin:0 0 4px; font-weight:600; }
-  p.sub { margin:0; font-size:13px; opacity:.65; }
-  .scene {
-    margin: 20px 24px; border-radius: 12px; overflow:hidden;
-    background: linear-gradient(#1E3A6E 0%, #2b4f8c 70%, #35608f 100%);
-    position: relative; height: 320px;
-  }
-  .ground { position:absolute; left:0; right:0; bottom:0; height:56px; background: var(--grass); }
-  .star { position:absolute; width:3px; height:3px; background:#fff; border-radius:50%; opacity:.8; }
-  .place { position:absolute; }
-  .row { display:flex; gap:28px; flex-wrap:wrap; align-items:flex-start; margin: 0 24px 28px; }
-  figure { margin:0; background:#f7f4ec; border-radius:10px; padding:14px; text-align:center; }
+  p.sub { margin:0; font-size:13px; opacity:.65; max-width: 1100px; line-height: 1.45; }
+  h2 { font-size:13px; margin:28px 24px 10px; text-transform:uppercase; letter-spacing:.08em; opacity:.55; }
+  .row { display:flex; gap:22px; flex-wrap:wrap; align-items:flex-end; margin: 0 24px 20px; }
+  figure { margin:0; background:#f7f4ec; border-radius:10px; padding:12px; text-align:center; }
   figure.dark { background:#16233d; }
+  figure.night { background: linear-gradient(#1E3A6E, #2b4f8c); }
   figcaption { font-size:11px; margin-top:8px; opacity:.7; color:#333; }
-  figure.dark figcaption { color:#cfd9ee; }
-  h2 { font-size:13px; margin:24px 24px 10px; text-transform:uppercase; letter-spacing:.08em; opacity:.55; }
+  figure.dark figcaption, figure.night figcaption { color:#cfd9ee; }
+  figure img { display:block; margin:0 auto; }
+  .inline { display:inline-flex; gap:10px; align-items:flex-end; }
+
+  /* makiety kadru 1280×720 */
+  .frame { position:relative; width:1280px; height:720px; overflow:hidden; margin: 0 24px 8px;
+           border-radius: 12px; background:#1E3A6E; }
+  .frame img, .frame .tile, .frame .cell { position:absolute; }
+  .frame .tile { left:0; width:1280px; height:288px; background-repeat:repeat-x; }
+  .frame .cell { width:32px; height:32px; background-repeat:no-repeat; }
+  .frame .stop { position:absolute; width:168px; height:168px; border-radius:50%; border:6px solid #4A3226; box-sizing:border-box; }
+  .frame .hud { position:absolute; }
+
+  .sheet { image-rendering: pixelated; }
   .sfx { gap:12px; }
   .sfx button { font:inherit; font-size:14px; padding:10px 14px; border:0; border-radius:10px;
     background:#f7f4ec; color:#4A3226; cursor:pointer; text-align:left; }
   .sfx button:hover { background:#FFD166; }
   .sfx small { display:block; font-size:11px; opacity:.65; margin-top:2px; }
+  .legend { font-size:11px; opacity:.6; margin:0 24px 10px; }
 </style>
 </head>
 <body>
 
 <header>
-  <h1>Podgląd assetów — POC</h1>
-  <p class="sub">Miś (128 px), karton (64 px), cukierek (32 px) w skali gry oraz w powiększeniu.
-  Zabawka-nagroda w skali ekranu nagrody (512 px) i ikony HUD (96 px). Na dole — dźwięki.</p>
+  <h1>Podgląd assetów — art pass M5</h1>
+  <p class="sub">Najpierw makiety: kadr poziomu 1 i menu złożone z warstw dokładnie tak, jak ułoży je gra
+  (niebo → gwiazdy → chmury → horyzont → kafle → obiekty → postacie → HUD). Dalej każdy asset w skali gry
+  i w powiększeniu. Postacie, tilesety, tła i mapka menu pochodzą z generatorów (<code>npm run assets</code>) —
+  poprawki w <code>tools/build-*.mjs</code>, nie w SVG. Zasady i paleta: <code>docs/Styleguide_Wektorowy.md</code>.</p>
 </header>
 
-<h2>W scenie (skala docelowa)</h2>
-<div class="scene" id="scene">
-  <div class="ground"></div>
-  <img class="place" src="/assets/svg/world_box_small.svg" style="width:64px; left:360px; bottom:56px;">
-  <img class="place" src="/assets/svg/world_box_small.svg" style="width:64px; left:424px; bottom:56px;">
-  <img class="place" src="/assets/svg/world_box_small.svg" style="width:64px; left:424px; bottom:120px;">
-  <img class="place" src="/assets/svg/char_bear_idle.svg" style="width:128px; left:190px; bottom:50px;">
-  <img class="place" src="/assets/svg/pickup_candy_orange.svg" style="width:32px; left:440px; bottom:196px;">
-  <img class="place" src="/assets/svg/pickup_candy_orange.svg" style="width:32px; left:560px; bottom:64px;">
-  <img class="place" src="/assets/svg/reward_teddy.svg" style="width:96px; left:660px; bottom:56px;">
-  <img class="place" src="/assets/svg/ghost_mischief_idle.svg" style="width:96px; left:800px; bottom:96px;">
-  <img class="place" src="/assets/svg/fx_sparkle.svg" style="width:32px; left:790px; bottom:190px;">
-  <img class="place" src="/assets/svg/fx_sparkle.svg" style="width:24px; left:900px; bottom:150px;">
+<h2>Makieta kadru — poziom 1 „Kartonowy Las" (1280×720, skala 1:1)</h2>
+<div class="frame" id="level"></div>
+<p class="legend">Kafle z <code>world_l1_tileset.svg</code> (gidy 1–4 = greybox; dalej narożniki, krawędzie, półki, kartony, dekoracje — legenda w komentarzu pliku).
+HUD u góry: tabliczka licznika z cukierkiem i cyframi, medaliony z portretami, gniazda zabawek.</p>
+
+<h2>Makieta menu — mapka ogrodu z przystankami</h2>
+<div class="frame" id="menu"></div>
+
+<h2>Postacie — Gracz 1 (duży miś) i Gracz 2 (mały miś z latarką), skala gry 96 px</h2>
+<div class="row" id="bears"></div>
+<div class="row">
+  <figure><img src="/assets/svg/char_bear1_idle.svg" width="320"><figcaption>char_bear1_idle.svg — kontrola konturu</figcaption></figure>
+  <figure><img src="/assets/svg/char_bear2_idle.svg" width="320"><figcaption>char_bear2_idle.svg</figcaption></figure>
+  <figure class="dark"><div class="inline">
+    <span style="position:relative;display:inline-block;width:96px;height:96px"><img src="/assets/svg/char_bear1_face_smile.svg" style="position:absolute;left:10px;top:10px;width:76px"><img src="/assets/svg/ui_portrait_frame.svg" style="position:absolute;left:0;top:0;width:96px"></span>
+    <span style="position:relative;display:inline-block;width:96px;height:96px"><img src="/assets/svg/char_bear1_face_oops.svg" style="position:absolute;left:10px;top:10px;width:76px"><img src="/assets/svg/ui_portrait_frame.svg" style="position:absolute;left:0;top:0;width:96px"></span>
+    <span style="position:relative;display:inline-block;width:96px;height:96px"><img src="/assets/svg/char_bear2_face_smile.svg" style="position:absolute;left:10px;top:10px;width:76px"><img src="/assets/svg/ui_portrait_frame.svg" style="position:absolute;left:0;top:0;width:96px"></span>
+    <span style="position:relative;display:inline-block;width:96px;height:96px"><img src="/assets/svg/char_bear2_face_oops.svg" style="position:absolute;left:10px;top:10px;width:76px"><img src="/assets/svg/ui_portrait_frame.svg" style="position:absolute;left:0;top:0;width:96px"></span>
+  </div><figcaption>portrety w medalionie (char_bear*_face_* + ui_portrait_frame) — 96 px</figcaption></figure>
 </div>
 
-<h2>Powiększenie — kontrola konturu i detalu</h2>
-<div class="row">
-  <figure><img src="/assets/svg/char_bear_idle.svg" width="320"><figcaption>char_bear_idle.svg</figcaption></figure>
-  <figure><img src="/assets/svg/world_box_small.svg" width="192"><figcaption>world_box_small.svg</figcaption></figure>
-  <figure><img src="/assets/svg/pickup_candy_orange.svg" width="192"><figcaption>pickup_candy_orange.svg</figcaption></figure>
-  <figure><img src="/assets/svg/reward_teddy.svg" width="384"><figcaption>reward_teddy.svg — skala ekranu nagrody</figcaption></figure>
-  <figure><img src="/assets/svg/ghost_mischief_idle.svg" width="288"><figcaption>ghost_mischief_idle.svg</figcaption></figure>
-  <figure><img src="/assets/svg/fx_sparkle.svg" width="128"><figcaption>fx_sparkle.svg</figcaption></figure>
-</div>
+<h2>Duszek, znajdźki, efekty</h2>
+<div class="row" id="small"></div>
 
-<h2>Na ciemnym tle — kontrola czytelności sylwetki</h2>
-<div class="row">
-  <figure class="dark"><img src="/assets/svg/char_bear_idle.svg" width="220"><figcaption>char_bear_idle.svg</figcaption></figure>
-  <figure class="dark"><img src="/assets/svg/world_box_small.svg" width="128"><figcaption>world_box_small.svg</figcaption></figure>
-  <figure class="dark"><img src="/assets/svg/pickup_candy_orange.svg" width="128"><figcaption>pickup_candy_orange.svg</figcaption></figure>
-  <figure class="dark"><img src="/assets/svg/reward_teddy.svg" width="220"><figcaption>reward_teddy.svg</figcaption></figure>
-  <figure class="dark"><img src="/assets/svg/reward_teddy.svg" width="96"><figcaption>reward_teddy.svg — 96 px (HUD)</figcaption></figure>
-  <figure class="dark"><img src="/assets/svg/ghost_mischief_idle.svg" width="96"><figcaption>ghost_mischief_idle.svg — skala gry</figcaption></figure>
-</div>
+<h2>Nagrody — ekran nagrody (180 px) i gniazdo HUD (68 px: odzyskana / nieodzyskana)</h2>
+<div class="row" id="rewards"></div>
+
+<h2>Elementy interaktywne i platformy — skala gry + powiększenie</h2>
+<div class="row" id="interactive"></div>
+
+<h2>UI — cyfry licznika, przyciski, kłódka, ramka, gniazdo, tabliczka</h2>
+<div class="row" id="ui"></div>
+
+<h2>Tilesety poziomów 1–4 (arkusz ×2; kafel 32 px, margines 1, odstęp 2)</h2>
+<div class="row" id="tilesets"></div>
+
+<h2>Tła — niebo (statyczne) i warstwy paralaksy (kafelkowane w poziomie, 1:1)</h2>
+<div id="backgrounds"></div>
 
 <h2>Dźwięki — greybox z tools/generate-sfx.mjs, głośności jak w grze</h2>
 <div class="row sfx" id="sfx"></div>
+
+<script>
+  const SVG = '/assets/svg/';
+  const $ = (id) => document.getElementById(id);
+  const fig = (file, size, caption, cls = '', extra = '') =>
+    `<figure class="${cls}"><img src="${SVG}${file}" style="width:${size}px;${extra}"><figcaption>${caption || file}</figcaption></figure>`;
+  const pair = (file, size, zoom, caption, cls = 'night') =>
+    `<figure class="${cls}"><div class="inline"><img src="${SVG}${file}" style="width:${size}px"><img src="${SVG}${file}" style="width:${size * zoom}px"></div><figcaption>${caption || file} — ${size} px i ×${zoom}</figcaption></figure>`;
+
+  // ------------------------------------------------------------ makieta poziomu 1
+  const T = 32, P = 34, M = 1;
+  const tilePos = (gid) => { const i = gid - 1; return `${-(M + (i % 4) * P)}px ${-(M + Math.floor(i / 4) * P)}px`; };
+  const G = { top: 1, fill: 2, ledge: 3, tuft: 4, tl: 5, tr: 6, l: 7, r: 8, ll: 9, lr: 10, ts: 11, b: 12, bl: 13, br: 14, ls: 15,
+    box: 16, btl: 17, btr: 18, bbl: 19, bbr: 20, fp: 21, fy: 22, fb: 23, mu: 24, fel: 25, fem: 26, fer: 27, lad: 28, peb: 29, sn: 30, spr: 31, tuft2: 32 };
+  const rows = Array.from({ length: 23 }, () => Array(40).fill('.'));
+  const put = (x, y, k) => { rows[y][x] = k; };
+  ['tl','top','top','top','tr'].forEach((k, i) => put(4 + i, 9, k));
+  ['l','fill','fill','fill','r'].forEach((k, i) => put(4 + i, 10, k));
+  ['bl','b','b','b','br'].forEach((k, i) => put(4 + i, 11, k));
+  put(5, 8, 'fp'); put(7, 8, 'tuft');
+  ['ll','ledge','ledge','lr'].forEach((k, i) => put(13 + i, 12, k));
+  ['ll','ledge','lr'].forEach((k, i) => put(20 + i, 10, k));
+  put(25, 13, 'ls');
+  ['tl','top','top','top','top','tr'].forEach((k, i) => put(30 + i, 11, k));
+  for (let y = 12; y < 23; y++) ['l','fill','fill','fill','fill','r'].forEach((k, i) => put(30 + i, y, k));
+  put(31, 10, 'mu'); put(33, 10, 'fy'); put(34, 10, 'tuft2');
+  for (let x = 0; x < 30; x++) put(x, 17, 'top');
+  for (let y = 18; y < 23; y++) for (let x = 0; x < 30; x++) put(x, y, 'fill');
+  put(9, 15, 'btl'); put(10, 15, 'btr'); put(9, 16, 'bbl'); put(10, 16, 'bbr'); put(11, 16, 'box');
+  put(1, 16, 'spr'); put(2, 16, 'fb'); put(14, 16, 'sn'); put(17, 16, 'fel'); put(18, 16, 'fem'); put(19, 16, 'fer');
+  put(21, 16, 'peb'); put(23, 16, 'tuft'); put(27, 16, 'fp'); put(28, 16, 'tuft2');
+  for (let y = 13; y < 17; y++) put(24, y, 'lad');
+
+  const img = (file, x, y, w, h, extra = '') => `<img src="${SVG}${file}" style="left:${x}px;top:${y}px;width:${w}px;height:${h}px;${extra}">`;
+  let level = img('world_bg_sky.svg', 0, 0, 1280, 720);
+  level += `<div class="tile" style="top:0;background-image:url('${SVG}world_bg_stars.svg')"></div>`;
+  level += `<div class="tile" style="top:20px;background-image:url('${SVG}world_bg_clouds.svg');background-position:-80px 0"></div>`;
+  level += `<div class="tile" style="top:${17 * 32 - 288 + 14}px;background-image:url('${SVG}world_l1_bg_hedge.svg');background-position:-40px 0"></div>`;
+  rows.forEach((row, y) => row.forEach((k, x) => {
+    if (k === '.') return;
+    level += `<div class="cell" style="left:${x * T}px;top:${y * T}px;background-image:url('${SVG}world_l1_tileset.svg');background-position:${tilePos(G[k])}"></div>`;
+  }));
+  const groundY = 17 * 32;
+  level += img('world_hidden_plank.svg', 416, 12 * 32, 32, 32) + img('world_hidden_plank.svg', 448, 12 * 32, 32, 32, 'opacity:.35') + img('world_hidden_plank.svg', 480, 12 * 32, 32, 32, 'opacity:.35');
+  level += img('world_push_block.svg', 20 * 32, groundY - 64, 64, 64);
+  level += img('ui_hint_push.svg', 20 * 32 + 17, groundY - 64 - 34, 30, 30);
+  level += img('world_lever_base.svg', 26 * 32, groundY - 14, 28, 14) + img('world_lever_handle.svg', 26 * 32 + 9, groundY - 14 - 38, 10, 40, 'transform:rotate(-35deg);transform-origin:50% 100%');
+  level += img('ui_hint_action.svg', 26 * 32 + 1, groundY - 14 - 40 - 14 - 28, 28, 28);
+  level += img('world_plate.svg', 15 * 32, groundY - 10, 64, 10);
+  level += `<div style="position:absolute;left:${29 * 32}px;top:${groundY - 160}px;width:32px;height:160px;background:url('${SVG}world_gate_tile.svg') repeat;background-size:32px 32px"></div>`;
+  level += img('world_leaf.svg', 640, 320, 96, 28) + img('world_soap_bubble.svg', 760, 150, 80, 80);
+  level += img('char_bear1_run1.svg', 400, groundY - 96, 96, 96) + img('char_bear2_idle.svg', 300, groundY - 96, 96, 96);
+  level += img('pickup_candy_orange.svg', 470, 300, 40, 40) + img('pickup_candy_pink.svg', 520, 280, 40, 40) + img('pickup_candy_blue.svg', 680, 250, 40, 40);
+  level += img('ghost_mischief_idle.svg', 820, 330, 96, 96) + img('fx_sparkle.svg', 900, 300, 32, 32) + img('fx_firefly.svg', 600, 200, 24, 24) + img('fx_firefly.svg', 1150, 260, 20, 20);
+  level += img('reward_teddy.svg', 1000, 11 * 32 - 96, 96, 96);
+  // HUD
+  level += img('ui_candy_counter_bg.svg', 20, 20, 160, 64) + img('pickup_candy_orange.svg', 20, 20, 64, 64)
+    + img('ui_digit_1.svg', 92, 22, 40, 60) + img('ui_digit_8.svg', 128, 22, 40, 60);
+  level += img('char_bear1_face_smile.svg', 210, 24, 56, 56) + img('ui_portrait_frame.svg', 202, 16, 72, 72)
+    + img('char_bear2_face_smile.svg', 290, 24, 56, 56) + img('ui_portrait_frame.svg', 282, 16, 72, 72);
+  ['reward_teddy.svg', 'reward_car.svg', 'reward_robot.svg', 'reward_chest.svg'].forEach((toy, i) => {
+    const x = 1280 - 28 - 4 * 92 + i * 92;
+    level += img('ui_toy_socket.svg', x, 20, 82, 82) + img(toy, x + 7, 27, 68, 68, i === 0 ? '' : 'filter:brightness(0.25);opacity:.45');
+  });
+  $('level').innerHTML = level;
+
+  // ------------------------------------------------------------ makieta menu
+  let menu = img('world_bg_sky.svg', 0, 0, 1280, 720);
+  menu += `<div class="tile" style="top:0;background-image:url('${SVG}world_bg_stars.svg')"></div>`;
+  menu += img('world_menu_garden.svg', 0, 0, 1280, 720);
+  const stops = [[388, 384, 'reward_teddy.svg', true], [552, 437, 'reward_car.svg', false], [716, 416, 'reward_robot.svg', false], [880, 350, 'reward_chest.svg', false]];
+  stops.forEach(([x, y, toy, done], i) => {
+    menu += `<div class="stop" style="left:${x - 84}px;top:${y - 84}px;background:${done ? '#FFD166' : '#F7F0E3'}"></div>`;
+    menu += img(toy, x - 54, y - 54, 108, 108, done ? '' : 'filter:brightness(0.25);opacity:.5');
+    if (i >= 2) menu += img('ui_lock.svg', x - 36, y - 36, 72, 72);
+  });
+  menu += `<div class="stop" style="left:${388 - 96}px;top:${384 - 96}px;width:192px;height:192px;border:8px solid #FFD166;background:none"></div>`;
+  $('menu').innerHTML = menu;
+
+  // ------------------------------------------------------------ postacie
+  let bears = '';
+  for (const bear of ['bear1', 'bear2']) {
+    for (const pose of ['idle', 'run1', 'run2', 'jump', 'cheer', 'oops']) {
+      bears += fig(`char_${bear}_${pose}.svg`, 96, `${bear} ${pose}`, 'night');
+    }
+  }
+  $('bears').innerHTML = bears;
+
+  // ------------------------------------------------------------ duszek, znajdźki, efekty
+  $('small').innerHTML = pair('ghost_mischief_idle.svg', 96, 2) + pair('ghost_mischief_giggle.svg', 96, 2)
+    + pair('pickup_candy_orange.svg', 40, 3) + pair('pickup_candy_pink.svg', 40, 3) + pair('pickup_candy_blue.svg', 40, 3)
+    + pair('fx_sparkle.svg', 32, 3) + pair('fx_firefly.svg', 24, 4) + pair('fx_dust.svg', 32, 3) + pair('fx_bubble.svg', 130, 1.5)
+    + pair('world_acorn.svg', 32, 3) + pair('world_mushroom_trampoline.svg', 96, 2);
+
+  // ------------------------------------------------------------ nagrody
+  let rewards = '';
+  for (const toy of ['reward_teddy.svg', 'reward_car.svg', 'reward_robot.svg', 'reward_chest.svg']) {
+    rewards += `<figure class="night"><div class="inline"><img src="${SVG}${toy}" style="width:180px">
+      <span style="position:relative;display:inline-block;width:82px;height:82px"><img src="${SVG}ui_toy_socket.svg" style="position:absolute;left:0;top:0;width:82px"><img src="${SVG}${toy}" style="position:absolute;left:7px;top:7px;width:68px"></span>
+      <span style="position:relative;display:inline-block;width:82px;height:82px"><img src="${SVG}ui_toy_socket.svg" style="position:absolute;left:0;top:0;width:82px"><img src="${SVG}${toy}" style="position:absolute;left:7px;top:7px;width:68px;filter:brightness(0.25);opacity:.45"></span>
+      </div><figcaption>${toy}</figcaption></figure>`;
+  }
+  $('rewards').innerHTML = rewards;
+
+  // ------------------------------------------------------------ interaktywne
+  $('interactive').innerHTML = pair('world_push_block.svg', 64, 2) + pair('world_gate_tile.svg', 32, 3) + pair('world_hidden_plank.svg', 32, 3)
+    + pair('world_lever_base.svg', 28, 3) + pair('world_lever_handle.svg', 10, 3) + pair('world_plate.svg', 64, 2)
+    + pair('ui_hint_action.svg', 28, 3) + pair('ui_hint_push.svg', 30, 3) + pair('world_leaf.svg', 96, 2) + pair('world_soap_bubble.svg', 80, 2);
+
+  // ------------------------------------------------------------ UI
+  let ui = `<figure class="night"><div class="inline">${Array.from({ length: 10 }, (_, d) => `<img src="${SVG}ui_digit_${d}.svg" style="height:60px">`).join('')}</div><figcaption>ui_digit_0..9 — 60 px wysokości</figcaption></figure>`;
+  ui += `<figure><div class="inline">${Array.from({ length: 10 }, (_, d) => `<img src="${SVG}ui_digit_${d}.svg" style="height:60px">`).join('')}</div><figcaption>na papierze</figcaption></figure>`;
+  ui += pair('ui_play.svg', 96, 2) + pair('ui_pause.svg', 96, 2) + pair('ui_home.svg', 96, 2) + pair('ui_lock.svg', 72, 2)
+    + pair('ui_portrait_frame.svg', 96, 2) + pair('ui_toy_socket.svg', 82, 2) + pair('ui_candy_counter_bg.svg', 160, 2);
+  $('ui').innerHTML = ui;
+
+  // ------------------------------------------------------------ tilesety
+  $('tilesets').innerHTML = [1, 2, 3, 4].map((n) =>
+    `<figure class="dark"><img class="sheet" src="${SVG}world_l${n}_tileset.svg" style="width:272px"><figcaption>world_l${n}_tileset.svg</figcaption></figure>`).join('');
+
+  // ------------------------------------------------------------ tła
+  const bgLayer = (file, h, caption) => `<p class="legend">${caption} — ${file}</p>
+    <div style="margin:0 24px 14px;width:1280px;height:${h}px;border-radius:10px;overflow:hidden;background:#1E3A6E url('${SVG}${file}') repeat-x 0 0"></div>`;
+  $('backgrounds').innerHTML =
+    `<p class="legend">niebo (scrollFactor 0) — world_bg_sky.svg</p><img src="${SVG}world_bg_sky.svg" style="width:1280px;margin:0 24px 14px;border-radius:10px;display:block">`
+    + bgLayer('world_bg_stars.svg', 288, 'gwiazdy (TileSprite ~0.1)')
+    + bgLayer('world_bg_clouds.svg', 288, 'chmury (TileSprite ~0.2)')
+    + bgLayer('world_l1_bg_hedge.svg', 288, 'poziom 1 — żywopłot (TileSprite ~0.5)')
+    + bgLayer('world_l2_bg_pond.svg', 288, 'poziom 2 — oczko wodne')
+    + bgLayer('world_l3_bg_sandbox.svg', 288, 'poziom 3 — piaskownica')
+    + bgLayer('world_l4_bg_canopy.svg', 288, 'poziom 4 — korona dębu z lampionami');
+</script>
 
 <script type="module">
   // Lista i głośności prosto z manifestu gry (Vite tłumaczy plik .ts w locie,
@@ -93,18 +237,6 @@
       audio.play();
     };
     row.appendChild(button);
-  }
-</script>
-
-<script>
-  // rozsiane gwiazdy — dekoracja podglądu, nie asset gry
-  const scene = document.getElementById('scene');
-  for (let i = 0; i < 40; i++) {
-    const s = document.createElement('div');
-    s.className = 'star';
-    s.style.left = Math.random() * 100 + '%';
-    s.style.top = Math.random() * 60 + '%';
-    scene.appendChild(s);
   }
 </script>
 </body>

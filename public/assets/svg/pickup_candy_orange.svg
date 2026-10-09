@@ -1,23 +1,43 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
-  <!-- Znajdźka — cukierek w papierku. Wariant kolorystyczny: podmień #F2913A / #FFD166. -->
-  <g stroke="#7A3E12" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round">
+  <!--
+    Znajdźka — cukierek w papierku, wariant pomarańczowy (w grze 40 px, w HUD 64 px).
+    Miękka poświata za cukierkiem: na nocnym tle znajdźka ma „świecić" z daleka,
+    żeby dziecko widziało ją z drugiego końca kadru. Kontur w brązie świata gry
+    (#4A3226) jak wszystkie obiekty, z którymi można coś zrobić.
+    Warianty: pickup_candy_pink.svg, pickup_candy_blue.svg — ta sama geometria, inne barwy.
+  -->
+  <defs>
+    <radialGradient id="candyO_glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#FFF2B2" stop-opacity="0.55"/>
+      <stop offset="0.6" stop-color="#FFD166" stop-opacity="0.18"/>
+      <stop offset="1" stop-color="#FFD166" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="candyO_body" cx="0.38" cy="0.32" r="0.75">
+      <stop offset="0" stop-color="#FFD166"/>
+      <stop offset="0.55" stop-color="#F2913A"/>
+      <stop offset="1" stop-color="#C96A1E"/>
+    </radialGradient>
+    <clipPath id="candyO_clip"><ellipse cx="32" cy="32" rx="17" ry="14"/></clipPath>
+  </defs>
 
+  <circle cx="32" cy="32" r="31" fill="url(#candyO_glow)"/>
+
+  <g stroke="#4A3226" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round">
     <!-- skręcone końcówki papierka -->
-    <path d="M14 32 L4 22 q-2 10 0 20 z" fill="#FFD166"/>
-    <path d="M50 32 L60 22 q2 10 0 20 z" fill="#FFD166"/>
+    <path d="M16,32 C12,27 8,23 4,21 C6,25 6,29 5,32 C6,35 6,39 4,43 C8,41 12,37 16,32 Z" fill="#FFD166"/>
+    <path d="M48,32 C52,27 56,23 60,21 C58,25 58,29 59,32 C58,35 58,39 60,43 C56,41 52,37 48,32 Z" fill="#FFD166"/>
+    <path d="M8,26 C9,30 9,34 8,38 M56,26 C55,30 55,34 56,38" fill="none" stroke-width="1.6" stroke-opacity="0.6"/>
 
-    <!-- korpus cukierka -->
-    <ellipse cx="32" cy="32" rx="19" ry="16" fill="#F2913A"/>
+    <!-- korpus -->
+    <ellipse cx="32" cy="32" rx="17" ry="14" fill="url(#candyO_body)"/>
+    <g clip-path="url(#candyO_clip)" stroke="none">
+      <path d="M22,16 C19,26 19,38 22,48 L27,48 C24,38 24,26 27,16 Z" fill="#FFD166" opacity="0.9"/>
+      <path d="M37,16 C40,26 40,38 37,48 L42,48 C45,38 45,26 42,16 Z" fill="#FFD166" opacity="0.9"/>
+    </g>
+    <ellipse cx="32" cy="32" rx="17" ry="14" fill="none"/>
 
-    <!-- paski -->
-    <path d="M26 17 q-5 15 0 30" fill="none" stroke="#FFD166" stroke-width="5"/>
-    <path d="M38 17 q5 15 0 30" fill="none" stroke="#FFD166" stroke-width="5"/>
-
-    <!-- obrys korpusu na wierzchu pasków -->
-    <ellipse cx="32" cy="32" rx="19" ry="16" fill="none"/>
-
-    <!-- refleks -->
-    <ellipse cx="25" cy="25" rx="5" ry="3" fill="#FFFFFF" fill-opacity="0.6" stroke="none"
-             transform="rotate(-25 25 25)"/>
+    <!-- blik -->
+    <ellipse cx="25" cy="25" rx="5" ry="3" fill="#FFFFFF" fill-opacity="0.7" stroke="none" transform="rotate(-25 25 25)"/>
+    <circle cx="40" cy="39" r="1.6" fill="#FFFFFF" fill-opacity="0.5" stroke="none"/>
   </g>
 </svg>

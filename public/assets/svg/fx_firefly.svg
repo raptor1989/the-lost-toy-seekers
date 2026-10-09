@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!--
+    Świetlik — cząsteczka tła (checklista juiciness, sekcja 7): łagodnie dryfuje po kadrze.
+    Pokazywany w ~20–28 px, więc to przede wszystkim świecąca kropka; skrzydełka i ciałko
+    czytają się dopiero z bliska i dają „żyjątko" zamiast gołej kuli światła.
+    Bez brązowego konturu — to tło, nie obiekt do zebrania.
+  -->
+  <defs>
+    <radialGradient id="firefly_glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#FFF2B2" stop-opacity="0.9"/>
+      <stop offset="0.35" stop-color="#FFD166" stop-opacity="0.45"/>
+      <stop offset="1" stop-color="#FFD166" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <circle cx="32" cy="36" r="30" fill="url(#firefly_glow)"/>
+  <g opacity="0.8">
+    <ellipse cx="24" cy="24" rx="8" ry="4.5" fill="#DCE8F7" opacity="0.7" transform="rotate(-30 24 24)"/>
+    <ellipse cx="40" cy="24" rx="8" ry="4.5" fill="#DCE8F7" opacity="0.7" transform="rotate(30 40 24)"/>
+    <ellipse cx="32" cy="29" rx="5" ry="4" fill="#4A3226"/>
+    <circle cx="29.5" cy="27.5" r="1.1" fill="#FFFFFF"/>
+    <circle cx="34.5" cy="27.5" r="1.1" fill="#FFFFFF"/>
+  </g>
+  <ellipse cx="32" cy="38" rx="6.5" ry="7.5" fill="#FFD166"/>
+  <ellipse cx="32" cy="39" rx="4" ry="5" fill="#FFF2B2"/>
+</svg>

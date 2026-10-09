@@ -7,7 +7,12 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "sfx": "node tools/generate-sfx.mjs"
+    "sfx": "node tools/generate-sfx.mjs",
+    "characters": "node tools/build-characters.mjs",
+    "tilesets": "node tools/build-tilesets.mjs",
+    "backgrounds": "node tools/build-backgrounds.mjs",
+    "menu": "node tools/build-menu.mjs",
+    "assets": "npm run characters && npm run tilesets && npm run backgrounds && npm run menu"
   },
   "dependencies": {
     "phaser": "^3.80.1"

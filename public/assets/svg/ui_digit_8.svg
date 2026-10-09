@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 120" width="80" height="120">
+  <!--
+    Cyfra „8" licznika cukierków — jedyny „tekst" dopuszczony w grze (GDD sekcja 3).
+    Gra pokazuje ją w 40×60 px w HUD, na granatowym nocnym tle.
+    Rodzina ui_digit_0..9: wszystkie cyfry mają tę samą oś (x 18..62, y 15..103),
+    tę samą grubość „rurki" i blik w tym samym miejscu — bez czcionki i bez elementu tekstowego:
+    oś cyfry jest obrysowana grubą kreską konturu (28) i cieńszą kreską
+    wypełnienia (16), więc kontur ma 6 jednostek (3 px w grze).
+    Ziarno papieru przycięte maską z tej samej rurki (clipPath nie widzi obrysów).
+    Górna pętla mniejsza od dolnej — ósemka stoi stabilnie, a nie jak bałwanek.
+    Paleta i grubości konturu: docs/Styleguide_Wektorowy.md
+  -->
+  <defs>
+    <linearGradient id="ui_digit_8_fill" gradientUnits="userSpaceOnUse" x1="0" y1="8" x2="0" y2="112">
+      <stop offset="0" stop-color="#F7F0E3"/>
+      <stop offset="0.5" stop-color="#F7F0E3"/>
+      <stop offset="1" stop-color="#EFD6B2"/>
+    </linearGradient>
+    <filter id="ui_digit_8_grain" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+    </filter>
+    <mask id="ui_digit_8_body">
+      <path d="M40,57 C28,57 20,48 20,36 C20,24 29,15 40,15 C51,15 60,24 60,36 C60,48 52,57 40,57 C26,57 18,67 18,80 C18,94 28,103 40,103 C52,103 62,94 62,80 C62,67 54,57 40,57 Z" fill="none" stroke="#FFFFFF" stroke-width="28" stroke-linecap="round" stroke-linejoin="round"/>
+    </mask>
+  </defs>
+
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <!-- miękki cień pod cyfrą — odrywa ją od nocnego tła -->
+    <path d="M40,57 C28,57 20,48 20,36 C20,24 29,15 40,15 C51,15 60,24 60,36 C60,48 52,57 40,57 C26,57 18,67 18,80 C18,94 28,103 40,103 C52,103 62,94 62,80 C62,67 54,57 40,57 Z" stroke="#14284F" stroke-width="28" stroke-opacity="0.45" transform="translate(0 3)"/>
+    <!-- kontur: cała rurka w kolorze konturu -->
+    <path d="M40,57 C28,57 20,48 20,36 C20,24 29,15 40,15 C51,15 60,24 60,36 C60,48 52,57 40,57 C26,57 18,67 18,80 C18,94 28,103 40,103 C52,103 62,94 62,80 C62,67 54,57 40,57 Z" stroke="#4A3226" stroke-width="28"/>
+    <!-- wypełnienie: cieńsza rurka, gradient koszulka → jasne futro ku dołowi -->
+    <path d="M40,57 C28,57 20,48 20,36 C20,24 29,15 40,15 C51,15 60,24 60,36 C60,48 52,57 40,57 C26,57 18,67 18,80 C18,94 28,103 40,103 C52,103 62,94 62,80 C62,67 54,57 40,57 Z" stroke="url(#ui_digit_8_fill)" stroke-width="16"/>
+    <!-- blik u góry -->
+    <path d="M31,24 C33,18 36,15.5 40,15" stroke="#FFFFFF" stroke-width="3.6" stroke-opacity="0.65"/>
+  </g>
+
+  <!-- ziarno papieru — tylko na rurce -->
+  <rect width="80" height="120" filter="url(#ui_digit_8_grain)" mask="url(#ui_digit_8_body)" opacity="0.12" style="mix-blend-mode:multiply"/>
+</svg>

@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 80" width="20" height="80">
+  <!--
+    Drążek dźwigni (Dokumentacja 3.5). 10×40 px w grze; gra obraca go wokół
+    środka dolnej krawędzi (origin 0.5/1) i barwi całą teksturę kolorem
+    uprawnionego gracza (`setTint` mnoży kolory). Dlatego gałka jest czysto biała
+    #FFFFFF — po tincie dostaje kolor gracza — a trzonek ciemny, więc po tincie
+    zostaje ciemny. Cień na gałce to półprzezroczysta czerń (szarość po tincie
+    zrobiłaby się brudna), blik pominięty — na bieli nie ma czego rozjaśniać.
+    Środek gałki w górnych 10 px tekstury (y=10 w jednostkach pliku = 5 px).
+    Dolny koniec trzonka bez obrysu, bo chowa się w uchwycie podstawki.
+  -->
+  <defs>
+    <clipPath id="lhandle_knob"><circle cx="10" cy="10" r="8"/></clipPath>
+  </defs>
+
+  <!-- trzonek -->
+  <path d="M7,12 H13 V80 H7 Z" fill="#4A3226"/>
+  <path d="M9,18 V76" fill="none" stroke="#A8743F" stroke-width="1.6" stroke-opacity="0.55" stroke-linecap="round"/>
+
+  <!-- gałka (TINT) -->
+  <circle cx="10" cy="10" r="8" fill="#FFFFFF" stroke="#4A3226" stroke-width="2.6"/>
+  <!-- cień: gałka minus kółko przesunięte w górę-lewo = sierp po dolnej-prawej -->
+  <path clip-path="url(#lhandle_knob)" fill="#000000" fill-opacity="0.22" fill-rule="evenodd"
+        d="M2,10 a8,8 0 1 0 16,0 a8,8 0 1 0 -16,0 Z M-1,7 a8,8 0 1 0 16,0 a8,8 0 1 0 -16,0 Z"/>
+</svg>

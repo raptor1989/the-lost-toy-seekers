@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" width="160" height="160">
+  <!--
+    Mydlany bąbelek — ruchoma platforma-winda z poziomu 2 (Dokumentacja 3.5,
+    `MovingPlatform` wariant `bubble`). 80 px w grze, zaczepiony u góry
+    (origin 0.5/0): górna krawędź pliku to poziom stóp, więc kula sięga prawie
+    do niej. Gra ugina go tweenem skali, więc nic nie zależy od stałych
+    proporcji. Bez ciemnego konturu — bąbelek ma być lekki: jasny obrys
+    #DCE8F7, prawie przezroczyste wnętrze gęstniejące przy brzegu (kula),
+    tęczowy refleks na dole-prawo z niską opacity, dwa bliki w kremowej bieli.
+    Sprawdzany na granacie nocy, gdzie będzie lecieć.
+  -->
+  <defs>
+    <radialGradient id="sbubble_fill" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#DCE8F7" stop-opacity="0.05"/>
+      <stop offset="0.7" stop-color="#DCE8F7" stop-opacity="0.16"/>
+      <stop offset="1" stop-color="#DCE8F7" stop-opacity="0.55"/>
+    </radialGradient>
+  </defs>
+
+  <!-- kula -->
+  <circle cx="80" cy="80" r="76" fill="url(#sbubble_fill)" stroke="#DCE8F7" stroke-width="4.5"/>
+
+  <!-- tęczowy refleks (dół-prawo) -->
+  <g fill="none" stroke-linecap="round">
+    <path d="M138,107 A64,64 0 0 1 63.4,141.8" stroke="#F9A8D4" stroke-width="8" stroke-opacity="0.6"/>
+    <path d="M131.7,104.1 A57,57 0 0 1 65.2,135.1" stroke="#FFF2B2" stroke-width="7" stroke-opacity="0.65"/>
+    <path d="M125.3,101.1 A50,50 0 0 1 67.1,128.3" stroke="#9CCBF2" stroke-width="6" stroke-opacity="0.6"/>
+  </g>
+
+  <!-- cienki wewnętrzny obrys — szkło -->
+  <circle cx="80" cy="80" r="68" fill="none" stroke="#F7F0E3" stroke-width="2" stroke-opacity="0.4"/>
+
+  <!-- bliki -->
+  <ellipse cx="52" cy="44" rx="17" ry="9" fill="#F7F0E3" opacity="0.85" transform="rotate(-38 52 44)"/>
+  <circle cx="36" cy="66" r="4.5" fill="#F7F0E3" opacity="0.8"/>
+  <circle cx="116" cy="121" r="3.2" fill="#F7F0E3" opacity="0.55"/>
+</svg>

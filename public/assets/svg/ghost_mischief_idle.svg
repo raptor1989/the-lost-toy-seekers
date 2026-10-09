@@ -1,25 +1,41 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" width="96" height="96">
   <!--
-    Duszek-Psotnik, poza spoczynkowa.
+    Duszek-Psotnik, poza spoczynkowa (w grze 96 px).
     Ma być ZABAWNY, nie straszny (GDD sekcja 2.2): szeroki uśmiech, rumieńce,
     uniesione brwi jak przy psocie, żadnych kłów ani zmrużonych oczu.
-    Blada lawenda zamiast błękitu, żeby nie mylił się z Graczem 2.
-    Paleta i grubości konturu: patrz docs/Styleguide_Wektorowy.md
+    Blada lawenda, nie błękit ani mięta — żeby nie mylił się z Graczem 2.
+    Art pass (M5): miękka poświata od środka (duszek lekko świeci w nocy), loczek na
+    czubku, cień od lewej i ziarno papieru jak u postaci.
+    Druga klatka: ghost_mischief_giggle.svg (chichot przy kontakcie).
   -->
   <defs>
-    <linearGradient id="gShade" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0"   stop-color="#4A3226" stop-opacity="0.2"/>
+    <radialGradient id="ghostI_body" cx="0.42" cy="0.3" r="0.8">
+      <stop offset="0" stop-color="#F3EEFF"/>
+      <stop offset="0.5" stop-color="#D6CBF2"/>
+      <stop offset="1" stop-color="#B9A9E0"/>
+    </radialGradient>
+    <radialGradient id="ghostI_glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#D6CBF2" stop-opacity="0.35"/>
+      <stop offset="1" stop-color="#D6CBF2" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="ghostI_shade" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#4A3226" stop-opacity="0.16"/>
       <stop offset="0.5" stop-color="#4A3226" stop-opacity="0"/>
     </linearGradient>
-    <filter id="gGrain" x="0" y="0" width="100%" height="100%">
+    <filter id="ghostI_grain" x="0" y="0" width="100%" height="100%">
       <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/>
       <feColorMatrix type="saturate" values="0"/>
     </filter>
-    <clipPath id="gBody">
+    <clipPath id="ghostI_clip">
       <path d="M16,50 C16,26 30,12 48,12 C66,12 80,26 80,50 L80,76
                q-8,12 -16,0 q-8,-12 -16,0 q-8,12 -16,0 q-8,-12 -16,0 Z"/>
+      <ellipse cx="13" cy="52" rx="8" ry="6.5"/>
+      <ellipse cx="83" cy="52" rx="8" ry="6.5"/>
+      <path d="M44,14 C40,8 44,2 52,4 C58,5 56,12 50,13 Z"/>
     </clipPath>
   </defs>
+
+  <circle cx="48" cy="48" r="47" fill="url(#ghostI_glow)"/>
 
   <g stroke="#4A3226" stroke-width="3" stroke-linejoin="round" stroke-linecap="round">
 
@@ -27,35 +43,41 @@
     <ellipse cx="13" cy="52" rx="8" ry="6.5" fill="#B9A9E0"/>
     <ellipse cx="83" cy="52" rx="8" ry="6.5" fill="#B9A9E0"/>
 
+    <!-- ===== loczek na czubku ===== -->
+    <path d="M44,14 C40,8 44,2 52,4 C58,5 56,12 50,13 Z" fill="#D6CBF2"/>
+
     <!-- ===== korpus z falowanym dołem ===== -->
     <path d="M16,50 C16,26 30,12 48,12 C66,12 80,26 80,50 L80,76
-             q-8,12 -16,0 q-8,-12 -16,0 q-8,12 -16,0 q-8,-12 -16,0 Z" fill="#D6CBF2"/>
+             q-8,12 -16,0 q-8,-12 -16,0 q-8,12 -16,0 q-8,-12 -16,0 Z" fill="url(#ghostI_body)"/>
 
     <!-- cień pod falą — dół czyta się jako materiał, nie jako ząbki -->
     <path d="M16,70 L80,70 L80,76 q-8,12 -16,0 q-8,-12 -16,0 q-8,12 -16,0 q-8,-12 -16,0 Z"
           fill="#B9A9E0" stroke="none"/>
 
     <!-- ===== twarz ===== -->
-    <g clip-path="url(#gBody)">
+    <g clip-path="url(#ghostI_clip)">
       <ellipse cx="27" cy="55" rx="8" ry="5" fill="#F2908E" stroke="none" opacity="0.85"/>
       <ellipse cx="69" cy="55" rx="8" ry="5" fill="#F2908E" stroke="none" opacity="0.85"/>
     </g>
 
-    <circle cx="38" cy="42" r="7" fill="#3A2820" stroke="none"/>
-    <circle cx="58" cy="42" r="7" fill="#3A2820" stroke="none"/>
-    <circle cx="35.6" cy="39.4" r="2.6" fill="#FFFFFF" stroke="none"/>
-    <circle cx="55.6" cy="39.4" r="2.6" fill="#FFFFFF" stroke="none"/>
+    <circle cx="38" cy="42" r="7.5" fill="#3A2820" stroke="none"/>
+    <circle cx="58" cy="42" r="7.5" fill="#3A2820" stroke="none"/>
+    <circle cx="35.4" cy="39.2" r="2.8" fill="#FFFFFF" stroke="none"/>
+    <circle cx="55.4" cy="39.2" r="2.8" fill="#FFFFFF" stroke="none"/>
+    <circle cx="40.5" cy="44.5" r="1.3" fill="#FFFFFF" stroke="none" opacity="0.85"/>
+    <circle cx="60.5" cy="44.5" r="1.3" fill="#FFFFFF" stroke="none" opacity="0.85"/>
 
     <!-- brwi uniesione „w psotę" -->
     <path d="M31,30 C34,27 40,27 43,29" fill="none" stroke-width="2.4" stroke-opacity="0.8"/>
     <path d="M53,29 C56,27 62,27 65,30" fill="none" stroke-width="2.4" stroke-opacity="0.8"/>
 
-    <!-- szeroki, otwarty uśmiech -->
-    <path d="M36,54 C40,64 56,64 60,54 C56,58 40,58 36,54 Z" fill="#B9A9E0" stroke-width="2.6"/>
+    <!-- szeroki, otwarty uśmiech z języczkiem -->
+    <path d="M36,54 C40,64 56,64 60,54 C56,58 40,58 36,54 Z" fill="#3A2820" stroke-width="2.6"/>
+    <path d="M44,59.5 C46,57.5 50,57.5 52,59.5 C51,61.5 45,61.5 44,59.5 Z" fill="#E15240" stroke="none"/>
   </g>
 
   <!-- ===== bryła i faktura (przycięte do sylwetki) ===== -->
-  <rect width="96" height="96" fill="url(#gShade)" clip-path="url(#gBody)"/>
-  <rect width="96" height="96" filter="url(#gGrain)" clip-path="url(#gBody)"
-        opacity="0.12" style="mix-blend-mode:multiply"/>
+  <rect width="96" height="96" fill="url(#ghostI_shade)" clip-path="url(#ghostI_clip)"/>
+  <rect width="96" height="96" filter="url(#ghostI_grain)" clip-path="url(#ghostI_clip)"
+        opacity="0.1" style="mix-blend-mode:multiply"/>
 </svg>

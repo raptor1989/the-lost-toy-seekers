@@ -1,0 +1,361 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 136 272" width="136" height="272">
+  <!--
+    Tileset poziomu 1 — „Kartonowy Las": trawnik, murek z kamieni, kartony, dekoracje ogrodu.
+    PLIK GENEROWANY przez tools/build-tilesets.mjs — nie edytuj ręcznie.
+    Kafel 32 px, margines 1, odstęp 2, 4 kolumny — jak tileset greyboxu
+    w mapach Tiled. Ładować: this.load.svg(key, plik, { width: 136, height: 272 }).
+    Kafle (gid):
+     1  grass_top
+     2  dirt_fill
+     3  ledge_mid
+     4  grass_tuft
+     5  grass_top_left
+     6  grass_top_right
+     7  dirt_left
+     8  dirt_right
+     9  ledge_left
+    10  ledge_right
+    11  grass_top_single
+    12  dirt_bottom
+    13  dirt_bottom_left
+    14  dirt_bottom_right
+    15  ledge_single
+    16  box_small
+    17  box_big_tl
+    18  box_big_tr
+    19  box_big_bl
+    20  box_big_br
+    21  flower_pink
+    22  flower_yellow
+    23  flower_blue
+    24  mushroom
+    25  fence_left
+    26  fence_mid
+    27  fence_right
+    28  ladder
+    29  pebbles
+    30  snail
+    31  sprout
+    32  grass_tuft_b
+  -->
+  <defs>
+<clipPath id="l1_c0"><rect x="0" y="0" width="34" height="34"/></clipPath>
+<clipPath id="l1_c1"><rect x="34" y="0" width="34" height="34"/></clipPath>
+<clipPath id="l1_c2"><rect x="68" y="0" width="34" height="34"/></clipPath>
+<clipPath id="l1_c3"><rect x="102" y="0" width="34" height="34"/></clipPath>
+<clipPath id="l1_c4"><rect x="0" y="34" width="34" height="34"/></clipPath>
+<clipPath id="l1_c5"><rect x="34" y="34" width="34" height="34"/></clipPath>
+<clipPath id="l1_c6"><rect x="68" y="34" width="34" height="34"/></clipPath>
+<clipPath id="l1_c7"><rect x="102" y="34" width="34" height="34"/></clipPath>
+<clipPath id="l1_c8"><rect x="0" y="68" width="34" height="34"/></clipPath>
+<clipPath id="l1_c9"><rect x="34" y="68" width="34" height="34"/></clipPath>
+<clipPath id="l1_c10"><rect x="68" y="68" width="34" height="34"/></clipPath>
+<clipPath id="l1_c11"><rect x="102" y="68" width="34" height="34"/></clipPath>
+<clipPath id="l1_c12"><rect x="0" y="102" width="34" height="34"/></clipPath>
+<clipPath id="l1_c13"><rect x="34" y="102" width="34" height="34"/></clipPath>
+<clipPath id="l1_c14"><rect x="68" y="102" width="34" height="34"/></clipPath>
+<clipPath id="l1_c15"><rect x="102" y="102" width="34" height="34"/></clipPath>
+<clipPath id="l1_c16"><rect x="0" y="136" width="34" height="34"/></clipPath>
+<clipPath id="l1_c17"><rect x="34" y="136" width="34" height="34"/></clipPath>
+<clipPath id="l1_c18"><rect x="68" y="136" width="34" height="34"/></clipPath>
+<clipPath id="l1_c19"><rect x="102" y="136" width="34" height="34"/></clipPath>
+<clipPath id="l1_c20"><rect x="0" y="170" width="34" height="34"/></clipPath>
+<clipPath id="l1_c21"><rect x="34" y="170" width="34" height="34"/></clipPath>
+<clipPath id="l1_c22"><rect x="68" y="170" width="34" height="34"/></clipPath>
+<clipPath id="l1_c23"><rect x="102" y="170" width="34" height="34"/></clipPath>
+<clipPath id="l1_c24"><rect x="0" y="204" width="34" height="34"/></clipPath>
+<clipPath id="l1_c25"><rect x="34" y="204" width="34" height="34"/></clipPath>
+<clipPath id="l1_c26"><rect x="68" y="204" width="34" height="34"/></clipPath>
+<clipPath id="l1_c27"><rect x="102" y="204" width="34" height="34"/></clipPath>
+<clipPath id="l1_c28"><rect x="0" y="238" width="34" height="34"/></clipPath>
+<clipPath id="l1_c29"><rect x="34" y="238" width="34" height="34"/></clipPath>
+<clipPath id="l1_c30"><rect x="68" y="238" width="34" height="34"/></clipPath>
+<clipPath id="l1_c31"><rect x="102" y="238" width="34" height="34"/></clipPath>
+  </defs>
+<!-- 1: grass_top -->
+<g clip-path="url(#l1_c0)"><rect x="-1" y="11" width="36" height="26" fill="#8A5A3A"/><g clip-path="inset(0)"><rect x="-4" y="17" width="14" height="12" rx="4.5" fill="#A67448" stroke="#5E3B24" stroke-width="2"/>
+     <path d="M-1,20.5 h8" stroke="#C49363" stroke-width="2.2" stroke-opacity="0.75" fill="none"/>
+<rect x="12" y="17" width="14" height="12" rx="4.5" fill="#A67448" stroke="#5E3B24" stroke-width="2"/>
+     <path d="M15,20.5 h8" stroke="#C49363" stroke-width="2.2" stroke-opacity="0.75" fill="none"/>
+<rect x="28" y="17" width="14" height="12" rx="4.5" fill="#A67448" stroke="#5E3B24" stroke-width="2"/>
+     <path d="M31,20.5 h8" stroke="#C49363" stroke-width="2.2" stroke-opacity="0.75" fill="none"/>
+<rect x="2" y="33" width="18" height="12" rx="4.5" fill="#A67448" stroke="#5E3B24" stroke-width="2"/>
+     <path d="M5,36.5 h12" stroke="#C49363" stroke-width="2.2" stroke-opacity="0.75" fill="none"/>
+<rect x="22" y="33" width="10" height="12" rx="4.5" fill="#A67448" stroke="#5E3B24" stroke-width="2"/>
+     <path d="M25,36.5 h4" stroke="#C49363" stroke-width="2.2" stroke-opacity="0.75" fill="none"/></g><path d="M-3,8 L-1,3 L1,9 L3,3 L5,6 L7,3 L9,8 L11,3 L13,5 L15,3 L17,9 L19,3 L21,7 L23,3 L25,5 L27,3 L29,8 L31,3 L33,9 L35,3 L37,6 L39,3 L37,30 L-3,30 Z" fill="#4E9A52" stroke="#4A3226" stroke-width="1.6" stroke-linejoin="round"/>
+  <g fill="#8CD14A">
+    <path d="M4,11 l1.5,-7 l2,7 Z"/>
+    <path d="M13,11 l1.5,-6 l2,6 Z"/>
+    <path d="M21,10 l1.5,-7 l2,7 Z"/>
+    <path d="M28,11 l1.5,-5 l2,5 Z"/>
+  </g><path d="M-3,18 C3,23 9,16 15,21 C21,25 27,17 37,22 L37,10 L-3,10 Z" fill="#2F6B35"/></g>
+<!-- 2: dirt_fill -->
+<g clip-path="url(#l1_c1)"><rect x="33" y="-1" width="36" height="36" fill="#8A5A3A"/><rect x="36" y="3" width="18" height="12" rx="4.5" fill="#A67448" stroke="#5E3B24" stroke-width="2"/>
+     <path d="M39,6.5 h12" stroke="#C49363" stroke-width="2.2" stroke-opacity="0.75" fill="none"/>
+<rect x="56" y="3" width="10" height="12" rx="4.5" fill="#A67448" stroke="#5E3B24" stroke-width="2"/>
+     <path d="M59,6.5 h4" stroke="#C49363" stroke-width="2.2" stroke-opacity="0.75" fill="none"/>
+<rect x="30" y="19" width="14" height="12" rx="4.5" fill="#A67448" stroke="#5E3B24" stroke-width="2"/>
+     <path d="M33,22.5 h8" stroke="#C49363" stroke-width="2.2" stroke-opacity="0.75" fill="none"/>
+<rect x="46" y="19" width="14" height="12" rx="4.5" fill="#A67448" stroke="#5E3B24" stroke-width="2"/>
+     <path d="M49,22.5 h8" stroke="#C49363" stroke-width="2.2" stroke-opacity="0.75" fill="none"/>
+<rect x="62" y="19" width="14" height="12" rx="4.5" fill="#A67448" stroke="#5E3B24" stroke-width="2"/>
+     <path d="M65,22.5 h8" stroke="#C49363" stroke-width="2.2" stroke-opacity="0.75" fill="none"/></g>
+<!-- 3: ledge_mid -->
+<g clip-path="url(#l1_c2)"><path d="M65,11 L105,11 L105,20 Q85,25 65,20 Z" fill="#8A5A3A" stroke="#4A3226" stroke-width="2.4" stroke-linejoin="round"/><path d="M68,19 L102,19" stroke="#5E3B24" stroke-width="2" stroke-opacity="0.6"/><g clip-path="url(#ledgeClip_69_1)"><path d="M65,7 L67,2 L69,8 L71,2 L73,5 L75,2 L77,7 L79,2 L81,4 L83,2 L85,8 L87,2 L89,6 L91,2 L93,4 L95,2 L97,7 L99,2 L101,8 L103,2 L105,5 L107,2 L105,29 L65,29 Z" fill="#4E9A52" stroke="#4A3226" stroke-width="1.6" stroke-linejoin="round"/></g><defs><clipPath id="ledgeClip_69_1"><rect x="64" y="-1" width="42" height="17"/></clipPath></defs><g clip-path="url(#ledgeClip_69_1)">
+  <g fill="#8CD14A">
+    <path d="M72,10 l1.5,-7 l2,7 Z"/>
+    <path d="M81,10 l1.5,-6 l2,6 Z"/>
+    <path d="M89,9 l1.5,-7 l2,7 Z"/>
+    <path d="M96,10 l1.5,-5 l2,5 Z"/>
+  </g></g><path d="M65,15 L105,15" stroke="#2F6B35" stroke-width="2.4"/></g>
+<!-- 4: grass_tuft -->
+<g clip-path="url(#l1_c3)">
+    <g stroke="#4A3226" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round">
+      <path d="M111,33 C109,25 107,19 105,15 C111,18 113,25 114,33 Z" fill="#4E9A52"/>
+      <path d="M116,33 C116,23 118,15 120,9 C123,16 123,25 122,33 Z" fill="#8CD14A"/>
+      <path d="M124,33 C125,26 128,20 133,16 C131,22 130,27 129,33 Z" fill="#4E9A52"/>
+    </g></g>
+<!-- 5: grass_top_left -->
+<g clip-path="url(#l1_c4)"><rect x="-1" y="45" width="36" height="26" fill="#8A5A3A"/><g clip-path="inset(0)"><rect x="-4" y="51" width="14" height="12" rx="4.5" fill="#A67448" stroke="#5E3B24" stroke-width="2"/>
+     <path d="M-1,54.5 h8" stroke="#C49363" stroke-width="2.2" stroke-opacity="0.75" fill="none"/>
+<rect x="12" y="51" width="14" height="12" rx="4.5" fill="#A67448" stroke="#5E3B24" stroke-width="2"/>
+     <path d="M15,54.5 h8" stroke="#C49363" stroke-width="2.2" stroke-opacity="0.75" fill="none"/>
+<rect x="28" y="51" width="14" height="12" rx="4.5" fill="#A67448" stroke="#5E3B24" stroke-width="2"/>
+     <path d="M31,54.5 h8" stroke="#C49363" stroke-width="2.2" stroke-opacity="0.75" fill="none"/>
+<rect x="2" y="67" width="18" height="12" rx="4.5" fill="#A67448" stroke="#5E3B24" stroke-width="2"/>
+     <path d="M5,70.5 h12" stroke="#C49363" stroke-width="2.2" stroke-opacity="0.75" fill="none"/>
+<rect x="22" y="67" width="10" height="12" rx="4.5" fill="#A67448" stroke="#5E3B24" stroke-width="2"/>
+     <path d="M25,70.5 h4" stroke="#C49363" stroke-width="2.2" stroke-opacity="0.75" fill="none"/></g><path d="M-3,42 L-1,37 L1,43 L3,37 L5,40 L7,37 L9,42 L11,37 L13,39 L15,37 L17,43 L19,37 L21,41 L23,37 L25,39 L27,37 L29,42 L31,37 L33,43 L35,37 L37,40 L39,37 L37,64 L-3,64 Z" fill="#4E9A52" stroke="#4A3226" stroke-width="1.6" stroke-linejoin="round"/>
+  <g fill="#8CD14A">
+    <path d="M4,45 l1.5,-7 l2,7 Z"/>
+    <path d="M13,45 l1.5,-6 l2,6 Z"/>
+    <path d="M21,44 l1.5,-7 l2,7 Z"/>
+    <path d="M28,45 l1.5,-5 l2,5 Z"/>
+  </g><path d="M-3,52 C3,57 9,50 15,55 C21,59 27,51 37,56 L37,44 L-3,44 Z" fill="#2F6B35"/><path d="M-1,69 L-1,38" stroke="#4A3226" stroke-width="3"/></g>
+<!-- 6: grass_top_right -->
+<g clip-path="url(#l1_c5)"><rect x="33" y="45" width="36" height="26" fill="#8A5A3A"/><g clip-path="inset(0)"><rect x="30" y="51" width="14" height="12" rx="4.5" fill="#A67448" stroke="#5E3B24" stroke-width="2"/>
+     <path d="M33,54.5 h8" stroke="#C49363" stroke-width="2.2" stroke-opacity="0.75" fill="none"/>
+<rect x="46" y="51" width="14" height="12" rx="4.5" fill="#A67448" stroke="#5E3B24" stroke-width="2"/>
+     <path d="M49,54.5 h8" stroke="#C49363" stroke-width="2.2" stroke-opacity="0.75" fill="none"/>
+<rect x="62" y="51" width="14" height="12" rx="4.5" fill="#A67448" stroke="#5E3B24" stroke-width="2"/>
+     <path d="M65,54.5 h8" stroke="#C49363" stroke-width="2.2" stroke-opacity="0.75" fill="none"/>
+<rect x="36" y="67" width="18" height="12" rx="4.5" fill="#A67448" stroke="#5E3B24" stroke-width="2"/>
+     <path d="M39,70.5 h12" stroke="#C49363" stroke-width="2.2" stroke-opacity="0.75" fill="none"/>
+<rect x="56" y="67" width="10" height="12" rx="4.5" fill="#A67448" stroke="#5E3B24" stroke-width="2"/>
+     <path d="M59,70.5 h4" stroke="#C49363" stroke-width="2.2" stroke-opacity="0.75" fill="none"/></g><path d="M31,42 L33,37 L35,43 L37,37 L39,40 L41,37 L43,42 L45,37 L47,39 L49,37 L51,43 L53,37 L55,41 L57,37 L59,39 L61,37 L63,42 L65,37 L67,43 L69,37 L71,40 L73,37 L71,64 L31,64 Z" fill="#4E9A52" stroke="#4A3226" stroke-width="1.6" stroke-linejoin="round"/>
+  <g fill="#8CD14A">
+    <path d="M38,45 l1.5,-7 l2,7 Z"/>
+    <path d="M47,45 l1.5,-6 l2,6 Z"/>
+    <path d="M55,44 l1.5,-7 l2,7 Z"/>
+    <path d="M62,45 l1.5,-5 l2,5 Z"/>
+  </g><path d="M31,52 C37,57 43,50 49,55 C55,59 61,51 71,56 L71,44 L31,44 Z" fill="#2F6B35"/><path d="M69,69 L69,38" stroke="#4A3226" stroke-width="3"/></g>
+<!-- 7: dirt_left -->
+<g clip-path="url(#l1_c6)"><rect x="67" y="33" width="36" height="36" fill="#8A5A3A"/><rect x="70" y="37" width="18" height="12" rx="4.5" fill="#A67448" stroke="#5E3B24" stroke-width="2"/>
+     <path d="M73,40.5 h12" stroke="#C49363" stroke-width="2.2" stroke-opacity="0.75" fill="none"/>
+<rect x="90" y="37" width="10" height="12" rx="4.5" fill="#A67448" stroke="#5E3B24" stroke-width="2"/>
+     <path d="M93,40.5 h4" stroke="#C49363" stroke-width="2.2" stroke-opacity="0.75" fill="none"/>
+<rect x="64" y="53" width="14" height="12" rx="4.5" fill="#A67448" stroke="#5E3B24" stroke-width="2"/>
+     <path d="M67,56.5 h8" stroke="#C49363" stroke-width="2.2" stroke-opacity="0.75" fill="none"/>
+<rect x="80" y="53" width="14" height="12" rx="4.5" fill="#A67448" stroke="#5E3B24" stroke-width="2"/>
+     <path d="M83,56.5 h8" stroke="#C49363" stroke-width="2.2" stroke-opacity="0.75" fill="none"/>
+<rect x="96" y="53" width="14" height="12" rx="4.5" fill="#A67448" stroke="#5E3B24" stroke-width="2"/>
+     <path d="M99,56.5 h8" stroke="#C49363" stroke-width="2.2" stroke-opacity="0.75" fill="none"/><path d="M69.5,33 L69.5,69" stroke="#4A3226" stroke-width="3"/><rect x="70" y="33" width="4" height="36" fill="#5E3B24" opacity="0.45"/></g>
+<!-- 8: dirt_right -->
+<g clip-path="url(#l1_c7)"><rect x="101" y="33" width="36" height="36" fill="#8A5A3A"/><rect x="104" y="37" width="18" height="12" rx="4.5" fill="#A67448" stroke="#5E3B24" stroke-width="2"/>
+     <path d="M107,40.5 h12" stroke="#C49363" stroke-width="2.2" stroke-opacity="0.75" fill="none"/>
+<rect x="124" y="37" width="10" height="12" rx="4.5" fill="#A67448" stroke="#5E3B24" stroke-width="2"/>
+     <path d="M127,40.5 h4" stroke="#C49363" stroke-width="2.2" stroke-opacity="0.75" fill="none"/>
+<rect x="98" y="53" width="14" height="12" rx="4.5" fill="#A67448" stroke="#5E3B24" stroke-width="2"/>
+     <path d="M101,56.5 h8" stroke="#C49363" stroke-width="2.2" stroke-opacity="0.75" fill="none"/>
+<rect x="114" y="53" width="14" height="12" rx="4.5" fill="#A67448" stroke="#5E3B24" stroke-width="2"/>
+     <path d="M117,56.5 h8" stroke="#C49363" stroke-width="2.2" stroke-opacity="0.75" fill="none"/>
+<rect x="130" y="53" width="14" height="12" rx="4.5" fill="#A67448" stroke="#5E3B24" stroke-width="2"/>
+     <path d="M133,56.5 h8" stroke="#C49363" stroke-width="2.2" stroke-opacity="0.75" fill="none"/><path d="M134.5,33 L134.5,69" stroke="#4A3226" stroke-width="3"/><rect x="130" y="33" width="4" height="36" fill="#5E3B24" opacity="0.45"/></g>
+<!-- 9: ledge_left -->
+<g clip-path="url(#l1_c8)"><path d="M3,79 L37,79 L37,88 Q20,93 3,88 Z" fill="#8A5A3A" stroke="#4A3226" stroke-width="2.4" stroke-linejoin="round"/><path d="M6,87 L34,87" stroke="#5E3B24" stroke-width="2" stroke-opacity="0.6"/><g clip-path="url(#ledgeClip_1_69)"><path d="M-3,75 L-1,70 L1,76 L3,70 L5,73 L7,70 L9,75 L11,70 L13,72 L15,70 L17,76 L19,70 L21,74 L23,70 L25,72 L27,70 L29,75 L31,70 L33,76 L35,70 L37,73 L39,70 L37,97 L-3,97 Z" fill="#4E9A52" stroke="#4A3226" stroke-width="1.6" stroke-linejoin="round"/></g><defs><clipPath id="ledgeClip_1_69"><rect x="2" y="67" width="36" height="17"/></clipPath></defs><g clip-path="url(#ledgeClip_1_69)">
+  <g fill="#8CD14A">
+    <path d="M4,78 l1.5,-7 l2,7 Z"/>
+    <path d="M13,78 l1.5,-6 l2,6 Z"/>
+    <path d="M21,77 l1.5,-7 l2,7 Z"/>
+    <path d="M28,78 l1.5,-5 l2,5 Z"/>
+  </g></g><path d="M3,83 L37,83" stroke="#2F6B35" stroke-width="2.4"/><path d="M3,72 L3,88" stroke="#4A3226" stroke-width="2.6" stroke-linecap="round"/></g>
+<!-- 10: ledge_right -->
+<g clip-path="url(#l1_c9)"><path d="M31,79 L65,79 L65,88 Q48,93 31,88 Z" fill="#8A5A3A" stroke="#4A3226" stroke-width="2.4" stroke-linejoin="round"/><path d="M34,87 L62,87" stroke="#5E3B24" stroke-width="2" stroke-opacity="0.6"/><g clip-path="url(#ledgeClip_35_69)"><path d="M31,75 L33,70 L35,76 L37,70 L39,73 L41,70 L43,75 L45,70 L47,72 L49,70 L51,76 L53,70 L55,74 L57,70 L59,72 L61,70 L63,75 L65,70 L67,76 L69,70 L71,73 L73,70 L71,97 L31,97 Z" fill="#4E9A52" stroke="#4A3226" stroke-width="1.6" stroke-linejoin="round"/></g><defs><clipPath id="ledgeClip_35_69"><rect x="30" y="67" width="36" height="17"/></clipPath></defs><g clip-path="url(#ledgeClip_35_69)">
+  <g fill="#8CD14A">
+    <path d="M38,78 l1.5,-7 l2,7 Z"/>
+    <path d="M47,78 l1.5,-6 l2,6 Z"/>
+    <path d="M55,77 l1.5,-7 l2,7 Z"/>
+    <path d="M62,78 l1.5,-5 l2,5 Z"/>
+  </g></g><path d="M31,83 L65,83" stroke="#2F6B35" stroke-width="2.4"/><path d="M65,72 L65,88" stroke="#4A3226" stroke-width="2.6" stroke-linecap="round"/></g>
+<!-- 11: grass_top_single -->
+<g clip-path="url(#l1_c10)"><rect x="67" y="79" width="36" height="26" fill="#8A5A3A"/><g clip-path="inset(0)"><rect x="64" y="85" width="14" height="12" rx="4.5" fill="#A67448" stroke="#5E3B24" stroke-width="2"/>
+     <path d="M67,88.5 h8" stroke="#C49363" stroke-width="2.2" stroke-opacity="0.75" fill="none"/>
+<rect x="80" y="85" width="14" height="12" rx="4.5" fill="#A67448" stroke="#5E3B24" stroke-width="2"/>
+     <path d="M83,88.5 h8" stroke="#C49363" stroke-width="2.2" stroke-opacity="0.75" fill="none"/>
+<rect x="96" y="85" width="14" height="12" rx="4.5" fill="#A67448" stroke="#5E3B24" stroke-width="2"/>
+     <path d="M99,88.5 h8" stroke="#C49363" stroke-width="2.2" stroke-opacity="0.75" fill="none"/>
+<rect x="70" y="101" width="18" height="12" rx="4.5" fill="#A67448" stroke="#5E3B24" stroke-width="2"/>
+     <path d="M73,104.5 h12" stroke="#C49363" stroke-width="2.2" stroke-opacity="0.75" fill="none"/>
+<rect x="90" y="101" width="10" height="12" rx="4.5" fill="#A67448" stroke="#5E3B24" stroke-width="2"/>
+     <path d="M93,104.5 h4" stroke="#C49363" stroke-width="2.2" stroke-opacity="0.75" fill="none"/></g><path d="M65,76 L67,71 L69,77 L71,71 L73,74 L75,71 L77,76 L79,71 L81,73 L83,71 L85,77 L87,71 L89,75 L91,71 L93,73 L95,71 L97,76 L99,71 L101,77 L103,71 L105,74 L107,71 L105,98 L65,98 Z" fill="#4E9A52" stroke="#4A3226" stroke-width="1.6" stroke-linejoin="round"/>
+  <g fill="#8CD14A">
+    <path d="M72,79 l1.5,-7 l2,7 Z"/>
+    <path d="M81,79 l1.5,-6 l2,6 Z"/>
+    <path d="M89,78 l1.5,-7 l2,7 Z"/>
+    <path d="M96,79 l1.5,-5 l2,5 Z"/>
+  </g><path d="M65,86 C71,91 77,84 83,89 C89,93 95,85 105,90 L105,78 L65,78 Z" fill="#2F6B35"/><path d="M67,103 L67,72" stroke="#4A3226" stroke-width="3"/><path d="M103,103 L103,72" stroke="#4A3226" stroke-width="3"/></g>
+<!-- 12: dirt_bottom -->
+<g clip-path="url(#l1_c11)"><rect x="101" y="67" width="36" height="32" fill="#8A5A3A"/><rect x="104" y="71" width="18" height="12" rx="4.5" fill="#A67448" stroke="#5E3B24" stroke-width="2"/>
+     <path d="M107,74.5 h12" stroke="#C49363" stroke-width="2.2" stroke-opacity="0.75" fill="none"/>
+<rect x="124" y="71" width="10" height="12" rx="4.5" fill="#A67448" stroke="#5E3B24" stroke-width="2"/>
+     <path d="M127,74.5 h4" stroke="#C49363" stroke-width="2.2" stroke-opacity="0.75" fill="none"/>
+<rect x="98" y="87" width="14" height="12" rx="4.5" fill="#A67448" stroke="#5E3B24" stroke-width="2"/>
+     <path d="M101,90.5 h8" stroke="#C49363" stroke-width="2.2" stroke-opacity="0.75" fill="none"/>
+<rect x="114" y="87" width="14" height="12" rx="4.5" fill="#A67448" stroke="#5E3B24" stroke-width="2"/>
+     <path d="M117,90.5 h8" stroke="#C49363" stroke-width="2.2" stroke-opacity="0.75" fill="none"/>
+<rect x="130" y="87" width="14" height="12" rx="4.5" fill="#A67448" stroke="#5E3B24" stroke-width="2"/>
+     <path d="M133,90.5 h8" stroke="#C49363" stroke-width="2.2" stroke-opacity="0.75" fill="none"/><path d="M101,98.5 L137,98.5" stroke="#4A3226" stroke-width="3"/><rect x="101" y="93" width="36" height="5" fill="#5E3B24" opacity="0.5"/><g stroke="#4A3226" stroke-width="1.8" stroke-linecap="round" fill="none">
+      <path d="M110,99 q-1,3 1,5"/><path d="M124,99 q1,3 -1,6"/></g></g>
+<!-- 13: dirt_bottom_left -->
+<g clip-path="url(#l1_c12)"><rect x="-1" y="101" width="36" height="32" fill="#8A5A3A"/><rect x="2" y="105" width="18" height="12" rx="4.5" fill="#A67448" stroke="#5E3B24" stroke-width="2"/>
+     <path d="M5,108.5 h12" stroke="#C49363" stroke-width="2.2" stroke-opacity="0.75" fill="none"/>
+<rect x="22" y="105" width="10" height="12" rx="4.5" fill="#A67448" stroke="#5E3B24" stroke-width="2"/>
+     <path d="M25,108.5 h4" stroke="#C49363" stroke-width="2.2" stroke-opacity="0.75" fill="none"/>
+<rect x="-4" y="121" width="14" height="12" rx="4.5" fill="#A67448" stroke="#5E3B24" stroke-width="2"/>
+     <path d="M-1,124.5 h8" stroke="#C49363" stroke-width="2.2" stroke-opacity="0.75" fill="none"/>
+<rect x="12" y="121" width="14" height="12" rx="4.5" fill="#A67448" stroke="#5E3B24" stroke-width="2"/>
+     <path d="M15,124.5 h8" stroke="#C49363" stroke-width="2.2" stroke-opacity="0.75" fill="none"/>
+<rect x="28" y="121" width="14" height="12" rx="4.5" fill="#A67448" stroke="#5E3B24" stroke-width="2"/>
+     <path d="M31,124.5 h8" stroke="#C49363" stroke-width="2.2" stroke-opacity="0.75" fill="none"/><path d="M-1,132.5 L35,132.5" stroke="#4A3226" stroke-width="3"/><rect x="-1" y="127" width="36" height="5" fill="#5E3B24" opacity="0.5"/><g stroke="#4A3226" stroke-width="1.8" stroke-linecap="round" fill="none">
+      <path d="M8,133 q-1,3 1,5"/><path d="M22,133 q1,3 -1,6"/></g><path d="M1.5,101 L1.5,133" stroke="#4A3226" stroke-width="3"/></g>
+<!-- 14: dirt_bottom_right -->
+<g clip-path="url(#l1_c13)"><rect x="33" y="101" width="36" height="32" fill="#8A5A3A"/><rect x="36" y="105" width="18" height="12" rx="4.5" fill="#A67448" stroke="#5E3B24" stroke-width="2"/>
+     <path d="M39,108.5 h12" stroke="#C49363" stroke-width="2.2" stroke-opacity="0.75" fill="none"/>
+<rect x="56" y="105" width="10" height="12" rx="4.5" fill="#A67448" stroke="#5E3B24" stroke-width="2"/>
+     <path d="M59,108.5 h4" stroke="#C49363" stroke-width="2.2" stroke-opacity="0.75" fill="none"/>
+<rect x="30" y="121" width="14" height="12" rx="4.5" fill="#A67448" stroke="#5E3B24" stroke-width="2"/>
+     <path d="M33,124.5 h8" stroke="#C49363" stroke-width="2.2" stroke-opacity="0.75" fill="none"/>
+<rect x="46" y="121" width="14" height="12" rx="4.5" fill="#A67448" stroke="#5E3B24" stroke-width="2"/>
+     <path d="M49,124.5 h8" stroke="#C49363" stroke-width="2.2" stroke-opacity="0.75" fill="none"/>
+<rect x="62" y="121" width="14" height="12" rx="4.5" fill="#A67448" stroke="#5E3B24" stroke-width="2"/>
+     <path d="M65,124.5 h8" stroke="#C49363" stroke-width="2.2" stroke-opacity="0.75" fill="none"/><path d="M33,132.5 L69,132.5" stroke="#4A3226" stroke-width="3"/><rect x="33" y="127" width="36" height="5" fill="#5E3B24" opacity="0.5"/><g stroke="#4A3226" stroke-width="1.8" stroke-linecap="round" fill="none">
+      <path d="M42,133 q-1,3 1,5"/><path d="M56,133 q1,3 -1,6"/></g><path d="M66.5,101 L66.5,133" stroke="#4A3226" stroke-width="3"/></g>
+<!-- 15: ledge_single -->
+<g clip-path="url(#l1_c14)"><path d="M71,113 L99,113 L99,122 Q85,127 71,122 Z" fill="#8A5A3A" stroke="#4A3226" stroke-width="2.4" stroke-linejoin="round"/><path d="M74,121 L96,121" stroke="#5E3B24" stroke-width="2" stroke-opacity="0.6"/><g clip-path="url(#ledgeClip_69_103)"><path d="M65,109 L67,104 L69,110 L71,104 L73,107 L75,104 L77,109 L79,104 L81,106 L83,104 L85,110 L87,104 L89,108 L91,104 L93,106 L95,104 L97,109 L99,104 L101,110 L103,104 L105,107 L107,104 L105,131 L65,131 Z" fill="#4E9A52" stroke="#4A3226" stroke-width="1.6" stroke-linejoin="round"/></g><defs><clipPath id="ledgeClip_69_103"><rect x="70" y="101" width="30" height="17"/></clipPath></defs><g clip-path="url(#ledgeClip_69_103)">
+  <g fill="#8CD14A">
+    <path d="M72,112 l1.5,-7 l2,7 Z"/>
+    <path d="M81,112 l1.5,-6 l2,6 Z"/>
+    <path d="M89,111 l1.5,-7 l2,7 Z"/>
+    <path d="M96,112 l1.5,-5 l2,5 Z"/>
+  </g></g><path d="M71,117 L99,117" stroke="#2F6B35" stroke-width="2.4"/><path d="M71,106 L71,122" stroke="#4A3226" stroke-width="2.6" stroke-linecap="round"/><path d="M99,106 L99,122" stroke="#4A3226" stroke-width="2.6" stroke-linecap="round"/></g>
+<!-- 16: box_small -->
+<g clip-path="url(#l1_c15)"><g clip-path="url(#boxClip_103_103)"><rect x="104.5" y="104.5" width="29" height="29" rx="4" fill="#C89257"/><path d="M104.5,109.5 L133.5,109.5 L133.5,104.5 L104.5,104.5 Z" fill="#DCA96D"/><rect x="128.5" y="108" width="5" height="25" fill="#A8743F" opacity="0.8"/><path d="M109,116 L126,116" stroke="#A8743F" stroke-width="1.2" stroke-opacity="0.35"/><path d="M109,123 L126,123" stroke="#A8743F" stroke-width="1.2" stroke-opacity="0.35"/><rect x="115" y="104.5" width="8" height="29" fill="#EFDCB8" opacity="0.9"/><path d="M104.5,109.5 L133.5,109.5" stroke="#6B4A2A" stroke-width="1.8"/><rect x="104.5" y="104.5" width="29" height="29" rx="4" fill="none" stroke="#6B4A2A" stroke-width="3"/></g><defs><clipPath id="boxClip_103_103"><rect x="103" y="103" width="32" height="32"/></clipPath></defs></g>
+<!-- 17: box_big_tl -->
+<g clip-path="url(#l1_c16)"><g clip-path="url(#boxClip_1_137)"><rect x="2.5" y="138.5" width="61" height="61" rx="6" fill="#C89257"/><path d="M2.5,149.5 L63.5,149.5 L63.5,138.5 L2.5,138.5 Z" fill="#DCA96D"/><rect x="58.5" y="148" width="5" height="51" fill="#A8743F" opacity="0.8"/><path d="M7,156 L56,156" stroke="#A8743F" stroke-width="1.2" stroke-opacity="0.35"/><path d="M7,163 L56,163" stroke="#A8743F" stroke-width="1.2" stroke-opacity="0.35"/><path d="M7,170 L56,170" stroke="#A8743F" stroke-width="1.2" stroke-opacity="0.35"/><path d="M7,177 L56,177" stroke="#A8743F" stroke-width="1.2" stroke-opacity="0.35"/><path d="M7,184 L56,184" stroke="#A8743F" stroke-width="1.2" stroke-opacity="0.35"/><path d="M7,191 L56,191" stroke="#A8743F" stroke-width="1.2" stroke-opacity="0.35"/><rect x="27" y="138.5" width="12" height="61" fill="#EFDCB8" opacity="0.9"/><path d="M2.5,149.5 L63.5,149.5" stroke="#6B4A2A" stroke-width="1.8"/><g stroke="#6B4A2A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none">
+        <path d="M13,166 v-8 m-3,3 l3,-3 l3,3 M20,166 v-8 m-3,3 l3,-3 l3,3"/></g><rect x="39" y="158" width="14" height="9" rx="2" fill="#EFDCB8" stroke="#6B4A2A" stroke-width="1.5"/><rect x="2.5" y="138.5" width="61" height="61" rx="6" fill="none" stroke="#6B4A2A" stroke-width="3"/></g><defs><clipPath id="boxClip_1_137"><rect x="1" y="137" width="32" height="32"/></clipPath></defs></g>
+<!-- 18: box_big_tr -->
+<g clip-path="url(#l1_c17)"><g clip-path="url(#boxClip_35_137)"><rect x="4.5" y="138.5" width="61" height="61" rx="6" fill="#C89257"/><path d="M4.5,149.5 L65.5,149.5 L65.5,138.5 L4.5,138.5 Z" fill="#DCA96D"/><rect x="60.5" y="148" width="5" height="51" fill="#A8743F" opacity="0.8"/><path d="M9,156 L58,156" stroke="#A8743F" stroke-width="1.2" stroke-opacity="0.35"/><path d="M9,163 L58,163" stroke="#A8743F" stroke-width="1.2" stroke-opacity="0.35"/><path d="M9,170 L58,170" stroke="#A8743F" stroke-width="1.2" stroke-opacity="0.35"/><path d="M9,177 L58,177" stroke="#A8743F" stroke-width="1.2" stroke-opacity="0.35"/><path d="M9,184 L58,184" stroke="#A8743F" stroke-width="1.2" stroke-opacity="0.35"/><path d="M9,191 L58,191" stroke="#A8743F" stroke-width="1.2" stroke-opacity="0.35"/><rect x="29" y="138.5" width="12" height="61" fill="#EFDCB8" opacity="0.9"/><path d="M4.5,149.5 L65.5,149.5" stroke="#6B4A2A" stroke-width="1.8"/><g stroke="#6B4A2A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none">
+        <path d="M15,166 v-8 m-3,3 l3,-3 l3,3 M22,166 v-8 m-3,3 l3,-3 l3,3"/></g><rect x="41" y="158" width="14" height="9" rx="2" fill="#EFDCB8" stroke="#6B4A2A" stroke-width="1.5"/><rect x="4.5" y="138.5" width="61" height="61" rx="6" fill="none" stroke="#6B4A2A" stroke-width="3"/></g><defs><clipPath id="boxClip_35_137"><rect x="35" y="137" width="32" height="32"/></clipPath></defs></g>
+<!-- 19: box_big_bl -->
+<g clip-path="url(#l1_c18)"><g clip-path="url(#boxClip_69_137)"><rect x="70.5" y="106.5" width="61" height="61" rx="6" fill="#C89257"/><path d="M70.5,117.5 L131.5,117.5 L131.5,106.5 L70.5,106.5 Z" fill="#DCA96D"/><rect x="126.5" y="116" width="5" height="51" fill="#A8743F" opacity="0.8"/><path d="M75,124 L124,124" stroke="#A8743F" stroke-width="1.2" stroke-opacity="0.35"/><path d="M75,131 L124,131" stroke="#A8743F" stroke-width="1.2" stroke-opacity="0.35"/><path d="M75,138 L124,138" stroke="#A8743F" stroke-width="1.2" stroke-opacity="0.35"/><path d="M75,145 L124,145" stroke="#A8743F" stroke-width="1.2" stroke-opacity="0.35"/><path d="M75,152 L124,152" stroke="#A8743F" stroke-width="1.2" stroke-opacity="0.35"/><path d="M75,159 L124,159" stroke="#A8743F" stroke-width="1.2" stroke-opacity="0.35"/><rect x="95" y="106.5" width="12" height="61" fill="#EFDCB8" opacity="0.9"/><path d="M70.5,117.5 L131.5,117.5" stroke="#6B4A2A" stroke-width="1.8"/><g stroke="#6B4A2A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none">
+        <path d="M81,134 v-8 m-3,3 l3,-3 l3,3 M88,134 v-8 m-3,3 l3,-3 l3,3"/></g><rect x="107" y="126" width="14" height="9" rx="2" fill="#EFDCB8" stroke="#6B4A2A" stroke-width="1.5"/><rect x="70.5" y="106.5" width="61" height="61" rx="6" fill="none" stroke="#6B4A2A" stroke-width="3"/></g><defs><clipPath id="boxClip_69_137"><rect x="69" y="137" width="32" height="32"/></clipPath></defs></g>
+<!-- 20: box_big_br -->
+<g clip-path="url(#l1_c19)"><g clip-path="url(#boxClip_103_137)"><rect x="72.5" y="106.5" width="61" height="61" rx="6" fill="#C89257"/><path d="M72.5,117.5 L133.5,117.5 L133.5,106.5 L72.5,106.5 Z" fill="#DCA96D"/><rect x="128.5" y="116" width="5" height="51" fill="#A8743F" opacity="0.8"/><path d="M77,124 L126,124" stroke="#A8743F" stroke-width="1.2" stroke-opacity="0.35"/><path d="M77,131 L126,131" stroke="#A8743F" stroke-width="1.2" stroke-opacity="0.35"/><path d="M77,138 L126,138" stroke="#A8743F" stroke-width="1.2" stroke-opacity="0.35"/><path d="M77,145 L126,145" stroke="#A8743F" stroke-width="1.2" stroke-opacity="0.35"/><path d="M77,152 L126,152" stroke="#A8743F" stroke-width="1.2" stroke-opacity="0.35"/><path d="M77,159 L126,159" stroke="#A8743F" stroke-width="1.2" stroke-opacity="0.35"/><rect x="97" y="106.5" width="12" height="61" fill="#EFDCB8" opacity="0.9"/><path d="M72.5,117.5 L133.5,117.5" stroke="#6B4A2A" stroke-width="1.8"/><g stroke="#6B4A2A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none">
+        <path d="M83,134 v-8 m-3,3 l3,-3 l3,3 M90,134 v-8 m-3,3 l3,-3 l3,3"/></g><rect x="109" y="126" width="14" height="9" rx="2" fill="#EFDCB8" stroke="#6B4A2A" stroke-width="1.5"/><rect x="72.5" y="106.5" width="61" height="61" rx="6" fill="none" stroke="#6B4A2A" stroke-width="3"/></g><defs><clipPath id="boxClip_103_137"><rect x="103" y="137" width="32" height="32"/></clipPath></defs></g>
+<!-- 21: flower_pink -->
+<g clip-path="url(#l1_c20)">
+    <g stroke="#4A3226" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round">
+      <path d="M17,203 C17,197 16,191 17,186" fill="none" stroke="#2F6B35" stroke-width="2.4"/>
+      <path d="M17,195 C13,195 9,193 8,189 C13,189 16,191 17,195 Z" fill="#4E9A52"/>
+      <path d="M17,198 C21,198 25,196 26,192 C21,192 18,194 17,198 Z" fill="#4E9A52"/>
+      <g fill="#F06AB0">
+        <circle cx="17" cy="176.5" r="4.5"/><circle cx="10.5" cy="181" r="4.5"/>
+        <circle cx="23.5" cy="181" r="4.5"/><circle cx="12.5" cy="188" r="4.5"/>
+        <circle cx="21.5" cy="188" r="4.5"/>
+      </g>
+      <circle cx="17" cy="178" r="2" fill="#F9A8D4" stroke="none" opacity="0.8"/>
+      <circle cx="17" cy="183" r="3.6" fill="#FFD166"/>
+    </g></g>
+<!-- 22: flower_yellow -->
+<g clip-path="url(#l1_c21)">
+    <g stroke="#4A3226" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round">
+      <path d="M51,203 C51,197 50,191 51,186" fill="none" stroke="#2F6B35" stroke-width="2.4"/>
+      <path d="M51,195 C47,195 43,193 42,189 C47,189 50,191 51,195 Z" fill="#4E9A52"/>
+      <path d="M51,198 C55,198 59,196 60,192 C55,192 52,194 51,198 Z" fill="#4E9A52"/>
+      <g fill="#FFD166">
+        <circle cx="51" cy="176.5" r="4.5"/><circle cx="44.5" cy="181" r="4.5"/>
+        <circle cx="57.5" cy="181" r="4.5"/><circle cx="46.5" cy="188" r="4.5"/>
+        <circle cx="55.5" cy="188" r="4.5"/>
+      </g>
+      <circle cx="51" cy="178" r="2" fill="#FFF2B2" stroke="none" opacity="0.8"/>
+      <circle cx="51" cy="183" r="3.6" fill="#FFD166"/>
+    </g></g>
+<!-- 23: flower_blue -->
+<g clip-path="url(#l1_c22)">
+    <g stroke="#4A3226" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round">
+      <path d="M85,203 C85,197 84,191 85,186" fill="none" stroke="#2F6B35" stroke-width="2.4"/>
+      <path d="M85,195 C81,195 77,193 76,189 C81,189 84,191 85,195 Z" fill="#4E9A52"/>
+      <path d="M85,198 C89,198 93,196 94,192 C89,192 86,194 85,198 Z" fill="#4E9A52"/>
+      <g fill="#4A90D9">
+        <circle cx="85" cy="176.5" r="4.5"/><circle cx="78.5" cy="181" r="4.5"/>
+        <circle cx="91.5" cy="181" r="4.5"/><circle cx="80.5" cy="188" r="4.5"/>
+        <circle cx="89.5" cy="188" r="4.5"/>
+      </g>
+      <circle cx="85" cy="178" r="2" fill="#9CCBF2" stroke="none" opacity="0.8"/>
+      <circle cx="85" cy="183" r="3.6" fill="#FFD166"/>
+    </g></g>
+<!-- 24: mushroom -->
+<g clip-path="url(#l1_c23)">
+    <g stroke="#4A3226" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round">
+      <path d="M114,189 L124,189 L125,202 L113,202 Z" fill="#F7F0E3"/>
+      <path d="M106,189 C106,179 112,174 119,174 C126,174 132,179 132,189 Z" fill="#E15240"/>
+      <path d="M108,188 C111,186 127,186 130,188" fill="none" stroke="#C23F2F" stroke-width="2"/>
+      <g fill="#F7F0E3" stroke="none"><circle cx="114" cy="180" r="2.2"/><circle cx="122" cy="178" r="1.8"/><circle cx="126" cy="184" r="1.8"/><circle cx="117" cy="185" r="1.4"/></g>
+      <path d="M111,179 C113,177 116,176 118,176" fill="none" stroke="#FFFFFF" stroke-width="1.6" stroke-opacity="0.55"/>
+    </g></g>
+<!-- 25: fence_left -->
+<g clip-path="url(#l1_c24)"><g stroke="#4A3226" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><rect x="9" y="217" width="26" height="4" fill="#EFD6B2"/><rect x="9" y="228" width="26" height="4" fill="#EFD6B2"/><path d="M9,237 L9,213 L13,208 L17,213 L17,237 Z" fill="#F7F0E3"/><path d="M21,237 L21,213 L25,208 L29,213 L29,237 Z" fill="#F7F0E3"/><path d="M9,217 h26 M9,228 h26" stroke-width="1.4" stroke-opacity="0.5" fill="none"/></g></g>
+<!-- 26: fence_mid -->
+<g clip-path="url(#l1_c25)"><g stroke="#4A3226" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><rect x="33" y="217" width="36" height="4" fill="#EFD6B2"/><rect x="33" y="228" width="36" height="4" fill="#EFD6B2"/><path d="M39,237 L39,213 L43,208 L47,213 L47,237 Z" fill="#F7F0E3"/><path d="M51,237 L51,213 L55,208 L59,213 L59,237 Z" fill="#F7F0E3"/><path d="M63,237 L63,213 L67,208 L71,213 L71,237 Z" fill="#F7F0E3"/><path d="M33,217 h36 M33,228 h36" stroke-width="1.4" stroke-opacity="0.5" fill="none"/></g></g>
+<!-- 27: fence_right -->
+<g clip-path="url(#l1_c26)"><g stroke="#4A3226" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><rect x="67" y="217" width="26" height="4" fill="#EFD6B2"/><rect x="67" y="228" width="26" height="4" fill="#EFD6B2"/><path d="M73,237 L73,213 L77,208 L81,213 L81,237 Z" fill="#F7F0E3"/><path d="M85,237 L85,213 L89,208 L93,213 L93,237 Z" fill="#F7F0E3"/><path d="M67,217 h26 M67,228 h26" stroke-width="1.4" stroke-opacity="0.5" fill="none"/></g></g>
+<!-- 28: ladder -->
+<g clip-path="url(#l1_c27)">
+    <g stroke="#4A3226" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round">
+      <rect x="108" y="203" width="5" height="36" fill="#4A90D9"/>
+      <rect x="125" y="203" width="5" height="36" fill="#4A90D9"/>
+      <rect x="112" y="210" width="14" height="4" rx="1.5" fill="#9CCBF2"/>
+      <rect x="112" y="226" width="14" height="4" rx="1.5" fill="#9CCBF2"/>
+      <path d="M109.5,203 v36 M126.5,203 v36" stroke="#9CCBF2" stroke-width="1.4" stroke-opacity="0.7"/>
+    </g></g>
+<!-- 29: pebbles -->
+<g clip-path="url(#l1_c28)">
+    <g stroke="#4A3226" stroke-width="1.6" stroke-linejoin="round">
+      <ellipse cx="11" cy="266" rx="7" ry="4.5" fill="#A67448"/>
+      <ellipse cx="23" cy="267" rx="5" ry="3.5" fill="#C49363"/>
+      <path d="M7,264.5 q3,-2 6,-0.5" fill="none" stroke="#C49363" stroke-width="1.6"/>
+    </g></g>
+<!-- 30: snail -->
+<g clip-path="url(#l1_c29)">
+    <g stroke="#4A3226" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round">
+      <path d="M39,268 C41,263 47,261 53,263 L62,258 L64,263 C63,267 57,269 51,269 Z" fill="#EFD6B2"/>
+      <circle cx="47" cy="258" r="8" fill="#C89257"/>
+      <path d="M47,258 m-4.5,0 a4.5,4.5 0 1,1 4.5,4.5 a2.5,2.5 0 1,1 2.5,-2.5" fill="none" stroke="#6B4A2A" stroke-width="1.6"/>
+      <path d="M60,259 l1,-5 M63,260 l2,-4" fill="none"/>
+      <circle cx="61" cy="253" r="1.3" fill="#3A2820" stroke="none"/><circle cx="65.2" cy="255" r="1.3" fill="#3A2820" stroke="none"/>
+    </g></g>
+<!-- 31: sprout -->
+<g clip-path="url(#l1_c30)">
+    <g stroke="#4A3226" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round">
+      <path d="M85,271 C85,265 85,259 85,255" fill="none" stroke="#2F6B35" stroke-width="2.4"/>
+      <path d="M85,259 C78,259 73,254 73,248 C80,248 85,252 85,259 Z" fill="#8CD14A"/>
+      <path d="M85,256 C92,256 97,251 97,245 C90,245 85,249 85,256 Z" fill="#4E9A52"/>
+    </g></g>
+<!-- 32: grass_tuft_b -->
+<g clip-path="url(#l1_c31)"><g transform="translate(238 0) scale(-1 1)">
+    <g stroke="#4A3226" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round">
+      <path d="M111,271 C109,263 107,257 105,253 C111,256 113,263 114,271 Z" fill="#4E9A52"/>
+      <path d="M116,271 C116,261 118,253 120,247 C123,254 123,263 122,271 Z" fill="#8CD14A"/>
+      <path d="M124,271 C125,264 128,258 133,254 C131,260 130,265 129,271 Z" fill="#4E9A52"/>
+    </g></g></g>
+</svg>

@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <!--
+    „Magiczna bańka" kamery kooperacyjnej (Dokumentacja 3.1): gracz, który został z tyłu,
+    wraca do drugiego w takiej bańce. Pokazywana wokół postaci (~130 px), więc środek
+    jest niemal przezroczysty, a cała informacja siedzi w obrzeżu: jasna krawędź, tęczowy
+    refleks i dwa bliki. To zabawa, nie kara — bańka ma być ładna i lekka.
+    Nie mylić z world_soap_bubble.svg (platforma z poziomu 2).
+  -->
+  <defs>
+    <radialGradient id="bubble_fill" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#DCE8F7" stop-opacity="0.04"/>
+      <stop offset="0.8" stop-color="#DCE8F7" stop-opacity="0.1"/>
+      <stop offset="1" stop-color="#F7F0E3" stop-opacity="0.35"/>
+    </radialGradient>
+  </defs>
+  <circle cx="64" cy="64" r="60" fill="url(#bubble_fill)"/>
+  <circle cx="64" cy="64" r="60" fill="none" stroke="#F7F0E3" stroke-width="3" stroke-opacity="0.85"/>
+  <!-- tęczowy refleks po lewej u góry i po prawej u dołu -->
+  <path d="M20,44 A50,50 0 0,1 44,20" fill="none" stroke="#F9A8D4" stroke-width="5" stroke-opacity="0.5" stroke-linecap="round"/>
+  <path d="M16,56 A52,52 0 0,1 24,36" fill="none" stroke="#9CCBF2" stroke-width="5" stroke-opacity="0.5" stroke-linecap="round"/>
+  <path d="M108,80 A50,50 0 0,1 84,106" fill="none" stroke="#FFF2B2" stroke-width="5" stroke-opacity="0.45" stroke-linecap="round"/>
+  <path d="M112,66 A52,52 0 0,1 106,88" fill="none" stroke="#F9A8D4" stroke-width="4" stroke-opacity="0.4" stroke-linecap="round"/>
+  <!-- bliki -->
+  <ellipse cx="40" cy="32" rx="9" ry="5" fill="#FFFFFF" opacity="0.8" transform="rotate(-40 40 32)"/>
+  <circle cx="30" cy="46" r="3" fill="#FFFFFF" opacity="0.7"/>
+  <!-- gwiazdki — bańka jest magiczna -->
+  <path d="M96,30 C97,36 99,38 105,39 C99,40 97,42 96,48 C95,42 93,40 87,39 C93,38 95,36 96,30 Z" fill="#FFF2B2" opacity="0.9"/>
+  <path d="M28,92 C28.7,96 30,97 34,97.5 C30,98 28.7,99 28,103 C27.3,99 26,98 22,97.5 C26,97 27.3,96 28,92 Z" fill="#FFF2B2" opacity="0.8"/>
+</svg>

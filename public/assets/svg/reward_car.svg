@@ -1,0 +1,107 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <!--
+    Nagroda poziomu 2 — „Ulubione Autko" (GDD sekcja 4).
+    Jeden plik obsługuje ekran nagrody (360 px), metę (96 px) i HUD/menu (68–108 px,
+    nieodzyskana = ciemna sylwetka przez tint). Dlatego widok Z BOKU: pękaty garbusek
+    na dwóch wielkich kołach to sylwetka „auta" nie do pomylenia nawet jako cień.
+    Twarz w oknach (oczy w szybie, uśmiech na przodzie) — to zabawka-przyjaciel, nie pojazd.
+    Druga wersja: pierwsza (ujęcie 3/4) miała koło odstające od nadwozia i buzię
+    czytającą się jak doklejony klocek; sylwetka w HUD nie mówiła jasno „auto".
+    Kolejność warstw od tyłu: koła → nadwozie → okna → twarz → błotniki → felgi → łatka.
+    Paleta i grubości konturu: patrz docs/Styleguide_Wektorowy.md
+  -->
+  <defs>
+    <radialGradient id="car2_body" cx="0.42" cy="0.3" r="0.8">
+      <stop offset="0" stop-color="#F2705C"/>
+      <stop offset="0.5" stop-color="#E15240"/>
+      <stop offset="1" stop-color="#C23F2F"/>
+    </radialGradient>
+    <linearGradient id="car2_glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#DCE8F7"/>
+      <stop offset="1" stop-color="#9CCBF2"/>
+    </linearGradient>
+    <linearGradient id="car2_shade" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#4A3226" stop-opacity="0.22"/>
+      <stop offset="0.5" stop-color="#4A3226" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="car2_grain" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+    </filter>
+    <clipPath id="car2_window">
+      <path d="M86,118 C94,86 118,70 150,70 C186,70 206,92 214,118 Z"/>
+    </clipPath>
+    <clipPath id="car2_silhouette">
+      <circle cx="78" cy="190" r="34"/>
+      <circle cx="186" cy="190" r="34"/>
+      <path d="M26,176 C26,112 76,58 142,58 C202,58 238,104 242,160 L242,180 C242,190 234,196 224,196 L44,196 C34,196 26,190 26,180 Z"/>
+    </clipPath>
+  </defs>
+
+  <g stroke="#4A3226" stroke-width="3" stroke-linejoin="round" stroke-linecap="round">
+
+    <!-- ===== koła (za nadwoziem) ===== -->
+    <circle cx="78" cy="190" r="34" fill="#3A2820"/>
+    <circle cx="186" cy="190" r="34" fill="#3A2820"/>
+
+    <!-- ===== nadwozie: jeden garb ===== -->
+    <path d="M26,176 C26,112 76,58 142,58 C202,58 238,104 242,160 L242,180 C242,190 234,196 224,196 L44,196 C34,196 26,190 26,180 Z" fill="url(#car2_body)"/>
+    <!-- blik na dachu i szew pluszaka -->
+    <path d="M96,84 C112,70 134,64 156,66" fill="none" stroke="#FFFFFF" stroke-width="5" stroke-opacity="0.45"/>
+    <path d="M60,100 C72,86 86,76 100,70" fill="none" stroke-width="2" stroke-dasharray="5 6" stroke-opacity="0.55"/>
+
+    <!-- ===== okna: jedna duża szyba z przedziałką ===== -->
+    <path d="M86,118 C94,86 118,70 150,70 C186,70 206,92 214,118 Z" fill="url(#car2_glass)" stroke-width="3"/>
+    <path d="M150,70 L150,118" fill="none" stroke-width="3"/>
+    <path d="M166,78 C180,84 194,96 204,112" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-opacity="0.55"/>
+
+    <!-- ===== twarz: oczy w szybie, uśmiech na przodzie ===== -->
+    <g clip-path="url(#car2_window)">
+      <circle cx="126" cy="100" r="12" fill="#3A2820" stroke="none"/>
+      <circle cx="176" cy="100" r="12" fill="#3A2820" stroke="none"/>
+      <circle cx="121.5" cy="95.5" r="4.5" fill="#FFFFFF" stroke="none"/>
+      <circle cx="171.5" cy="95.5" r="4.5" fill="#FFFFFF" stroke="none"/>
+      <circle cx="130" cy="105" r="2" fill="#FFFFFF" stroke="none" opacity="0.85"/>
+      <circle cx="180" cy="105" r="2" fill="#FFFFFF" stroke="none" opacity="0.85"/>
+    </g>
+    <ellipse cx="216" cy="142" rx="10" ry="6" fill="#F2908E" stroke="none" opacity="0.85"/>
+    <ellipse cx="84" cy="142" rx="10" ry="6" fill="#F2908E" stroke="none" opacity="0.85"/>
+    <!-- uśmiech — gruba kreska na przodzie, nad zderzakiem -->
+    <path d="M196,150 C206,162 220,164 230,154" fill="none" stroke-width="4"/>
+
+    <!-- ===== błotniki (nad kołami, przed nadwoziem) ===== -->
+    <path d="M40,176 C40,150 58,136 78,136 C98,136 116,150 116,176 Z" fill="#C23F2F"/>
+    <path d="M148,176 C148,150 166,136 186,136 C206,136 224,150 224,176 Z" fill="#C23F2F"/>
+    <path d="M52,160 C60,148 70,142 78,142" fill="none" stroke="#F2705C" stroke-width="3.5" stroke-opacity="0.8"/>
+    <path d="M160,160 C168,148 178,142 186,142" fill="none" stroke="#F2705C" stroke-width="3.5" stroke-opacity="0.8"/>
+
+    <!-- reflektor i tylne światło -->
+    <circle cx="232" cy="128" r="9" fill="#FFD166" stroke-width="2.6"/>
+    <circle cx="230" cy="126" r="3.5" fill="#FFF2B2" stroke="none"/>
+    <rect x="28" y="124" width="12" height="14" rx="4" fill="#FFD166" stroke-width="2.4"/>
+
+    <!-- zderzaki -->
+    <rect x="222" y="178" width="26" height="12" rx="6" fill="#D9A440" stroke-width="2.6"/>
+    <rect x="8" y="178" width="26" height="12" rx="6" fill="#D9A440" stroke-width="2.6"/>
+    <path d="M228,182 h14 M14,182 h14" fill="none" stroke="#F2C94C" stroke-width="2.5"/>
+
+    <!-- ===== felgi ===== -->
+    <circle cx="78" cy="190" r="15" fill="#D9A440" stroke-width="2.6"/>
+    <circle cx="186" cy="190" r="15" fill="#D9A440" stroke-width="2.6"/>
+    <g fill="none" stroke="#F2C94C" stroke-width="3">
+      <path d="M78,178 V202 M66,190 H90 M186,178 V202 M174,190 H198"/>
+    </g>
+    <circle cx="78" cy="190" r="5" fill="#4A3226" stroke="none"/>
+    <circle cx="186" cy="190" r="5" fill="#4A3226" stroke="none"/>
+
+    <!-- łatka przyszyta na boku — kochana zabawka -->
+    <rect x="108" y="138" width="26" height="22" rx="6" fill="#EFD6B2" stroke-width="2.2"/>
+    <path d="M112,143 L118,138 M112,151 L122,138 M116,155 L128,139 M123,156 L132,145 M129,157 L134,151"
+          fill="none" stroke-width="1.6" stroke-opacity="0.7"/>
+  </g>
+
+  <!-- ===== bryła i faktura (przycięte do sylwetki) ===== -->
+  <rect width="256" height="256" fill="url(#car2_shade)" clip-path="url(#car2_silhouette)"/>
+  <rect width="256" height="256" filter="url(#car2_grain)" clip-path="url(#car2_silhouette)"
+        opacity="0.13" style="mix-blend-mode:multiply"/>
+</svg>

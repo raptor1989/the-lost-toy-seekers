@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <!--
+    Medalion-ramka portretu postaci (HUD, ekran nagrody) — kierunek z konceptu:
+    złoty pierścień z klejnotami, jak w prawym górnym rogu concept_night_garden_style.png.
+    Gra pokazuje go w ok. 96 px i wkłada do środka osobno głowę postaci, dlatego
+    ŚRODEK JEST W PEŁNI PRZEZROCZYSTY: pierścień to ścieżka evenodd, cień pod nim
+    jest przycięty do zewnętrza, ziarno — do samego pierścienia.
+    Wymiary: zewnętrzna średnica 238, wewnętrzna 186 (pierścień 26 — ok. 10 px w grze). Cztery klejnoty w oprawkach na
+    osiach: czerwony, niebieski, różowy, niebieski (barwy cukierków z palety).
+    Paleta i grubości konturu: docs/Styleguide_Wektorowy.md
+  -->
+  <defs>
+    <linearGradient id="ui_portrait_frame_gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#F2C94C"/>
+      <stop offset="0.5" stop-color="#D9A440"/>
+      <stop offset="1" stop-color="#D9A440"/>
+    </linearGradient>
+    <linearGradient id="ui_portrait_frame_shade" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0.5" stop-color="#4A3226" stop-opacity="0"/>
+      <stop offset="1" stop-color="#4A3226" stop-opacity="0.24"/>
+    </linearGradient>
+    <radialGradient id="ui_portrait_frame_red" cx="0.35" cy="0.3" r="0.8">
+      <stop offset="0" stop-color="#F2705C"/>
+      <stop offset="0.5" stop-color="#E15240"/>
+      <stop offset="1" stop-color="#C23F2F"/>
+    </radialGradient>
+    <radialGradient id="ui_portrait_frame_blue" cx="0.35" cy="0.3" r="0.8">
+      <stop offset="0" stop-color="#9CCBF2"/>
+      <stop offset="0.55" stop-color="#4A90D9"/>
+      <stop offset="1" stop-color="#2B6CB0"/>
+    </radialGradient>
+    <radialGradient id="ui_portrait_frame_pink" cx="0.35" cy="0.3" r="0.8">
+      <stop offset="0" stop-color="#F9A8D4"/>
+      <stop offset="0.55" stop-color="#F06AB0"/>
+      <stop offset="1" stop-color="#F06AB0"/>
+    </radialGradient>
+    <filter id="ui_portrait_frame_blur" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="2.5"/>
+    </filter>
+    <filter id="ui_portrait_frame_grain" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+    </filter>
+    <!-- sam pierścień (evenodd) — dla ziarna i cienia bryły -->
+    <clipPath id="ui_portrait_frame_ring">
+      <path clip-rule="evenodd" d="M247,128 A119,119 0 1 1 9,128 A119,119 0 1 1 247,128 Z M221,128 A93,93 0 1 0 35,128 A93,93 0 1 0 221,128 Z"/>
+    </clipPath>
+    <!-- wszystko poza dziurą — cień nie może wejść do środka medalionu -->
+    <clipPath id="ui_portrait_frame_outside">
+      <path clip-rule="evenodd" d="M0,0 H256 V256 H0 Z M221,128 A93,93 0 1 0 35,128 A93,93 0 1 0 221,128 Z"/>
+    </clipPath>
+  </defs>
+
+  <!-- cień pod pierścieniem (tylko na zewnątrz dziury) -->
+  <g clip-path="url(#ui_portrait_frame_outside)">
+    <path fill-rule="evenodd" d="M247,128 A119,119 0 1 1 9,128 A119,119 0 1 1 247,128 Z M221,128 A93,93 0 1 0 35,128 A93,93 0 1 0 221,128 Z"
+          fill="#14284F" opacity="0.5" transform="translate(0 4)" filter="url(#ui_portrait_frame_blur)"/>
+  </g>
+
+  <g stroke="#4A3226" stroke-width="6" stroke-linejoin="round" stroke-linecap="round">
+    <!-- złoty pierścień -->
+    <path fill-rule="evenodd" d="M247,128 A119,119 0 1 1 9,128 A119,119 0 1 1 247,128 Z M221,128 A93,93 0 1 0 35,128 A93,93 0 1 0 221,128 Z"
+          fill="url(#ui_portrait_frame_gold)"/>
+    <rect width="256" height="256" fill="url(#ui_portrait_frame_shade)" stroke="none" clip-path="url(#ui_portrait_frame_ring)"/>
+    <!-- rowek dzielący pierścień na dwa pasy — faseta ramki -->
+    <circle cx="128" cy="128" r="106" fill="none" stroke-width="2.5" stroke-opacity="0.3"/>
+    <!-- blik u góry-lewo i mniejszy odblask u dołu-prawo -->
+    <path d="M21,99 A111,111 0 0 1 118,17" fill="none" stroke="#FFFFFF" stroke-width="5" stroke-opacity="0.6"/>
+    <path d="M225,154 A100,100 0 0 1 162,222" fill="none" stroke="#F2C94C" stroke-width="4" stroke-opacity="0.8"/>
+
+    <!-- klejnoty w oprawkach: góra, prawo, dół, lewo -->
+    <g stroke-width="4">
+      <circle cx="128" cy="22" r="16" fill="#D9A440" stroke-width="5"/>
+      <circle cx="128" cy="22" r="11" fill="url(#ui_portrait_frame_red)"/>
+      <circle cx="125" cy="19" r="3.2" fill="#FFFFFF" stroke="none" opacity="0.85"/>
+
+      <circle cx="234" cy="128" r="16" fill="#D9A440" stroke-width="5"/>
+      <circle cx="234" cy="128" r="11" fill="url(#ui_portrait_frame_blue)"/>
+      <circle cx="231" cy="125" r="3.2" fill="#FFFFFF" stroke="none" opacity="0.85"/>
+
+      <circle cx="128" cy="234" r="16" fill="#D9A440" stroke-width="5"/>
+      <circle cx="128" cy="234" r="11" fill="url(#ui_portrait_frame_pink)"/>
+      <circle cx="125" cy="231" r="3.2" fill="#FFFFFF" stroke="none" opacity="0.85"/>
+
+      <circle cx="22" cy="128" r="16" fill="#D9A440" stroke-width="5"/>
+      <circle cx="22" cy="128" r="11" fill="url(#ui_portrait_frame_blue)"/>
+      <circle cx="19" cy="125" r="3.2" fill="#FFFFFF" stroke="none" opacity="0.85"/>
+    </g>
+  </g>
+
+  <!-- ziarno papieru — tylko na pierścieniu -->
+  <rect width="256" height="256" filter="url(#ui_portrait_frame_grain)" clip-path="url(#ui_portrait_frame_ring)" opacity="0.12" style="mix-blend-mode:multiply"/>
+</svg>

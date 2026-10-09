@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+  <!--
+    Niebo nocnego ogrodu — warstwa statyczna (scrollFactor 0), wspólna dla wszystkich poziomów.
+    PLIK GENEROWANY przez tools/build-backgrounds.mjs — nie edytuj ręcznie.
+    Gradient od nocy głębokiej u góry do nocy jasnej przy horyzoncie, kredkowe smugi
+    i księżyc z poświatą w prawym górnym rogu (tam, gdzie w koncepcie). Drobne gwiazdy
+    i chmury są w osobnych, przewijanych warstwach.
+  -->
+  <defs>
+    <linearGradient id="sky_grad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#14284F"/>
+      <stop offset="0.5" stop-color="#1E3A6E"/>
+      <stop offset="1" stop-color="#2E5597"/>
+    </linearGradient>
+    <radialGradient id="sky_moonGlow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#FFF2B2" stop-opacity="0.45"/>
+      <stop offset="0.45" stop-color="#FFF2B2" stop-opacity="0.14"/>
+      <stop offset="1" stop-color="#FFF2B2" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="sky_starGlow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#FFF2B2" stop-opacity="0.5"/>
+      <stop offset="1" stop-color="#FFF2B2" stop-opacity="0"/>
+    </radialGradient>
+    <mask id="sky_crescent">
+      <circle cx="1040" cy="150" r="72" fill="#FFFFFF"/>
+      <circle cx="1012" cy="134" r="64" fill="#000000"/>
+    </mask>
+    <filter id="sky_grain" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.7" numOctaves="2" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+    </filter>
+  </defs>
+  <rect width="1280" height="720" fill="url(#sky_grad)"/>
+  <path d="M15,62.3 C179.2,86.2 343.4,38.4 507.6,62.3" stroke="#9DB7E0" stroke-width="27.6" stroke-opacity="0.12" fill="none" stroke-linecap="round"/><path d="M519.1,207.8 C604.7,214.2 690.3,201.4 775.8,207.8" stroke="#2E5597" stroke-width="33" stroke-opacity="0.35" fill="none" stroke-linecap="round"/><path d="M330,96.1 C471.5,98.3 613,93.9 754.5,96.1" stroke="#2E5597" stroke-width="19.1" stroke-opacity="0.35" fill="none" stroke-linecap="round"/><path d="M471,145.6 C588,121.1 705.1,170 822.1,145.6" stroke="#9DB7E0" stroke-width="39.4" stroke-opacity="0.12" fill="none" stroke-linecap="round"/><path d="M316.8,356 C397.2,313.2 477.5,398.8 557.9,356" stroke="#2E5597" stroke-width="18" stroke-opacity="0.35" fill="none" stroke-linecap="round"/><path d="M372.4,237.2 C513.7,186.2 655,288.3 796.2,237.2" stroke="#2E5597" stroke-width="37.7" stroke-opacity="0.35" fill="none" stroke-linecap="round"/><path d="M708.7,263.8 C841.3,319.7 973.8,207.9 1106.4,263.8" stroke="#9DB7E0" stroke-width="30.2" stroke-opacity="0.12" fill="none" stroke-linecap="round"/><path d="M1179.1,337.9 C1243.4,298.9 1307.7,377 1371.9,337.9" stroke="#2E5597" stroke-width="23.3" stroke-opacity="0.35" fill="none" stroke-linecap="round"/><path d="M544.4,47.3 C613.8,79.4 683.2,15.1 752.6,47.3" stroke="#2E5597" stroke-width="23.6" stroke-opacity="0.35" fill="none" stroke-linecap="round"/>
+  <circle cx="1040" cy="150" r="230" fill="url(#sky_moonGlow)"/>
+  <circle cx="180" cy="120" r="27" fill="url(#sky_starGlow)"/><path d="M180,111 C182,118 182,118 189,120 C182,122 182,122 180,129 C178,122 178,122 171,120 C178,118 178,118 180,111 Z" fill="#FFD166" opacity="1"/><circle cx="180" cy="120" r="2.5" fill="#FFFFFF" opacity="0.9"/><circle cx="420" cy="70" r="21" fill="url(#sky_starGlow)"/><path d="M420,63 C421.5,68.5 421.5,68.5 427,70 C421.5,71.5 421.5,71.5 420,77 C418.5,71.5 418.5,71.5 413,70 C418.5,68.5 418.5,68.5 420,63 Z" fill="#FFD166" opacity="1"/><circle cx="420" cy="70" r="2" fill="#FFFFFF" opacity="0.9"/><circle cx="700" cy="160" r="24" fill="url(#sky_starGlow)"/><path d="M700,152 C701.8,158.2 701.8,158.2 708,160 C701.8,161.8 701.8,161.8 700,168 C698.2,161.8 698.2,161.8 692,160 C698.2,158.2 698.2,158.2 700,152 Z" fill="#FFD166" opacity="1"/><circle cx="700" cy="160" r="2.2" fill="#FFFFFF" opacity="0.9"/><circle cx="880" cy="60" r="18" fill="url(#sky_starGlow)"/><path d="M880,54 C881.3,58.7 881.3,58.7 886,60 C881.3,61.3 881.3,61.3 880,66 C878.7,61.3 878.7,61.3 874,60 C878.7,58.7 878.7,58.7 880,54 Z" fill="#FFD166" opacity="1"/><circle cx="880" cy="60" r="1.7" fill="#FFFFFF" opacity="0.9"/><circle cx="1180" cy="300" r="21" fill="url(#sky_starGlow)"/><path d="M1180,293 C1181.5,298.5 1181.5,298.5 1187,300 C1181.5,301.5 1181.5,301.5 1180,307 C1178.5,301.5 1178.5,301.5 1173,300 C1178.5,298.5 1178.5,298.5 1180,293 Z" fill="#FFD166" opacity="1"/><circle cx="1180" cy="300" r="2" fill="#FFFFFF" opacity="0.9"/><circle cx="320" cy="260" r="18" fill="url(#sky_starGlow)"/><path d="M320,254 C321.3,258.7 321.3,258.7 326,260 C321.3,261.3 321.3,261.3 320,266 C318.7,261.3 318.7,261.3 314,260 C318.7,258.7 318.7,258.7 320,254 Z" fill="#FFD166" opacity="1"/><circle cx="320" cy="260" r="1.7" fill="#FFFFFF" opacity="0.9"/>
+  <g mask="url(#sky_crescent)">
+    <circle cx="1040" cy="150" r="72" fill="#F6F1DC"/>
+    <circle cx="1058" cy="130" r="9" fill="#9DB7E0" opacity="0.35"/>
+    <circle cx="1070" cy="175" r="6" fill="#9DB7E0" opacity="0.3"/>
+    <circle cx="1052" cy="200" r="4" fill="#9DB7E0" opacity="0.3"/>
+  </g>
+  <path d="M1040,78 A72,72 0 1,1 1040,222" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-opacity="0.35" stroke-linecap="round"/>
+  <rect width="1280" height="720" filter="url(#sky_grain)" opacity="0.08" style="mix-blend-mode:multiply"/>
+</svg>
