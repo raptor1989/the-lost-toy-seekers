@@ -81,6 +81,11 @@ export const OBJECT = {
    * i opada. Zwykły punkt dostaje domyślną trasę do góry.
    */
   bubble: 'bubble',
+  /**
+   * Grzyb-trampolina — **punkt na podłodze**, środek grzyba. Wskoczenie na kapelusz
+   * wyrzuca w górę na `MUSHROOM_BOUNCE_HEIGHT`.
+   */
+  mushroom: 'mushroom',
 } as const;
 
 /** Właściwości obiektów (Custom Properties w Tiled). */

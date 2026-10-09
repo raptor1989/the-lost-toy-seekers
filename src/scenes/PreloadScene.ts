@@ -17,6 +17,8 @@ import {
   LEAF_WIDTH,
   LEAF_HEIGHT,
   SOAP_BUBBLE_SIZE,
+  MUSHROOM_WIDTH,
+  MUSHROOM_HEIGHT,
   HUD_DIGIT_WIDTH,
   HUD_DIGIT_HEIGHT,
 } from '../config/constants';
@@ -29,6 +31,7 @@ import { LEVER_BASE_TEXTURE, LEVER_HANDLE_TEXTURE, HINT_TEXTURE } from '../objec
 import { PLATE_TEXTURE } from '../objects/interactive/PressurePlate';
 import { PUSH_BLOCK_TEXTURE, PUSH_MARKER_TEXTURE } from '../objects/interactive/PushBlock';
 import { LEAF_TEXTURE, SOAP_BUBBLE_TEXTURE } from '../objects/interactive/MovingPlatform';
+import { MUSHROOM_TEXTURE } from '../objects/interactive/MushroomTrampoline';
 import { FLASHLIGHT_TEXTURE } from '../systems/FlashlightSystem';
 import { AudioManager } from '../systems/AudioManager';
 import { CONFETTI_TEXTURE, PLAY_TEXTURE } from './RewardScene';
@@ -288,6 +291,26 @@ export class PreloadScene extends Phaser.Scene {
     g.fillStyle(0xf7f0e3, 0.9);
     g.fillCircle(r - 14, r - 22, 4);
     g.generateTexture(SOAP_BUBBLE_TEXTURE, SOAP_BUBBLE_SIZE, SOAP_BUBBLE_SIZE);
+    g.clear();
+
+    // Grzyb-trampolina: kremowa nóżka (jasne futro z palety) pod czerwonym
+    // kapeluszem w kropki. Wierzch kapelusza przy górnej krawędzi tekstury —
+    // tam ląduje gracz.
+    const w = MUSHROOM_WIDTH;
+    const h = MUSHROOM_HEIGHT;
+    const capHeight = h * 0.75;
+    g.fillStyle(0xefd6b2, 1);
+    g.fillRoundedRect(w / 2 - 14, capHeight / 2, 28, h - capHeight / 2 - 1, 8);
+    g.lineStyle(3, 0x4a3226, 1);
+    g.strokeRoundedRect(w / 2 - 14, capHeight / 2, 28, h - capHeight / 2 - 1, 8);
+    g.fillStyle(0xe15240, 1);
+    g.fillEllipse(w / 2, capHeight / 2 + 1, w - 4, capHeight - 2);
+    g.strokeEllipse(w / 2, capHeight / 2 + 1, w - 4, capHeight - 2);
+    g.fillStyle(0xf7f0e3, 1);
+    g.fillCircle(w / 2 - 22, capHeight / 2 - 4, 6);
+    g.fillCircle(w / 2 + 4, capHeight / 2 - 10, 7);
+    g.fillCircle(w / 2 + 26, capHeight / 2 - 2, 5);
+    g.generateTexture(MUSHROOM_TEXTURE, w, h);
     g.clear();
   }
 

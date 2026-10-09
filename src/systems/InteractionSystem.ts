@@ -78,7 +78,7 @@ export class InteractionSystem implements BlockWorld {
       interactive.update(this.players);
     }
     for (const gate of this.gates) {
-      gate.update((area) => this.isOccupied(area));
+      gate.update((area) => this.isOccupied(area), delta);
     }
   }
 

@@ -34,6 +34,7 @@ import { Lever } from '../objects/interactive/Lever';
 import { PressurePlate } from '../objects/interactive/PressurePlate';
 import { PushBlock } from '../objects/interactive/PushBlock';
 import { MovingPlatform } from '../objects/interactive/MovingPlatform';
+import { MushroomTrampoline } from '../objects/interactive/MushroomTrampoline';
 import type { AllowedPlayer } from '../objects/interactive/Interactive';
 import type { Player } from '../objects/Player';
 import { InputManager } from '../systems/InputManager';
@@ -133,6 +134,7 @@ export class GameScene extends Phaser.Scene {
     this.spawnCheckpoints(map);
     this.spawnHiddenObjects(map);
     this.spawnInteractives(map, solidLayers);
+    this.spawnMushrooms(map);
     this.spawnCandies(map);
     this.spawnGhosts(map);
     this.spawnGoal(map);
@@ -355,6 +357,24 @@ export class GameScene extends Phaser.Scene {
       );
     }
     return rect;
+  }
+
+  /**
+   * Grzyby-trampoliny. Odbija tylko gracz, który naprawdę spada na kapelusz
+   * (`isLanding`), i tylko z kontrolą — przelot w bańce albo na checkpoint
+   * nad grzybem nie może skończyć się wyrzutem, który rozbiłby tween lotu.
+   */
+  private spawnMushrooms(map: Phaser.Tilemaps.Tilemap): void {
+    for (const point of this.findObjects(map, OBJECT.mushroom)) {
+      const mushroom = new MushroomTrampoline(this, point.x, point.y);
+      this.physics.add.collider(
+        this.players,
+        mushroom.cap,
+        (playerObject) => mushroom.bounce(playerObject as Player),
+        (playerObject) =>
+          onlyWithControl(playerObject) && mushroom.isLanding(playerObject as Player),
+      );
+    }
   }
 
   /** Brama wskazana właściwością `target` — błąd mapy, jeśli jej brak. */

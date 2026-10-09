@@ -4,6 +4,7 @@ import {
   GATE_OPEN_MS,
   GATE_CLOSE_MS,
   GATE_OPEN_SCALE_Y,
+  GATE_CLOSE_DELAY_MS,
 } from '../../config/constants';
 import { AudioManager } from '../../systems/AudioManager';
 import type { Switchable } from './Interactive';
@@ -29,6 +30,8 @@ export class Gate extends Phaser.GameObjects.TileSprite implements Switchable {
   readonly closedArea: Phaser.Geom.Rectangle;
   private readonly holders = new Set<object>();
   private open = false;
+  /** Od ilu ms nikt nie trzyma bramy. */
+  private releasedFor = 0;
 
   /** @param area prostokąt bramy z Tiled (narożnik lewy-górny + rozmiar) */
   constructor(scene: Phaser.Scene, area: Phaser.Geom.Rectangle) {
@@ -59,20 +62,23 @@ export class Gate extends Phaser.GameObjects.TileSprite implements Switchable {
   /**
    * Wołane raz na klatkę — po tym, jak dźwignie i przyciski zgłosiły swój stan.
    *
+   * Opada dopiero {@link GATE_CLOSE_DELAY_MS} po zwolnieniu i tylko przy wolnym
+   * przejściu — w przeciwnym razie zostaje otwarta i sprawdza w następnej klatce.
+   *
    * @param isOccupied czy w prostokącie stoi gracz albo blok (wie to `InteractionSystem`)
    */
-  update(isOccupied: (area: Phaser.Geom.Rectangle) => boolean): void {
+  update(isOccupied: (area: Phaser.Geom.Rectangle) => boolean, delta: number): void {
     const wantOpen = this.holders.size > 0;
+    this.releasedFor = wantOpen ? 0 : this.releasedFor + delta;
     if (wantOpen === this.open) {
       return;
     }
 
     if (wantOpen) {
       this.raise();
-    } else if (!isOccupied(this.closedArea)) {
+    } else if (this.releasedFor >= GATE_CLOSE_DELAY_MS && !isOccupied(this.closedArea)) {
       this.lower();
     }
-    // Zajęte przejście: zostajemy otwarci i sprawdzamy w następnej klatce.
   }
 
   private raise(): void {

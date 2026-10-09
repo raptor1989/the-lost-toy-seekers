@@ -214,9 +214,12 @@ rescueZone.onOverlap(player, () => {
   widok bramy, nie odbije się od niej) i wraca od razu przy opadaniu — przejście jest już
   sprawdzone, a opadająca brama ma zatrzymać każdego, kto wbiegnie w ostatniej chwili.
 * **Przycisk tamy bez timerów**, tak jak zakładano: wciśnięty = „ktoś teraz na mnie stoi".
-  Wybaczanie bierze na siebie brama (powyżej). Płytka jest tylko obrazkiem w podłodze —
-  dziecko stoi na zwykłym gruncie, więc przycisk niczego nie zmienia w fizyce. Wystarczy
-  stanąć na nim połową stopy (`PLATE_PRESS_HALF_WIDTH`).
+  Wybaczanie bierze na siebie brama: **opada dopiero `GATE_CLOSE_DELAY_MS` (1,5 s) po
+  zwolnieniu** — jak grace period latarki — i nigdy na kogoś w przejściu. Dzięki opóźnieniu
+  dziecko może zejść z przycisku i przejść samo, a przy „jedno trzyma, drugie przechodzi"
+  nie trzeba się zgrywać co do chwili. Płytka jest tylko obrazkiem w podłodze — dziecko stoi
+  na zwykłym gruncie, więc przycisk niczego nie zmienia w fizyce. Wystarczy stanąć na nim
+  połową stopy (`PLATE_PRESS_HALF_WIDTH`).
 * **Kto może czego użyć, decyduje obiekt, nie klasa gracza** (`allowedPlayer`: 1, 2 albo
   0 = obaj; domyślnie Gracz 1, bo interakcje to jego rola — GDD 2.1). `GameScene` przekazuje
   przycisk akcji każdego gracza do `InteractionSystem`; u Gracza 2 ten sam klawisz zapala też
@@ -228,10 +231,11 @@ rescueZone.onOverlap(player, () => {
 * **Źródła się sumują** (`Switchable.hold` / `release`): brama jest otwarta, dopóki trzyma ją
   którekolwiek z nich, więc jedną bramę mogą obsługiwać dwa przyciski i dźwignia naraz.
 * **Wierzch bramy to grunt tymczasowy** — jak ukryty most, nie może zostać checkpointem.
-* **Dziecko może zamknąć się samo** w pomieszczeniu za przyciskiem dostępnym dla obu
-  (`allowedPlayer: 0`): wciska, schodzi, wbiega, a brama opada za nim. To nie pułapka bez
-  wyjścia — wypuszcza je drugi gracz albo bańka, gdy pokój wyjdzie z kadru — ale projektując
-  poziomy (M4) warto o tym pamiętać.
+* **Pomieszczenie za bramą musi dać się otworzyć od środka.** Przegląd `kid-check` przy
+  zamykaniu M3 znalazł pułapkę: dziecko wciskało przycisk, wbiegało do pomieszczenia, brama
+  opadała za nim — a jeśli drugie dziecko zostało obok i nie pomagało, bańka nie zadziałała
+  (pokój był w kadrze) i nie było wyjścia. W poligonie stoi więc drugi przycisk **w środku**,
+  sterujący tą samą bramą; kto jest w pomieszczeniu, ten trzyma ją otwartą.
 
 **Decyzje z wdrożenia (M3, pchane bloki):**
 
@@ -280,6 +284,24 @@ rescueZone.onOverlap(player, () => {
 * **Kolizja tylko od góry**, jak `oneway`.
 * **Bąbelek ugina się i „błupa", ale nie pęka.** Pękanie zamieniłoby windę w zadanie na czas;
   jeśli playtest pokaże, że jest za nudno, można je dodać jako wariant.
+* **Niesionemu graczowi zerujemy całą prędkość pionową**, nie tylko w dół. Wznosząca się
+  platforma nadawała mu prędkość w górę i w następnej klatce wynosiła go 1–2 px ponad wierzch —
+  drganie widoczne dopiero przy pomiarze w jednej klatce. Po poprawce odstęp od wierzchu
+  nie przekracza 1 px w całej jeździe.
+
+**Decyzje z wdrożenia (M3, grzyby-trampoliny):**
+
+* **Odbicie zawsze takie samo** (`MUSHROOM_BOUNCE_VELOCITY`, ≈ 405 px — 2,7 zwykłego skoku),
+  bez „wciśnij skok w odpowiedniej chwili". Dla 5-latka grzyb ma być pewną windą, a nie
+  zadaniem na timing; kto nie chce skakać dalej, zeskakuje w bok w locie.
+* **Skok wciśnięty przy lądowaniu nie osłabia odbicia.** Kolizja z kapeluszem w tej samej
+  klatce ustawia „na ziemi", więc buforowany skok odpaliłby od razu i zamienił odbicie w zwykły,
+  niższy skok. `Player.launch` zużywa okna coyote time i bufora skoku, a przez
+  `LAUNCH_GROUND_GRACE_MS` gracz nie liczy się jako stojący.
+* **Odbija tylko gracz, który spada na kapelusz z góry** (`isLanding`) — patrz pułapka
+  z ciałami „zagnieżdżonymi" w sekcji 3.7. Pod kapeluszem da się przejść i stać.
+* **„Camera bump"** — krótki, słaby wstrząs kamery przy każdym odbiciu (checklista z sekcji 7).
+* Gracz bez kontroli (bańka, powrót na checkpoint) przelatuje nad grzybem bez odbicia.
 
 ### 3.6. Znajdźki i nagrody
 
@@ -303,8 +325,15 @@ rescueZone.onOverlap(player, () => {
 
 ### 3.7. Pułapki Arcade Physics
 
-Dwie pułapki znalezione przy przeglądzie M3 (trzecia, o squash & stretch, jest w sekcji 3.1).
-Obie działały „prawie dobrze", więc nie było ich widać w zwykłej grze.
+Pułapki znalezione w trakcie M3 (jeszcze jedna, o squash & stretch, jest w sekcji 3.1).
+Wszystkie działały „prawie dobrze", więc nie było ich widać w zwykłej grze.
+
+**Kolizja zgłasza też ciała „zagnieżdżone".** Gdy dwa ciała nachodzą na siebie i żadne się nie
+rusza, Arcade oznacza je jako `embedded` i `collider` **wywołuje callback**, choć niczego nie
+rozdziela. Gracz stojący nieruchomo pod kapeluszem grzyba (w jego obrysie, ale pod wierzchem)
+był przez to wyrzucany w górę. Callback, który robi coś więcej niż znakowanie, musi sam
+sprawdzić geometrię — grzyb pyta, czy stopy gracza klatkę wcześniej były nad kapeluszem
+(`body.prev`).
 
 **„Dotyka od dołu" to nie to samo co „stoi".** Arcade ustawia `touching.down` także przy
 samym `overlap` — wystarczy, że postać w locie musnie cukierek, duszka albo strefę checkpointu.
@@ -389,7 +418,7 @@ Zasady stylu, paleta, kolejność warstw postaci i checklista QA:
 * **Nazwy obiektów** wpisuje się w Tiled w pole **Name** (nie Class) — Phaser zawsze wystawia
   `name`, więc jest to najpewniejszy klucz. Rozpoznawane nazwy trzyma `config/levels.ts`
   (`OBJECT`): `player1`, `player2`, `checkpoint`, `candy`, `goal`, `ghost`, `hidden`,
-  `gate`, `lever`, `plate`, `block`, `leaf`, `bubble`.
+  `gate`, `lever`, `plate`, `block`, `leaf`, `bubble`, `mushroom`.
 * **`hidden` rysuje się prostokątem**, nie punktem (M3): rozmiar prostokąta jest wprost
   rozmiarem mostu czy półki, więc w edytorze widać dokładnie to, co dostaniemy w grze.
   Górna krawędź prostokąta to powierzchnia, po której się chodzi — kładąc most w poprzek
@@ -416,6 +445,13 @@ Zasady stylu, paleta, kolejność warstw postaci i checklista QA:
   trasa **środka wierzchu** platformy, czyli miejsca, gdzie stoją stopy. Liść kładziony
   w przepaści na wysokości podłogi wyrównuj do górnego rzędu kafli. Zwykły punkt dostaje
   domyślną trasę: liść `LEAF_PATH_DEFAULT` w prawo, bąbelek `SOAP_BUBBLE_PATH_DEFAULT` w górę.
+* **Grzyb-trampolina** (`mushroom`) to **punkt na podłodze** — środek grzyba. Odbicie sięga
+  `MUSHROOM_BOUNCE_HEIGHT` (≈ 405 px nad kapeluszem, kapelusz `MUSHROOM_HEIGHT` nad podłogą).
+  Projektując, sprawdź, czego grzyb pozwala dosięgnąć — także przez bramy, których nie wolno
+  przeskoczyć.
+* **Pomieszczenie za bramą musi dać się otworzyć od środka** — drugi przycisk (albo dźwignia)
+  w środku, wskazujący tę samą bramę. Inaczej dziecko, które weszło samo, może zostać zamknięte,
+  jeśli drugie nie pomoże (sekcja 3.5).
 * **Korytarz bloku musi dać się pchać z obu stron.** Blok dopchnięty do ściany, za którą
   gracz nie stanie na wysokości bloku, zostaje tam na zawsze. W poligonie przy starcie
   blok ogranicza z prawej niski krawężnik: blok o niego się zatrzyma, a gracz stojący na
@@ -468,7 +504,7 @@ Zasady stylu, paleta, kolejność warstw postaci i checklista QA:
 - [x] Cukierki: rotacja + sinusoidalne unoszenie; przy zebraniu lot do licznika HUD — M2
 - [x] Brokat duszków, konfetti w `RewardScene` — M2
 - [ ] Świetliki w tle (particles z łagodnym ruchem — jak na konceptach)
-- [ ] Delikatny "camera bump" przy odbiciu z grzyba-trampoliny
+- [x] Delikatny "camera bump" przy odbiciu z grzyba-trampoliny — M3
 - [x] Wszystkie dźwięki z lekko losowym pitch (0.95–1.05) — nie nużą przy powtórkach (`AudioManager`)
 
 ---
@@ -484,15 +520,16 @@ Kolejność zoptymalizowana pod zasadę: **najpierw grywalny prototyp, grafika n
 | **M0** — Szkielet projektu | ✅ **ukończony** | Boot/Preload/Game, jeden gracz na strzałkach, platformy z prostokątów |
 | **M1** — Rdzeń ruchu i strojenie | ✅ **ukończony** | `InputManager`, `CoopCamera` z bańką, `RescueSystem`, coyote time + jump buffering, squash & stretch. **Playtest z dziećmi zaliczony** — 5-latek przechodzi tor testowy samodzielnie |
 | **M2** — Pętla rozgrywki | ✅ **ukończony** | Pipeline map z Tiled, generyczna `GameScene`, manifest `levels.ts`, checkpointy z mapy, cukierki, `UIScene` z ikonowym HUD, meta poziomu + `RewardScene`, `SaveManager` z paskiem odzyskanych zabawek, `MenuScene`, duszki-psotniki. **Kryterium spełnione: pełne przejście szarego poziomu 1 od menu do nagrody.** Czeka na playtest z dziećmi |
-| **M3** — Mechaniki kooperacji | 🟡 **w trakcie** | Gotowe: magiczna latarka Gracza 2 (`FlashlightSystem`) i obiekty odkrywane światłem (`HiddenObject`) — z „szeptem", grace periodem, kolizją tylko od góry i zabezpieczeniem checkpointów; dźwignie, przyciski tamy i bramy (`interactive/`, `InteractionSystem`); pchane bloki (snap do siatki, powrót na start, dociskanie przycisków); pływające liście i mydlane bąbelki (`MovingPlatform`). Zostają: trampoliny-grzyby |
+| **M3** — Mechaniki kooperacji | ✅ **ukończony** | Magiczna latarka Gracza 2 (`FlashlightSystem`) i obiekty odkrywane światłem (`HiddenObject`); dźwignie, przyciski tamy i bramy; pchane bloki; pływające liście i mydlane bąbelki (`MovingPlatform`); grzyby-trampoliny — wszystko w `objects/interactive/` + `InteractionSystem`, z poligonami na poziomie 1. **Zweryfikowane w grze** (każda mechanika + pętla menu → nagroda → menu) i przeglądem `kid-check`. Czeka na playtest z dziećmi |
 | **M4** — Poziomy w Tiled | ⬜ nierozpoczęty | |
 | **M5** — Art pass | 🟡 **rozpoczęty poza kolejnością** | Zmiana pipeline'u na SVG (sekcja 4). Gotowe: `char_bear_idle`, `world_box_small`, `pickup_candy_orange`, `reward_teddy`, `ghost_mischief_idle`, `fx_sparkle`, [Styleguide_Wektorowy.md](Styleguide_Wektorowy.md), podgląd assetów. Greybox dźwięku: 14 syntezowanych SFX + `AudioManager` (sekcja 4). Brak: nagrania głosu, muzyka |
 | **M6** — Polish i playtesty | ⬜ nierozpoczęty | |
 
 > **Uwaga o kolejności:** M5 ruszył przed M1–M4, bo zmiana pipeline'u grafiki wymagała
 > weryfikacji na realnym assecie. To wyjątek, nie nowa kolejność — **priorytetem pozostaje
-> grywalność** (M3, potem M4). Assety powstają w tle, w miarę potrzeb: w grze są już cukierek,
-> duszek, brokat i miś-nagroda; postacie i świat to nadal greybox.
+> grywalność**: teraz M4 (greybox czterech poziomów i playtesty). Assety powstają w tle,
+> w miarę potrzeb: w grze są już cukierek, duszek, brokat i miś-nagroda; postacie i świat
+> to nadal greybox.
 
 **Legenda:** ✅ ukończony · 🟡 w trakcie · ⬜ nierozpoczęty.
 Po zamknięciu etapu zaktualizuj tabelę **i** datę w nagłówku.
@@ -548,7 +585,7 @@ gęstość cukierków, tempo patrolu duszków i czas ich powrotu (wartości ⚙ 
 Mapka ogrodu w menu jest na razie greyboxem (gwiazdy i kamienie rysowane kodem);
 rysunkowe tło należy do M5.
 
-### M3 — Mechaniki kooperacji (2–3 wieczory) 🟡
+### M3 — Mechaniki kooperacji (2–3 wieczory) ✅
 Magiczna latarka + obiekty ukryte, dźwignie/przyciski/pchane bloki, bąbelki i pływające liście (poziom 2), trampoliny-grzyby (poziom 4).
 
 **Zrealizowano (wieczór 1):** [FlashlightSystem.ts](../src/systems/FlashlightSystem.ts) —
@@ -635,7 +672,36 @@ zeskok na wysoką platformę i oba cukierki, skok z jadącego bąbelka; liść p
 przepaść i pozwala zejść na drugi brzeg; checkpoint nie zapisuje się na żadnej platformie.
 Regresja dźwigni, przycisku tamy i bloków — bez zmian.
 
-**Następne:** trampoliny-grzyby — ostatni element M3.
+**Zrealizowano (wieczór 5):** [MushroomTrampoline.ts](../src/objects/interactive/MushroomTrampoline.ts)
+— grzyb-trampolina z zawsze jednakowym odbiciem, `Player.launch` (odbicia nie osłabia
+buforowany skok), „camera bump", dźwięk `bounce`. Poligon: grzyb przy ścianie klocka za drugą
+przepaścią, nad nim dwa cukierki osiągalne tylko z odbicia (sprawdzone rachunkiem: także
+z wieży mety ich nie dosięgnąć). Decyzje — sekcja 3.5.
+
+**Weryfikacja całego M3 (2026-10-09).** Każda mechanika sprawdzona w grze skryptem Playwrighta,
+z odczytem stanu fizyki, a potem cała bateria puszczona jeszcze raz po ostatnich poprawkach:
+
+| Mechanika | Sprawdzone |
+|---|---|
+| Latarka + most | bez światła wpadka i powrót na checkpoint; ze światłem przejście; most trzyma 2,5 s, gaśnie przed 3,5 s |
+| Ukryte schodki | zapalone z niższego klocka, Gracz 1 wchodzi po obu stopniach, cukierek; z górnego stopnia da się też zejść na półkę przy lewej krawędzi |
+| Dźwignia + brama | strzałka tylko przy uprawnionym graczu, klawisz Gracza 2 jej nie rusza; brama się podnosi i przepuszcza do mety |
+| Przycisk tamy | brama czeka na gracza w przejściu (także 2,5 s po zwolnieniu), opada 1,5 s po zejściu z przycisku; z pomieszczenia da się wyjść samemu |
+| Pchany blok | pchanie w obie strony, Gracz 2 nie rusza bloku Gracza 1, stopień pod półkę, blok na przycisku otwiera bramę, blok spada w przepaść i wraca na start |
+| Liść, bąbelek | brak oderwania od platformy (odstęp ≤ 1 px w ~330 klatkach jazdy), wyskok z jadącego bąbelka, checkpoint nigdy na platformie |
+| Grzyb | odbicie na zawsze tę samą wysokość, także z buforowanym skokiem; stanie i chodzenie pod kapeluszem bez wyrzutu |
+| Pętla gry | menu → poziom → meta → nagroda → menu, zapis `level1: completed` |
+
+Weryfikacja znalazła i naprawiła cztery błędy: checkpoint na wznoszącym się bąbelku, drganie
+gracza o 1–2 px na bąbelku, wyrzut z grzyba gracza stojącego pod kapeluszem i — w przeglądzie
+`kid-check` — możliwość zamknięcia się w pomieszczeniu bez wyjścia. Poza zakresem M3 `kid-check`
+odnotował dłuższą niż ~600 ms utratę kontroli po wpadce (lot 800 ms + 200 ms); wartości
+przeszły playtest M1, więc zostają do decyzji po kolejnym playteście.
+
+**Etap zamknięty — czeka na playtest z dziećmi.** Do obserwacji: czy 5-latek rozumie
+pulsujący zarys mostu i strzałkę nad dźwignią, czy da radę świecić w ruchu (S między A i D),
+czy finał z dźwignią nie jest za trudny jak na pierwszy poziom, czy grzyb nie wyrzuca za wysoko.
+Poligony M3 na poziomie 1 to tor testowy — docelowe rozmieszczenie mechanik należy do M4.
 
 ### M4 — Poziomy w Tiled (3–4 wieczory)
 Greybox wszystkich 4 poziomów zgodnie z GDD sekcja 4 + playtest każdego z dziećmi **przed** art passem (przesuwanie platform w Tiled jest darmowe, po oklejeniu grafiką — bolesne).

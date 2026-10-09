@@ -292,6 +292,16 @@ const SOUNDS = {
     return b;
   },
 
+  /** Grzyb-trampolina — sprężyste „bojoing" w górę (jaśniejsze niż wpadkowe „boing"). */
+  bounce() {
+    const d = 0.45;
+    const b = buffer(d);
+    const f = (t) => 200 * (560 / 200) ** Math.min(1, t / 0.25) * (1 + 0.08 * Math.exp(-t * 6) * Math.sin(2 * Math.PI * 16 * t));
+    tone(b, { dur: d, freq: f, wave: 'triangle', env: pluck(0.005, 0.16) });
+    tone(b, { dur: d, freq: (t) => 2 * f(t), env: pluck(0.005, 0.1), gain: 0.25 });
+    return b;
+  },
+
   /** Menu — przeskok zaznaczenia na inny przystanek. */
   tick() {
     const b = buffer(0.08);

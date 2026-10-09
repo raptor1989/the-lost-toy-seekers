@@ -130,9 +130,10 @@ export class MovingPlatform {
     for (const rider of riders) {
       rider.x += dx;
       rider.y = this.top.y;
-      if (rider.arcadeBody.velocity.y > 0) {
-        rider.arcadeBody.velocity.y = 0;
-      }
+      // Ruch w pionie należy w całości do platformy. Prędkość w górę, którą nadała
+      // graczowi kolizja ze wznoszącą się platformą, wynosiłaby go w następnej
+      // klatce ponad wierzch — drganie o 1–2 px przy każdym przejeździe.
+      rider.arcadeBody.velocity.y = 0;
       rider.markPlatformGround();
       if (!this.riders.has(rider)) {
         this.onLanded();

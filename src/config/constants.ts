@@ -250,6 +250,12 @@ export const GATE_OPEN_MS = 420;
 export const GATE_CLOSE_MS = 700;
 /** Ile bramy zostaje widać po otwarciu (ułamek wysokości) — znak, że wróci. */
 export const GATE_OPEN_SCALE_Y = 0.12;
+/**
+ * ⚙ Ile brama czeka, zanim opadnie po zwolnieniu przycisku — jak grace period
+ * latarki. Dziecko może zejść z przycisku i przejść samo, a przy „jedno trzyma,
+ * drugie przechodzi" nie trzeba się zgrywać co do chwili.
+ */
+export const GATE_CLOSE_DELAY_MS = 1500;
 
 /**
  * ⚙ Ile trzeba napierać na blok, zanim drgnie o jeden kafel. Chroni przed
@@ -321,6 +327,34 @@ export const SOAP_BUBBLE_SQUASH_Y = 0.84;
 export const SOAP_BUBBLE_SQUASH_MS = 280;
 export const SOAP_BUBBLE_WOBBLE = 0.04;
 export const SOAP_BUBBLE_WOBBLE_MS = 900;
+
+// ---------------------------------------------------------------- grzyby-trampoliny
+// GDD poziom 4: wielkie, sprężyste grzyby. Odbicie zawsze tak samo wysokie —
+// przewidywalność ważniejsza niż „im mocniej skoczysz, tym wyżej".
+
+export const MUSHROOM_WIDTH = 96;
+/** Wysokość wierzchu kapelusza nad podłogą — jak niski stopień: trzeba na niego wskoczyć. */
+export const MUSHROOM_HEIGHT = 56;
+/** Grubość ciała kapelusza — liczy się tylko jego wierzch. */
+export const MUSHROOM_CAP_THICKNESS = 16;
+/** ⚙ Prędkość wyrzutu (px/s, ujemne = w górę). */
+export const MUSHROOM_BOUNCE_VELOCITY = -900;
+/** Wysokość odbicia wyliczona z wyrzutu — do projektowania poziomów (≈ 2,7 zwykłego skoku). */
+export const MUSHROOM_BOUNCE_HEIGHT =
+  (MUSHROOM_BOUNCE_VELOCITY * MUSHROOM_BOUNCE_VELOCITY) / (2 * GRAVITY); // px
+/** Ugięcie kapelusza przy odbiciu. */
+export const MUSHROOM_SQUASH_Y = 0.6;
+export const MUSHROOM_SQUASH_MS = 320;
+/** „Camera bump" przy odbiciu (checklista juiciness, Dokumentacja sekcja 7). */
+export const MUSHROOM_SHAKE_MS = 110;
+export const MUSHROOM_SHAKE_INTENSITY = 0.004;
+
+/**
+ * Jak długo po wyrzucie (grzyb) gracz nie liczy się jako stojący. Kolizja z kapeluszem
+ * w tej samej klatce ustawia „na ziemi" — bez tej przerwy buforowany skok odpaliłby
+ * od razu i zamienił odbicie w zwykły, niższy skok.
+ */
+export const LAUNCH_GROUND_GRACE_MS = 120;
 
 // ---------------------------------------------------------------- meta poziomu
 

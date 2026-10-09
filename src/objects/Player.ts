@@ -11,6 +11,7 @@ import {
   LAND_SQUASH_Y,
   TEMPORARY_GROUND_MEMORY_MS,
   PLATFORM_GROUND_MEMORY_MS,
+  LAUNCH_GROUND_GRACE_MS,
 } from '../config/constants';
 import { InputManager, type PlayerId, type PlayerInput } from '../systems/InputManager';
 import { AudioManager } from '../systems/AudioManager';
@@ -34,6 +35,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
   private wasOnGround = false;
   private temporaryGroundAt = Number.NEGATIVE_INFINITY;
   private platformGroundAt = Number.NEGATIVE_INFINITY;
+  private launchedAt = Number.NEGATIVE_INFINITY;
   private squashTween?: Phaser.Tweens.Tween;
 
   constructor(
@@ -89,10 +91,26 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
    * ustawiają — same zgłaszają gracza, który na nich stoi (`markPlatformGround`).
    */
   get isOnGround(): boolean {
-    return (
-      this.arcadeBody.blocked.down ||
-      this.scene.time.now - this.platformGroundAt <= PLATFORM_GROUND_MEMORY_MS
-    );
+    const now = this.scene.time.now;
+    if (now - this.launchedAt < LAUNCH_GROUND_GRACE_MS) {
+      return false;
+    }
+    return this.arcadeBody.blocked.down || now - this.platformGroundAt <= PLATFORM_GROUND_MEMORY_MS;
+  }
+
+  /**
+   * Wyrzut w górę z zewnątrz — grzyb-trampolina. Przez chwilę po wyrzucie gracz nie
+   * stoi (`LAUNCH_GROUND_GRACE_MS`), a okna coyote time i buforowania skoku są
+   * zużyte: wciśnięty przy lądowaniu skok nie może zamienić odbicia w zwykły, niższy
+   * skok ani dać dodatkowego skoku w powietrzu.
+   */
+  launch(velocityY: number): void {
+    this.setVelocityY(velocityY);
+    this.launchedAt = this.scene.time.now;
+    this.lastGroundedAt = Number.NEGATIVE_INFINITY;
+    this.lastJumpPressedAt = Number.NEGATIVE_INFINITY;
+    this.wasOnGround = false;
+    this.playSquash(JUMP_STRETCH_X, JUMP_STRETCH_Y);
   }
 
   /**

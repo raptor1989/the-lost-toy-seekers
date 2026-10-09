@@ -37,6 +37,7 @@ export const SFX = {
   push: { file: 'sfx_push.wav', volume: 0.5, when: 'pchany blok przesuwa się o kafel' },
   thud: { file: 'sfx_thud.wav', volume: 0.6, when: 'blok spada i ląduje' },
   squish: { file: 'sfx_squish.wav', volume: 0.55, when: 'wskoczenie na mydlany bąbelek' },
+  bounce: { file: 'sfx_bounce.wav', volume: 0.5, when: 'odbicie z grzyba-trampoliny' },
   goal: { file: 'sfx_goal.wav', volume: 0.7, when: 'dotknięcie mety' },
   fanfare: { file: 'sfx_fanfare.wav', volume: 0.7, when: 'ekran nagrody' },
   tick: { file: 'sfx_tick.wav', volume: 0.4, when: 'menu — zmiana przystanku' },

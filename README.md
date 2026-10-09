@@ -54,20 +54,22 @@ w [`src/config/levels.ts`](src/config/levels.ts)) → cukierki, duszki-psotniki 
 → meta z zabawką → ekran nagrody z konfetti → zapis postępu w `localStorage` i z powrotem
 do menu, gdzie odzyskana zabawka świeci pełnym kolorem.
 
-**M3 w trakcie.** Działa **magiczna latarka Gracza 2**: trzymany przycisk zapala krąg
+**M3 ukończone** — mechaniki kooperacji, sprawdzone w grze. **Magiczna latarka Gracza 2**: trzymany przycisk zapala krąg
 światła, a w jego zasięgu pojawiają się ukryte mosty i półki — solidne jeszcze przez
 3 sekundy po zgaszeniu, żeby młodszy nie musiał świecić w rytm kroków starszego.
 Gracz 1 ma swoje **dźwignie** (podnoszą bramy na zawsze), a obaj — **przyciski tamy**:
 jedno dziecko stoi na przycisku, drugie przechodzi przez otwartą bramę. Brama nigdy
-nie opada na kogoś, kto stoi w przejściu. Gracz 1 **pcha klocki** (wystarczy w nie iść) —
-klocek robi stopień, a położony na przycisku trzyma bramę otwartą za dziecko.
-Po wodzie pływają **liście-tratwy**, a **mydlane bąbelki** działają jak windy — obie
-platformy stają na chwilę na końcach trasy, żeby wsiadanie nie wymagało refleksu.
+nie opada na kogoś, kto stoi w przejściu, i czeka chwilę po zwolnieniu przycisku.
+Gracz 1 **pcha klocki** (wystarczy w nie iść) — klocek robi stopień, a położony na przycisku
+trzyma bramę otwartą za dziecko. Po wodzie pływają **liście-tratwy**, a **mydlane bąbelki**
+działają jak windy — obie platformy stają na chwilę na końcach trasy, żeby wsiadanie nie
+wymagało refleksu. **Grzyby-trampoliny** wyrzucają zawsze na tę samą wysokość.
+Na poziomie 1 każda mechanika ma swój poligon (docelowe rozmieszczenie — M4).
 
 Gra ma też już **dźwięki**: na razie syntezowane placeholdery (skok, cukierek, śmieszne
 wpadki, chichot duszka, fanfara), do podmiany na nagrania bez zmian w kodzie.
 
-**Następny krok:** trampoliny-grzyby — ostatni element M3.
+**Następny krok:** playtest M2–M3 z dziećmi, potem M4 — greybox czterech poziomów z GDD.
 
 ### Sterowanie
 
@@ -87,7 +89,7 @@ src/
 ├── config/      # constants.ts (strojenie), levels.ts (manifest poziomów), audio.ts (manifest dźwięków)
 ├── scenes/      # Boot, Preload, Menu, Game, UI, Reward
 ├── objects/     # klasy sprite'ów: Player, Candy, Ghost, Goal, HiddenObject
-│   └── interactive/  # Gate, Lever, PressurePlate, PushBlock, MovingPlatform + wspólne typy
+│   └── interactive/  # Gate, Lever, PressurePlate, PushBlock, MovingPlatform, MushroomTrampoline
 ├── systems/     # InputManager, CoopCamera, RescueSystem, FlashlightSystem, InteractionSystem, AudioManager...
 └── utils/       # digits.ts (cyfry licznika), physics.ts (rozmiary ciał Arcade)
 public/assets/

@@ -8,7 +8,7 @@
  "orientation": "orthogonal",
  "renderorder": "right-down",
  "nextlayerid": 5,
- "nextobjectid": 52,
+ "nextobjectid": 56,
  "tiledversion": "1.10.2",
  "version": "1.10",
  "type": "map",
@@ -8309,6 +8309,66 @@
      "visible": true,
      "x": 1568,
      "y": 298,
+     "width": 0,
+     "height": 0
+    },
+    {
+     "id": 52,
+     "name": "mushroom",
+     "type": "",
+     "point": true,
+     "rotation": 0,
+     "visible": true,
+     "x": 2064,
+     "y": 768,
+     "width": 0,
+     "height": 0
+    },
+    {
+     "id": 53,
+     "name": "candy",
+     "type": "",
+     "point": true,
+     "rotation": 0,
+     "visible": true,
+     "x": 2028,
+     "y": 240,
+     "width": 0,
+     "height": 0
+    },
+    {
+     "id": 54,
+     "name": "candy",
+     "type": "",
+     "point": true,
+     "rotation": 0,
+     "visible": true,
+     "x": 2052,
+     "y": 240,
+     "width": 0,
+     "height": 0
+    },
+    {
+     "id": 55,
+     "name": "plate",
+     "type": "",
+     "point": true,
+     "properties": [
+      {
+       "name": "allowedPlayer",
+       "type": "int",
+       "value": 0
+      },
+      {
+       "name": "target",
+       "type": "object",
+       "value": 40
+      }
+     ],
+     "rotation": 0,
+     "visible": true,
+     "x": 640,
+     "y": 768,
      "width": 0,
      "height": 0
     }
