@@ -8,7 +8,7 @@ description: Dodaj nowy obiekt gry (znajdźka, duszek, element interaktywny, ukr
 ## Konwencje
 
 1. **Miejsce**: klasa w `src/objects/` (elementy kooperacji typu dźwignia/przycisk/pchany blok → `src/objects/interactive/`). Klasa rozszerza `Phaser.Physics.Arcade.Sprite` i sama rejestruje się w scenie (`scene.add.existing(this)` + `scene.physics.add.existing(this)`) — wzór: `src/objects/Player.ts`.
-2. **Elementy interaktywne** implementują wspólny interfejs `Interactive` z metodą `activate(player)`; który gracz może użyć, określa właściwość `allowedPlayer` z obiektu w Tiled (Dokumentacja, sekcja 3.5).
+2. **Elementy interaktywne** (`src/objects/interactive/Interactive.ts`): uruchamiane przyciskiem akcji implementują `Interactive` (`canBeUsedBy` / `activate` / `update`), a to, co otwierają, implementuje `Switchable` (`hold` / `release` — źródła się sumują). Rejestruje je `InteractionSystem`, do którego `GameScene` przekazuje przycisk akcji każdego gracza. Kto może użyć — `allowedPlayer` z Tiled (domyślnie Gracz 1); znacznik w kolorze uprawnionego gracza z `allowedPlayerColor` (Dokumentacja, sekcja 3.5).
 3. **Spawn z danych, nie z kodu**: obiekt powinien być tworzony przez `GameScene` na podstawie warstwy `objects` mapy Tiled (nazwa/typ obiektu + właściwości). Pozycje na sztywno w kodzie tylko na etapie prototypu.
 4. **Stałe strojenia** (prędkości, czasy, zasięgi) → `src/config/constants.ts`, nigdy magic numbers w klasie.
 5. **Rozmiar ciała fizycznego** ustawiaj przez `setBodySizeInWorld` z `src/utils/physics.ts`, po `setDisplaySize`. Gołe `body.setSize()` przyjmuje piksele tekstury i Arcade mnoży je przez skalę sprite'a — sprite zmniejszony z SVG dostaje wtedy za małą strefę.

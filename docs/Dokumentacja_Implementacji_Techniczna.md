@@ -205,6 +205,34 @@ rescueZone.onOverlap(player, () => {
 * **Przycisk przytrzymywany** (tama w poziomie 2): aktywny, dopóki Gracz 1 na nim stoi — czysta kolizja Arcade, zero timerów.
 * **Pchane bloki:** `immovable` + ręczne przesuwanie przy kolizji z Graczem 1 (Arcade nie ma prawdziwego pchania — prosty snap do siatki 32 px daje przewidywalność lepszą niż fizyka).
 
+**Decyzje z wdrożenia (M3, dźwignie / tama / bramy):**
+
+* **Dźwignia działa raz i na zawsze.** Przełącznik w obie strony dawałby starszemu dziecku
+  władzę zamknięcia młodszego za kratą, a cofnięcie postępu to frustracja, której gra nie ma.
+* **Brama nigdy nie opada na gracza.** Jeśli ktoś stoi w przejściu, czeka otwarta, aż
+  przejście będzie wolne. Kolizja znika od razu przy podnoszeniu (dziecko, które ruszyło na
+  widok bramy, nie odbije się od niej) i wraca od razu przy opadaniu — przejście jest już
+  sprawdzone, a opadająca brama ma zatrzymać każdego, kto wbiegnie w ostatniej chwili.
+* **Przycisk tamy bez timerów**, tak jak zakładano: wciśnięty = „ktoś teraz na mnie stoi".
+  Wybaczanie bierze na siebie brama (powyżej). Płytka jest tylko obrazkiem w podłodze —
+  dziecko stoi na zwykłym gruncie, więc przycisk niczego nie zmienia w fizyce. Wystarczy
+  stanąć na nim połową stopy (`PLATE_PRESS_HALF_WIDTH`).
+* **Kto może czego użyć, decyduje obiekt, nie klasa gracza** (`allowedPlayer`: 1, 2 albo
+  0 = obaj; domyślnie Gracz 1, bo interakcje to jego rola — GDD 2.1). `GameScene` przekazuje
+  przycisk akcji każdego gracza do `InteractionSystem`; u Gracza 2 ten sam klawisz zapala też
+  latarkę i obie rzeczy mogą zajść naraz.
+* **Kolor mówi „to dla ciebie".** Gałka dźwigni, płytka i strzałka-podpowiedź mają kolor
+  uprawnionego gracza (obaj — brokat). Strzałka „wciśnij swój dolny klawisz" pojawia się
+  w promieniu `HINT_RADIUS`, większym niż zasięg dźwigni — ma przyciągnąć wzrok, zanim dziecko
+  dojdzie na miejsce.
+* **Źródła się sumują** (`Switchable.hold` / `release`): brama jest otwarta, dopóki trzyma ją
+  którekolwiek z nich, więc jedną bramę mogą obsługiwać dwa przyciski i dźwignia naraz.
+* **Wierzch bramy to grunt tymczasowy** — jak ukryty most, nie może zostać checkpointem.
+* **Dziecko może zamknąć się samo** w pomieszczeniu za przyciskiem dostępnym dla obu
+  (`allowedPlayer: 0`): wciska, schodzi, wbiega, a brama opada za nim. To nie pułapka bez
+  wyjścia — wypuszcza je drugi gracz albo bańka, gdy pokój wyjdzie z kadru — ale projektując
+  poziomy (M4) warto o tym pamiętać.
+
 ### 3.6. Znajdźki i nagrody
 
 * Cukierki: grupa Arcade z `overlap` → dźwięk + licznik + particle burst + tween "wessania" do HUD.
@@ -307,7 +335,8 @@ Zasady stylu, paleta, kolejność warstw postaci i checklista QA:
 
 * **Nazwy obiektów** wpisuje się w Tiled w pole **Name** (nie Class) — Phaser zawsze wystawia
   `name`, więc jest to najpewniejszy klucz. Rozpoznawane nazwy trzyma `config/levels.ts`
-  (`OBJECT`): `player1`, `player2`, `checkpoint`, `candy`, `goal`, `ghost`, `hidden`.
+  (`OBJECT`): `player1`, `player2`, `checkpoint`, `candy`, `goal`, `ghost`, `hidden`,
+  `gate`, `lever`, `plate`.
 * **`hidden` rysuje się prostokątem**, nie punktem (M3): rozmiar prostokąta jest wprost
   rozmiarem mostu czy półki, więc w edytorze widać dokładnie to, co dostaniemy w grze.
   Górna krawędź prostokąta to powierzchnia, po której się chodzi — kładąc most w poprzek
@@ -318,6 +347,15 @@ Zasady stylu, paleta, kolejność warstw postaci i checklista QA:
   i ~`JUMP_DISTANCE_MAX` (≈275 px) w bok, a z coyote time i sterowaniem w locie jeszcze
   trochę dalej. Pierwsza wersja poligonu miała półkę 96 px nad podłogą i jej cukierek dało się
   złapać zwykłym podskokiem — dlatego sprawdzamy to rachunkiem, nie na oko.
+* **Bramy, dźwignie i przyciski** (M3): `gate` rysuje się **prostokątem** (rozmiar bramy;
+  chowa się do góry, więc nad nią sufit albo wolne niebo), `lever` i `plate` to **punkty na
+  podłodze**. Dźwignia i przycisk wskazują bramę właściwością `target` typu **object**
+  (w Tiled klika się bramę, więc nazw nie da się pomylić); opcjonalne `allowedPlayer` (int:
+  1, 2 albo 0 = obaj) mówi, kto może ich użyć. Brak `target` to błąd mapy z czytelnym
+  komunikatem, nie cicha dźwignia, która nic nie robi.
+* **Brama stojąca wolno musi być wyższa niż skok** — co najmniej 5 kafli (160 px przy
+  `JUMP_HEIGHT_MAX` ≈ 151 px), inaczej da się ją przeskoczyć. Brama w otworze ściany potrzebuje
+  tylko wysokości otworu.
 * **Punkt postawiony na podłodze jest wprost miejscem, gdzie gracz stanie** — postacie są
   zaczepione na stopach (sekcja 3.1). Dotyczy spawnów i checkpointów. Obiekty zaczepione
   w środku (meta, cukierek) biorą punkt jako swój środek.
@@ -382,7 +420,7 @@ Kolejność zoptymalizowana pod zasadę: **najpierw grywalny prototyp, grafika n
 | **M0** — Szkielet projektu | ✅ **ukończony** | Boot/Preload/Game, jeden gracz na strzałkach, platformy z prostokątów |
 | **M1** — Rdzeń ruchu i strojenie | ✅ **ukończony** | `InputManager`, `CoopCamera` z bańką, `RescueSystem`, coyote time + jump buffering, squash & stretch. **Playtest z dziećmi zaliczony** — 5-latek przechodzi tor testowy samodzielnie |
 | **M2** — Pętla rozgrywki | ✅ **ukończony** | Pipeline map z Tiled, generyczna `GameScene`, manifest `levels.ts`, checkpointy z mapy, cukierki, `UIScene` z ikonowym HUD, meta poziomu + `RewardScene`, `SaveManager` z paskiem odzyskanych zabawek, `MenuScene`, duszki-psotniki. **Kryterium spełnione: pełne przejście szarego poziomu 1 od menu do nagrody.** Czeka na playtest z dziećmi |
-| **M3** — Mechaniki kooperacji | 🟡 **w trakcie** | Gotowe: magiczna latarka Gracza 2 (`FlashlightSystem`) i obiekty odkrywane światłem (`HiddenObject`) — z „szeptem", grace periodem, kolizją tylko od góry i zabezpieczeniem checkpointów. Zostają: dźwignie / przyciski / pchane bloki, bąbelki i pływające liście, trampoliny-grzyby |
+| **M3** — Mechaniki kooperacji | 🟡 **w trakcie** | Gotowe: magiczna latarka Gracza 2 (`FlashlightSystem`) i obiekty odkrywane światłem (`HiddenObject`) — z „szeptem", grace periodem, kolizją tylko od góry i zabezpieczeniem checkpointów; dźwignie, przyciski tamy i bramy (`interactive/`, `InteractionSystem`). Zostają: pchane bloki, bąbelki i pływające liście, trampoliny-grzyby |
 | **M4** — Poziomy w Tiled | ⬜ nierozpoczęty | |
 | **M5** — Art pass | 🟡 **rozpoczęty poza kolejnością** | Zmiana pipeline'u na SVG (sekcja 4). Gotowe: `char_bear_idle`, `world_box_small`, `pickup_candy_orange`, `reward_teddy`, `ghost_mischief_idle`, `fx_sparkle`, [Styleguide_Wektorowy.md](Styleguide_Wektorowy.md), podgląd assetów. Greybox dźwięku: 14 syntezowanych SFX + `AudioManager` (sekcja 4). Brak: nagrania głosu, muzyka |
 | **M6** — Polish i playtesty | ⬜ nierozpoczęty | |
@@ -477,8 +515,27 @@ mniejsze niż w `constants.ts`, a dotknięcie cukierka w locie liczyło się jak
 — obie pułapki opisuje sekcja 3.7. Gracz niesiony w bańce zbierał po drodze cukierki
 i duszki — teraz bez kontroli niczego nie zbiera (sekcja 3.6).
 
-**Następne:** `interactive/` — dźwignia, przycisk przytrzymywany (tama), pchane bloki
-(snap do siatki 32 px), potem bąbelki i trampoliny-grzyby.
+**Zrealizowano (wieczór 2):** `objects/interactive/` — wspólne typy
+[Interactive.ts](../src/objects/interactive/Interactive.ts) (`Interactive`, `Switchable`,
+`allowedPlayer`), [Gate.ts](../src/objects/interactive/Gate.ts) (brama chowana do góry,
+nigdy nie opada na gracza), [Lever.ts](../src/objects/interactive/Lever.ts) (dźwignia na
+zawsze, ze strzałką-podpowiedzią) i [PressurePlate.ts](../src/objects/interactive/PressurePlate.ts)
+(przycisk tamy), spięte przez [InteractionSystem.ts](../src/systems/InteractionSystem.ts).
+Powiązania z mapy (`target`, `allowedPlayer` — sekcja 5), dźwięki `lever` / `gate` / `plate`.
+Decyzje — sekcja 3.5.
+
+Poligon w [level1.tmj](../public/assets/tilemaps/level1.tmj): **brama przed metą** na wieży
+z dźwignią Gracza 1 tuż obok — finał pierwszego poziomu wymaga teraz pociągnięcia dźwigni —
+oraz **pomieszczenie z trzema cukierkami** wycięte w klocku przy starcie, za bramą otwieraną
+przyciskiem dla obu graczy (jedno trzyma, drugie wchodzi).
+
+**Zweryfikowane w grze:** strzałka pojawia się tylko przy uprawnionym graczu; klawisz Gracza 2
+przy dźwigni Gracza 1 zapala tylko latarkę; po ↓ Gracza 1 brama się podnosi, przestaje
+kolidować i przepuszcza do mety. Przycisk otwiera pomieszczenie; gdy Gracz 2 stoi w przejściu,
+a Gracz 1 zejdzie z przycisku, brama czeka i opada dopiero, gdy przejście jest wolne;
+zamknięta zatrzymuje gracza w środku, a ponowne wciśnięcie go wypuszcza.
+
+**Następne:** pchane bloki (snap do siatki 32 px), potem bąbelki i trampoliny-grzyby.
 
 ### M4 — Poziomy w Tiled (3–4 wieczory)
 Greybox wszystkich 4 poziomów zgodnie z GDD sekcja 4 + playtest każdego z dziećmi **przed** art passem (przesuwanie platform w Tiled jest darmowe, po oklejeniu grafiką — bolesne).

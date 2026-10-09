@@ -229,6 +229,40 @@ const SOUNDS = {
     return b;
   },
 
+  /** Dźwignia — drewniane „klik-klak" z głuchym stuknięciem na końcu ruchu. */
+  lever() {
+    const b = buffer(0.3);
+    noise(b, { dur: 0.02, cutoff: 6000, env: (t) => Math.exp(-t / 0.004), gain: 0.6, seed: 41 });
+    tone(b, { dur: 0.05, freq: 1100, env: pluck(0.001, 0.012), gain: 0.6 });
+    noise(b, { at: 0.09, dur: 0.03, cutoff: 3000, env: (t) => Math.exp(-t / 0.006), gain: 0.6, seed: 42 });
+    tone(b, { at: 0.09, dur: 0.08, freq: 700, env: pluck(0.001, 0.02), gain: 0.6 });
+    tone(b, { at: 0.09, dur: 0.15, freq: sweep(180, 120), env: pluck(0.002, 0.05), gain: 0.7 });
+    return b;
+  },
+
+  /** Brama — turkoczące „wrrr" przesuwanej kraty i stuknięcie, gdy dojedzie. */
+  gate() {
+    const d = 0.55;
+    const run = d - 0.1;
+    const b = buffer(d);
+    const motion = (t) => Math.min(1, t / 0.03) * Math.max(0, 1 - t / run);
+    noise(b, {
+      dur: run, cutoff: 700, gain: 0.9, seed: 51,
+      env: (t) => motion(t) * (0.6 + 0.4 * Math.sin(2 * Math.PI * 22 * t)),
+    });
+    tone(b, { dur: run, freq: sweep(110, 170), wave: 'triangle', env: motion, gain: 0.5 });
+    tone(b, { at: run - 0.02, dur: 0.12, freq: sweep(160, 100), env: pluck(0.002, 0.04), gain: 0.8 });
+    return b;
+  },
+
+  /** Przycisk tamy — miękkie „pyk" wciskanej płytki. */
+  plate() {
+    const b = buffer(0.12);
+    noise(b, { dur: 0.012, cutoff: 4000, env: (t) => Math.exp(-t / 0.003), gain: 0.4, seed: 61 });
+    tone(b, { dur: 0.1, freq: sweep(520, 300), env: pluck(0.001, 0.025) });
+    return b;
+  },
+
   /** Menu — przeskok zaznaczenia na inny przystanek. */
   tick() {
     const b = buffer(0.08);

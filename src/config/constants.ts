@@ -28,6 +28,16 @@ export const JUMP_VELOCITY = -550; // ⚙ px/s (ujemne = w górę)
 export const PLAYER_WIDTH = 48;
 export const PLAYER_HEIGHT = 64;
 
+/**
+ * Kolory rozpoznawcze graczy — placeholdery postaci i znaczniki „to jest dla ciebie"
+ * na dźwigniach i przyciskach. Gracz 1 = czerwień plecaka misia (Styleguide);
+ * błękit Gracza 2 czeka na paletę królika.
+ */
+export const PLAYER_ONE_COLOR = 0xe15240;
+export const PLAYER_TWO_COLOR = 0x4a90d9;
+/** Obiekt dla obojga graczy — kolor brokatu z palety. */
+export const SHARED_COLOR = 0xffd166;
+
 // ---------------------------------------------------------------- wybaczanie błędów
 // Dwa mechanizmy, dzięki którym skok „po prostu działa" dla 5-latka.
 
@@ -97,6 +107,8 @@ export const DEPTH_DECOR = -10;
 export const DEPTH_TILES = 0;
 /** Ukryte mosty leżą tuż nad kaflami — mają czytać się jak część świata. */
 export const DEPTH_HIDDEN = 1;
+/** Bramy, dźwignie i przyciski — część świata, ale przed mostami. */
+export const DEPTH_INTERACTIVE = 2;
 export const DEPTH_PICKUPS = 5;
 /** Poświata latarki pod postaciami: światło oświetla świat, nie zasłania graczy. */
 export const DEPTH_FLASHLIGHT = 9;
@@ -188,6 +200,56 @@ export const HIDDEN_GRACE_MS = 3000;
  * bo chodzi tylko o rozjechanie się kolizji i próbkowania checkpointu w klatce.
  */
 export const TEMPORARY_GROUND_MEMORY_MS = 150;
+
+// ---------------------------------------------------------------- elementy interaktywne
+// Dokumentacja 3.5: dźwignie, przyciski tamy i bramy, które otwierają.
+
+/**
+ * ⚙ Zasięg dźwigni od jej podstawy (px). Hojny — 5-latek nie staje co do piksela,
+ * a „prawie przy dźwigni" ma działać tak samo jak „przy dźwigni".
+ */
+export const LEVER_REACH_X = 56;
+export const LEVER_REACH_Y = 48;
+/** Rozmiar placeholdera dźwigni: podstawa i drążek. */
+export const LEVER_BASE_WIDTH = 28;
+export const LEVER_BASE_HEIGHT = 14;
+export const LEVER_HANDLE_WIDTH = 10;
+export const LEVER_HANDLE_HEIGHT = 40;
+/** Wychylenie drążka w stopniach (w lewo = nieruszona, w prawo = pociągnięta). */
+export const LEVER_ANGLE = 35;
+export const LEVER_PULL_MS = 240;
+
+/**
+ * ⚙ Podpowiedź „wciśnij swój dolny klawisz": strzałka nad dźwignią, widoczna, gdy
+ * uprawniony gracz jest bliżej niż ten promień. Większy niż zasięg dźwigni —
+ * strzałka ma przyciągnąć dziecko, zanim dojdzie na miejsce.
+ */
+export const HINT_RADIUS = 260;
+export const HINT_SIZE = 28;
+export const HINT_GAP = 14;
+export const HINT_BOB_DISTANCE = 6;
+export const HINT_BOB_MS = 450;
+
+/** Przycisk tamy — płaska płytka wtopiona w podłogę. */
+export const PLATE_WIDTH = 64;
+export const PLATE_HEIGHT = 10;
+/**
+ * ⚙ Jak daleko od środka płytki może stać środek gracza, żeby ją wciskał.
+ * Wystarczy stanąć na niej połową stopy.
+ */
+export const PLATE_PRESS_HALF_WIDTH = 44;
+/** Spłaszczenie płytki, gdy ktoś na niej stoi. */
+export const PLATE_PRESSED_SCALE_Y = 0.35;
+export const PLATE_PRESS_MS = 90;
+
+/**
+ * Brama chowa się do góry, jak krata w zamku. Opada wolniej, niż się podnosi —
+ * dziecko widzi, że coś się zamyka, i ma czas zareagować.
+ */
+export const GATE_OPEN_MS = 420;
+export const GATE_CLOSE_MS = 700;
+/** Ile bramy zostaje widać po otwarciu (ułamek wysokości) — znak, że wróci. */
+export const GATE_OPEN_SCALE_Y = 0.12;
 
 // ---------------------------------------------------------------- meta poziomu
 

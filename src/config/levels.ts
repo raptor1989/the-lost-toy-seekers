@@ -48,7 +48,43 @@ export const OBJECT = {
    * mostu, więc projektant widzi w edytorze dokładnie to, co dostanie w grze.
    */
   hidden: 'hidden',
+  /**
+   * Brama otwierana dźwignią albo przyciskiem. Rysowana **prostokątem** —
+   * rozmiar prostokąta to rozmiar bramy. Chowa się do góry, więc nad nią
+   * powinien być sufit albo wolne niebo.
+   */
+  gate: 'gate',
+  /**
+   * Dźwignia — **punkt na podłodze**. Otwiera bramę wskazaną właściwością
+   * `target` na zawsze (Dokumentacja 3.5).
+   */
+  lever: 'lever',
+  /**
+   * Przycisk tamy — **punkt na podłodze**. Trzyma bramę `target` otwartą,
+   * dopóki ktoś na nim stoi.
+   */
+  plate: 'plate',
 } as const;
+
+/** Właściwości obiektów (Custom Properties w Tiled). */
+export const PROPERTY = {
+  /**
+   * Na dźwigni i przycisku: brama, którą sterują. W Tiled właściwość typu
+   * **object** — wskazuje się ją kliknięciem, więc nie da się pomylić nazw.
+   */
+  target: 'target',
+  /**
+   * Kto może użyć dźwigni lub przycisku: `1`, `2` albo `0` = obaj.
+   * Bez tej właściwości — {@link DEFAULT_ALLOWED_PLAYER}.
+   */
+  allowedPlayer: 'allowedPlayer',
+} as const;
+
+/**
+ * Domyślnie dźwignie i przyciski należą do Gracza 1 — interakcje z otoczeniem
+ * to jego rola, tak jak latarka jest rolą Gracza 2 (GDD sekcja 2.1).
+ */
+export const DEFAULT_ALLOWED_PLAYER = 1;
 
 export interface LevelDefinition {
   /** Identyfikator używany przy `scene.start('Game', { levelId })`. */

@@ -12,7 +12,7 @@ Poziomy są danymi, nie kodem: jedna generyczna `GameScene` czyta mapę Tiled + 
 1. **Mapa**: `public/assets/tilemaps/levelN.tmj` (format JSON z Tiled). Wymagane warstwy (Dokumentacja, sekcja 5):
    - `ground` — tile layer, kolizje przez właściwość `collides: true`,
    - `oneway` — platformy przenikalne od dołu (`checkCollision.down` only),
-   - `objects` — object layer; nazwy obiektów wpisuje się w pole **Name** i są zebrane w `OBJECT` w `src/config/levels.ts`: `player1`, `player2`, `checkpoint`, `candy`, `goal`, `ghost` (polilinia dwupunktowa = trasa patrolu), `hidden` (prostokąt = rozmiar mostu odkrywanego latarką). Punkty spawnu i checkpointów stawia się **na podłodze** — postacie są zaczepione na stopach,
+   - `objects` — object layer; nazwy obiektów wpisuje się w pole **Name** i są zebrane w `OBJECT` w `src/config/levels.ts`: `player1`, `player2`, `checkpoint`, `candy`, `goal`, `ghost` (polilinia dwupunktowa = trasa patrolu), `hidden` (prostokąt = rozmiar mostu odkrywanego latarką), `gate` (prostokąt = brama), `lever` i `plate` (punkty na podłodze; właściwość `target` typu object wskazuje bramę, opcjonalne `allowedPlayer` int 0/1/2, domyślnie 1). Brama stojąca wolno musi mieć min. 5 kafli wysokości, inaczej da się ją przeskoczyć. Punkty spawnu i checkpointów stawia się **na podłodze** — postacie są zaczepione na stopach,
    - `decor` — czysto wizualna.
 2. **Manifest**: wpis w `src/config/levels.ts` — klucz mapy, muzyka, zabawka-nagroda (jeśli plik nie istnieje, utwórz wg Dokumentacji sekcja 2.1).
 3. **Ładowanie**: `PreloadScene` ładuje paczkę danego poziomu (mapa + assety SVG + audio) z paskiem postępu.

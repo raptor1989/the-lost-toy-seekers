@@ -4,8 +4,16 @@ import {
   GAME_HEIGHT,
   PLAYER_WIDTH,
   PLAYER_HEIGHT,
+  PLAYER_ONE_COLOR,
+  PLAYER_TWO_COLOR,
   TILE_SIZE,
   FLASHLIGHT_TEXTURE_SIZE,
+  LEVER_BASE_WIDTH,
+  LEVER_BASE_HEIGHT,
+  LEVER_HANDLE_WIDTH,
+  LEVER_HANDLE_HEIGHT,
+  PLATE_WIDTH,
+  PLATE_HEIGHT,
   HUD_DIGIT_WIDTH,
   HUD_DIGIT_HEIGHT,
 } from '../config/constants';
@@ -13,6 +21,9 @@ import { LEVELS, TILESET_TEXTURE_KEY } from '../config/levels';
 import { CANDY_TEXTURE } from '../objects/Candy';
 import { GHOST_TEXTURE, SPARKLE_TEXTURE } from '../objects/Ghost';
 import { HIDDEN_TEXTURE } from '../objects/HiddenObject';
+import { GATE_TEXTURE } from '../objects/interactive/Gate';
+import { LEVER_BASE_TEXTURE, LEVER_HANDLE_TEXTURE, HINT_TEXTURE } from '../objects/interactive/Lever';
+import { PLATE_TEXTURE } from '../objects/interactive/PressurePlate';
 import { FLASHLIGHT_TEXTURE } from '../systems/FlashlightSystem';
 import { AudioManager } from '../systems/AudioManager';
 import { CONFETTI_TEXTURE, PLAY_TEXTURE } from './RewardScene';
@@ -87,13 +98,13 @@ export class PreloadScene extends Phaser.Scene {
     const g = this.make.graphics({ x: 0, y: 0 }, false);
 
     // Gracz 1 (strzałki) — ciepły pomarańcz, jak plecak misia
-    g.fillStyle(0xe15240, 1);
+    g.fillStyle(PLAYER_ONE_COLOR, 1);
     g.fillRect(0, 0, PLAYER_WIDTH, PLAYER_HEIGHT);
     g.generateTexture('player_one', PLAYER_WIDTH, PLAYER_HEIGHT);
     g.clear();
 
     // Gracz 2 (WASD) — chłodny błękit, jak plecak królika
-    g.fillStyle(0x4a90d9, 1);
+    g.fillStyle(PLAYER_TWO_COLOR, 1);
     g.fillRect(0, 0, PLAYER_WIDTH, PLAYER_HEIGHT);
     g.generateTexture('player_two', PLAYER_WIDTH, PLAYER_HEIGHT);
     g.clear();
@@ -127,6 +138,8 @@ export class PreloadScene extends Phaser.Scene {
     g.generateTexture(HIDDEN_TEXTURE, TILE_SIZE, TILE_SIZE);
     g.clear();
 
+    this.createInteractiveTextures(g);
+
     // Kłódka na zablokowanym poziomie — jedyny komunikat „jeszcze nie teraz".
     g.lineStyle(7, 0x4a3226, 1);
     g.beginPath();
@@ -141,6 +154,74 @@ export class PreloadScene extends Phaser.Scene {
     g.generateTexture(LOCK_TEXTURE, 96, 96);
 
     g.destroy();
+  }
+
+  /**
+   * Bramy, dźwignie, przyciski i strzałka-podpowiedź — greybox w kolorach palety.
+   * Elementy mówiące „czyje to" (gałka dźwigni, płytka, strzałka) są **białe**:
+   * barwi je tint w kolorze uprawnionego gracza, więc jedna tekstura obsłuży
+   * Gracza 1, Gracza 2 i obu naraz.
+   */
+  private createInteractiveTextures(g: Phaser.GameObjects.Graphics): void {
+    // Brama: drewniane sztaby na ciemnym tle. Kładziona `TileSprite`em w pionie
+    // i w poziomie, więc wzór musi się zazębiać na każdej krawędzi kafla.
+    g.fillStyle(0x4a3226, 1);
+    g.fillRect(0, 0, TILE_SIZE, TILE_SIZE);
+    g.fillStyle(0xc89257, 1);
+    g.fillRect(3, 0, 10, TILE_SIZE);
+    g.fillRect(19, 0, 10, TILE_SIZE);
+    g.fillStyle(0xdca96d, 1);
+    g.fillRect(5, 0, 3, TILE_SIZE);
+    g.fillRect(21, 0, 3, TILE_SIZE);
+    g.fillStyle(0x6b4a2a, 1);
+    g.fillRect(0, 13, TILE_SIZE, 6);
+    g.generateTexture(GATE_TEXTURE, TILE_SIZE, TILE_SIZE);
+    g.clear();
+
+    // Podstawa dźwigni.
+    g.fillStyle(0x6b4a2a, 1);
+    g.fillRoundedRect(1, 1, LEVER_BASE_WIDTH - 2, LEVER_BASE_HEIGHT - 2, 5);
+    g.lineStyle(2, 0x4a3226, 1);
+    g.strokeRoundedRect(1, 1, LEVER_BASE_WIDTH - 2, LEVER_BASE_HEIGHT - 2, 5);
+    g.generateTexture(LEVER_BASE_TEXTURE, LEVER_BASE_WIDTH, LEVER_BASE_HEIGHT);
+    g.clear();
+
+    // Drążek: ciemny trzonek i biała gałka (tint barwi tylko gałkę).
+    const knob = LEVER_HANDLE_WIDTH / 2;
+    g.fillStyle(0x4a3226, 1);
+    g.fillRect(knob - 2, knob, 4, LEVER_HANDLE_HEIGHT - knob);
+    g.fillStyle(0xffffff, 1);
+    g.fillCircle(knob, knob, knob - 1);
+    g.lineStyle(2, 0x4a3226, 1);
+    g.strokeCircle(knob, knob, knob - 1);
+    g.generateTexture(LEVER_HANDLE_TEXTURE, LEVER_HANDLE_WIDTH, LEVER_HANDLE_HEIGHT);
+    g.clear();
+
+    // Płytka przycisku tamy.
+    g.fillStyle(0xffffff, 1);
+    g.fillRoundedRect(1, 1, PLATE_WIDTH - 2, PLATE_HEIGHT - 1, 4);
+    g.lineStyle(2, 0x4a3226, 1);
+    g.strokeRoundedRect(1, 1, PLATE_WIDTH - 2, PLATE_HEIGHT - 1, 4);
+    g.generateTexture(PLATE_TEXTURE, PLATE_WIDTH, PLATE_HEIGHT);
+    g.clear();
+
+    // Strzałka w dół — „wciśnij swój dolny klawisz". Rysowana w 64 px,
+    // pokazywana mniejsza, żeby kontur został ostry.
+    g.fillStyle(0xffffff, 1);
+    g.lineStyle(5, 0x4a3226, 1);
+    g.beginPath();
+    g.moveTo(24, 6);
+    g.lineTo(40, 6);
+    g.lineTo(40, 28);
+    g.lineTo(56, 28);
+    g.lineTo(32, 58);
+    g.lineTo(8, 28);
+    g.lineTo(24, 28);
+    g.closePath();
+    g.fillPath();
+    g.strokePath();
+    g.generateTexture(HINT_TEXTURE, 64, 64);
+    g.clear();
   }
 
   /**

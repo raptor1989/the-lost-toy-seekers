@@ -16,6 +16,8 @@ import {
   TILESET_TEXTURE_KEY,
   LAYER,
   OBJECT,
+  PROPERTY,
+  DEFAULT_ALLOWED_PLAYER,
   type LevelDefinition,
 } from '../config/levels';
 import { PlayerOne } from '../objects/PlayerOne';
@@ -24,11 +26,16 @@ import { Candy } from '../objects/Candy';
 import { Goal } from '../objects/Goal';
 import { Ghost } from '../objects/Ghost';
 import { HiddenObject } from '../objects/HiddenObject';
+import { Gate } from '../objects/interactive/Gate';
+import { Lever } from '../objects/interactive/Lever';
+import { PressurePlate } from '../objects/interactive/PressurePlate';
+import type { AllowedPlayer } from '../objects/interactive/Interactive';
 import type { Player } from '../objects/Player';
 import { InputManager } from '../systems/InputManager';
 import { CoopCamera } from '../systems/CoopCamera';
 import { RescueSystem } from '../systems/RescueSystem';
 import { FlashlightSystem } from '../systems/FlashlightSystem';
+import { InteractionSystem } from '../systems/InteractionSystem';
 import { setCandyState } from '../systems/GameState';
 
 export interface GameSceneData {
@@ -46,6 +53,23 @@ export interface GameSceneData {
 const onlyWithControl = (playerObject: unknown): boolean => (playerObject as Player).hasControl;
 
 /**
+ * Callback kolizji z gruntem, który może zniknąć (ukryty most, brama). Taki grunt
+ * nie może zostać checkpointem — patrz `Player.isOnTemporaryGround`.
+ */
+const markTemporaryGround = (playerObject: unknown): void => {
+  const player = playerObject as Player;
+  if (player.isOnGround) {
+    player.markTemporaryGround();
+  }
+};
+
+/** Wartość właściwości obiektu z Tiled — w `.tmj` to tablica `{ name, type, value }`. */
+function tiledProperty(object: Phaser.Types.Tilemaps.TiledObject, name: string): unknown {
+  const properties = object.properties as { name: string; value: unknown }[] | undefined;
+  return properties?.find((property) => property.name === name)?.value;
+}
+
+/**
  * M2: **jedna generyczna scena dla wszystkich poziomów**, sterowana danymi.
  *
  * Scena nie wie nic o konkretnym poziomie — dostaje `levelId`, bierze wpis
@@ -59,6 +83,7 @@ export class GameScene extends Phaser.Scene {
   private input_!: InputManager;
   private coopCamera!: CoopCamera;
   private rescue!: RescueSystem;
+  private interactions!: InteractionSystem;
 
   private candies!: Phaser.GameObjects.Group;
   private candiesTotal = 0;
@@ -91,6 +116,7 @@ export class GameScene extends Phaser.Scene {
 
     this.spawnCheckpoints(map);
     this.spawnHiddenObjects(map);
+    this.spawnInteractives(map);
     this.spawnCandies(map);
     this.spawnGhosts(map);
     this.spawnGoal(map);
@@ -100,9 +126,16 @@ export class GameScene extends Phaser.Scene {
 
   update(time: number, delta: number): void {
     for (const player of this.players) {
-      player.update(time, this.input_.getInput(player.playerId));
+      const input = this.input_.getInput(player.playerId);
+      player.update(time, input);
+      // Przycisk akcji trafia do dźwigni niezależnie od tego, czy gracz ma też
+      // własną umiejętność — o tym, kto może czego użyć, decyduje obiekt.
+      if (input.actionJustPressed && player.hasControl) {
+        this.interactions.tryActivate(player);
+      }
     }
 
+    this.interactions.update();
     this.coopCamera.update(delta);
     this.rescue.update(delta);
   }
@@ -212,17 +245,71 @@ export class GameScene extends Phaser.Scene {
       (rect) => new HiddenObject(this, rect.centerX, rect.centerY, rect.width, rect.height),
     );
 
-    this.physics.add.collider(this.players, hidden, (playerObject) => {
-      const player = playerObject as Player;
-      if (player.isOnGround) {
-        // Grunt, który zaraz zgaśnie, nie może zostać checkpointem — patrz
-        // `Player.isOnTemporaryGround`.
-        player.markTemporaryGround();
-      }
-    });
+    this.physics.add.collider(this.players, hidden, markTemporaryGround);
 
     const owner = this.players.find((p) => p instanceof PlayerTwo) as PlayerTwo | undefined;
     owner?.attachFlashlight(new FlashlightSystem(this, owner, hidden));
+  }
+
+  /**
+   * Bramy, dźwignie i przyciski tamy (Dokumentacja 3.5). Powiązania pochodzą
+   * z mapy: dźwignia i przycisk wskazują swoją bramę właściwością `target`.
+   *
+   * Stanie na bramie liczy się jak stanie na ukrytym moście — brama może się
+   * otworzyć, więc jej wierzch nie może zostać checkpointem.
+   */
+  private spawnInteractives(map: Phaser.Tilemaps.Tilemap): void {
+    const gates = new Map<number, Gate>();
+    for (const object of this.objectsNamed(map, OBJECT.gate)) {
+      gates.set(object.id, new Gate(this, this.rectOf(object), this.players));
+    }
+
+    const levers = this.objectsNamed(map, OBJECT.lever).map(
+      (object) =>
+        new Lever(
+          this,
+          object.x ?? 0,
+          object.y ?? 0,
+          this.requireTarget(object, gates),
+          this.allowedPlayerOf(object),
+        ),
+    );
+    const plates = this.objectsNamed(map, OBJECT.plate).map(
+      (object) =>
+        new PressurePlate(
+          this,
+          object.x ?? 0,
+          object.y ?? 0,
+          this.requireTarget(object, gates),
+          this.allowedPlayerOf(object),
+        ),
+    );
+
+    this.physics.add.collider(this.players, [...gates.values()], markTemporaryGround);
+    this.interactions = new InteractionSystem(this.players, levers, plates, [...gates.values()]);
+  }
+
+  /** Brama wskazana właściwością `target` — błąd mapy, jeśli jej brak. */
+  private requireTarget(object: Phaser.Types.Tilemaps.TiledObject, gates: Map<number, Gate>): Gate {
+    const gate = gates.get(Number(tiledProperty(object, PROPERTY.target)));
+    if (!gate) {
+      throw new Error(
+        `Mapa "${this.level.mapKey}": obiekt "${object.name}" (id ${object.id}) potrzebuje ` +
+          `właściwości "${PROPERTY.target}" wskazującej obiekt "${OBJECT.gate}".`,
+      );
+    }
+    return gate;
+  }
+
+  private allowedPlayerOf(object: Phaser.Types.Tilemaps.TiledObject): AllowedPlayer {
+    const value = tiledProperty(object, PROPERTY.allowedPlayer) ?? DEFAULT_ALLOWED_PLAYER;
+    if (value !== 0 && value !== 1 && value !== 2) {
+      throw new Error(
+        `Mapa "${this.level.mapKey}": "${PROPERTY.allowedPlayer}" obiektu id ${object.id} ` +
+          `musi być 0, 1 albo 2 (jest: ${String(value)}).`,
+      );
+    }
+    return value;
   }
 
   private spawnCandies(map: Phaser.Tilemaps.Tilemap): void {
@@ -317,6 +404,18 @@ export class GameScene extends Phaser.Scene {
 
   // ------------------------------------------------------------------ odczyt warstwy `objects`
 
+  /** Wszystkie obiekty o danej nazwie (pole **Name** w Tiled). */
+  private objectsNamed(
+    map: Phaser.Tilemaps.Tilemap,
+    name: string,
+  ): Phaser.Types.Tilemaps.TiledObject[] {
+    const layer = map.getObjectLayer(LAYER.objects);
+    if (!layer) {
+      throw new Error(`Mapa "${this.level.mapKey}" nie ma warstwy "${LAYER.objects}".`);
+    }
+    return layer.objects.filter((object) => object.name === name);
+  }
+
   /**
    * Punkty z warstwy `objects` bierzemy wprost, bo postacie są zaczepione na
    * stopach — punkt postawiony w Tiled na podłodze jest od razu miejscem, gdzie
@@ -328,38 +427,29 @@ export class GameScene extends Phaser.Scene {
     name: string,
     liftY = 0,
   ): Phaser.Math.Vector2[] {
-    const layer = map.getObjectLayer(LAYER.objects);
-    if (!layer) {
-      throw new Error(`Mapa "${this.level.mapKey}" nie ma warstwy "${LAYER.objects}".`);
-    }
-
-    return layer.objects
-      .filter((object) => object.name === name)
-      .map((object) => new Phaser.Math.Vector2(object.x ?? 0, (object.y ?? 0) - liftY));
+    return this.objectsNamed(map, name).map(
+      (object) => new Phaser.Math.Vector2(object.x ?? 0, (object.y ?? 0) - liftY),
+    );
   }
 
   /**
-   * Prostokąty z warstwy `objects` (ukryte mosty, a w dalszej części M3 również
-   * strefy interaktywne). Tiled podaje je narożnikiem lewy-górny — oddajemy
-   * środek i rozmiar, bo tak ustawia się sprite'y.
+   * Prostokąty z warstwy `objects` (ukryte mosty). Obiekty bez rozmiaru — czyli
+   * postawione przez pomyłkę jako punkt — pomijamy, zamiast tworzyć most zerowej szerokości.
    */
   private findRects(map: Phaser.Tilemaps.Tilemap, name: string): Phaser.Geom.Rectangle[] {
-    const layer = map.getObjectLayer(LAYER.objects);
-    if (!layer) {
-      throw new Error(`Mapa "${this.level.mapKey}" nie ma warstwy "${LAYER.objects}".`);
-    }
+    return this.objectsNamed(map, name)
+      .filter((object) => !!object.width && !!object.height)
+      .map((object) => this.rectOf(object));
+  }
 
-    return layer.objects
-      .filter((object) => object.name === name && !!object.width && !!object.height)
-      .map(
-        (object) =>
-          new Phaser.Geom.Rectangle(
-            object.x ?? 0,
-            object.y ?? 0,
-            object.width ?? 0,
-            object.height ?? 0,
-          ),
-      );
+  /** Tiled podaje prostokąt narożnikiem lewy-górny i rozmiarem. */
+  private rectOf(object: Phaser.Types.Tilemaps.TiledObject): Phaser.Geom.Rectangle {
+    return new Phaser.Geom.Rectangle(
+      object.x ?? 0,
+      object.y ?? 0,
+      object.width ?? 0,
+      object.height ?? 0,
+    );
   }
 
   /**
@@ -374,32 +464,25 @@ export class GameScene extends Phaser.Scene {
     map: Phaser.Tilemaps.Tilemap,
     name: string,
   ): { from: Phaser.Math.Vector2; to: Phaser.Math.Vector2 }[] {
-    const layer = map.getObjectLayer(LAYER.objects);
-    if (!layer) {
-      throw new Error(`Mapa "${this.level.mapKey}" nie ma warstwy "${LAYER.objects}".`);
-    }
+    return this.objectsNamed(map, name).map((object) => {
+      const originX = object.x ?? 0;
+      const originY = object.y ?? 0;
+      const line = object.polyline;
 
-    return layer.objects
-      .filter((object) => object.name === name)
-      .map((object) => {
-        const originX = object.x ?? 0;
-        const originY = object.y ?? 0;
-        const line = object.polyline;
-
-        if (line && line.length >= 2) {
-          const last = line[line.length - 1];
-          return {
-            from: new Phaser.Math.Vector2(originX + line[0].x, originY + line[0].y),
-            to: new Phaser.Math.Vector2(originX + last.x, originY + last.y),
-          };
-        }
-
-        const half = GHOST_PATROL_DEFAULT / 2;
+      if (line && line.length >= 2) {
+        const last = line[line.length - 1];
         return {
-          from: new Phaser.Math.Vector2(originX - half, originY),
-          to: new Phaser.Math.Vector2(originX + half, originY),
+          from: new Phaser.Math.Vector2(originX + line[0].x, originY + line[0].y),
+          to: new Phaser.Math.Vector2(originX + last.x, originY + last.y),
         };
-      });
+      }
+
+      const half = GHOST_PATROL_DEFAULT / 2;
+      return {
+        from: new Phaser.Math.Vector2(originX - half, originY),
+        to: new Phaser.Math.Vector2(originX + half, originY),
+      };
+    });
   }
 
   private requireObject(map: Phaser.Tilemaps.Tilemap, name: string): Phaser.Math.Vector2 {
