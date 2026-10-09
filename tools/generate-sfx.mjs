@@ -284,6 +284,14 @@ const SOUNDS = {
     return b;
   },
 
+  /** Wskoczenie na mydlany bąbelek — miękkie, sprężyste „błup". */
+  squish() {
+    const b = buffer(0.22);
+    tone(b, { dur: 0.22, freq: sweepTo(320, 140, 0.12), env: pluck(0.004, 0.06) });
+    tone(b, { dur: 0.22, freq: sweepTo(640, 280, 0.12), env: pluck(0.004, 0.03), gain: 0.2 });
+    return b;
+  },
+
   /** Menu — przeskok zaznaczenia na inny przystanek. */
   tick() {
     const b = buffer(0.08);

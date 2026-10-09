@@ -275,6 +275,53 @@ export const BLOCK_RESPAWN_PARTICLES = 12;
 /** Znacznik „można pchać" na bloku. */
 export const BLOCK_MARKER_SIZE = 30;
 
+// ---------------------------------------------------------------- ruchome platformy
+// Pływające liście i mydlane bąbelki (GDD poziom 2). Prefiks SOAP_BUBBLE, żeby
+// nie mylić ich z „magiczną bańką" kamery (BUBBLE_*).
+
+/**
+ * ⚙ Postój na końcach trasy — chwila na spokojne wejście i zejście. Dla 5-latka
+ * wsiadanie do jadącej platformy to zadanie na refleks, a nie o to tu chodzi.
+ */
+export const PLATFORM_END_PAUSE_MS = 800;
+/** Gracz „stoi" na platformie, jeśli jego stopy są najwyżej tyle od jej wierzchu. */
+export const PLATFORM_RIDE_TOLERANCE = 6;
+/**
+ * Jak długo po ostatnim kontakcie z platformą gracz liczy się jako stojący —
+ * kilka klatek zapasu na to, że fizyka i ruch platformy dzieją się w różnych
+ * momentach klatki.
+ */
+export const PLATFORM_GROUND_MEMORY_MS = 60;
+/** Grubość ciała platformy — liczy się tylko jej wierzch. */
+export const PLATFORM_BODY_HEIGHT = 16;
+/**
+ * O ile szybciej niż platforma gracz może lecieć w górę, a nadal „stać" na niej
+ * (px/s). Wznosząca się platforma pcha gracza w górę, więc „nie skacze" nie może
+ * znaczyć `velocity.y >= 0`; skok (`JUMP_VELOCITY`) jest i tak wielokrotnie szybszy.
+ */
+export const PLATFORM_RIDE_SPEED_MARGIN = 120;
+
+export const LEAF_WIDTH = 96;
+export const LEAF_HEIGHT = 28;
+/** ⚙ Liść płynie wolno — to tratwa, nie winda. */
+export const LEAF_SPEED = 60;
+/** Trasa liścia postawionego w Tiled jako punkt (w poziomie, w prawo). */
+export const LEAF_PATH_DEFAULT = 128;
+
+export const SOAP_BUBBLE_SIZE = 80;
+/** Ciało węższe niż obrazek — wierzch kuli jest węższy niż jej środek. */
+export const SOAP_BUBBLE_BODY_WIDTH = 64;
+/** ⚙ Prędkość wznoszenia bąbelka. */
+export const SOAP_BUBBLE_SPEED = 55;
+/** Trasa bąbelka postawionego w Tiled jako punkt (w pionie, do góry). */
+export const SOAP_BUBBLE_PATH_DEFAULT = 192;
+/** Ugięcie bąbelka, gdy ktoś na niego wskoczy, i jego delikatne falowanie. */
+export const SOAP_BUBBLE_SQUASH_X = 1.14;
+export const SOAP_BUBBLE_SQUASH_Y = 0.84;
+export const SOAP_BUBBLE_SQUASH_MS = 280;
+export const SOAP_BUBBLE_WOBBLE = 0.04;
+export const SOAP_BUBBLE_WOBBLE_MS = 900;
+
 // ---------------------------------------------------------------- meta poziomu
 
 /** Rozmiar zabawki stojącej na mecie (w świecie gry). */

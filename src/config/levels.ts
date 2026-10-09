@@ -70,6 +70,17 @@ export const OBJECT = {
    * na siatce. Opcjonalne `allowedPlayer` mówi, kto może go pchać.
    */
   block: 'block',
+  /**
+   * Pływający liść — **polilinia o dwóch punktach**: trasa środka wierzchu liścia
+   * (tam, gdzie stoją stopy). Liść płynie tam i z powrotem z postojem na końcach.
+   * Zwykły punkt dostaje domyślną trasę w poziomie.
+   */
+  leaf: 'leaf',
+  /**
+   * Mydlany bąbelek — jak liść, ale zwykle rysowany w pionie: unosi gracza w górę
+   * i opada. Zwykły punkt dostaje domyślną trasę do góry.
+   */
+  bubble: 'bubble',
 } as const;
 
 /** Właściwości obiektów (Custom Properties w Tiled). */

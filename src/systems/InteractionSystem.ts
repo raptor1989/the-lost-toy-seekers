@@ -4,6 +4,7 @@ import type { Interactive } from '../objects/interactive/Interactive';
 import type { Gate } from '../objects/interactive/Gate';
 import type { PressurePlate } from '../objects/interactive/PressurePlate';
 import type { PushBlock, BlockWorld } from '../objects/interactive/PushBlock';
+import type { MovingPlatform } from '../objects/interactive/MovingPlatform';
 
 export interface InteractionSetup {
   players: readonly Player[];
@@ -11,6 +12,7 @@ export interface InteractionSetup {
   plates: readonly PressurePlate[];
   gates: readonly Gate[];
   blocks: readonly PushBlock[];
+  platforms: readonly MovingPlatform[];
   /** Warstwy kafli, przez które blok nie przejdzie (`ground`, `oneway`). */
   solidLayers: readonly Phaser.Tilemaps.TilemapLayer[];
   /** Granice mapy — blok nie wyjedzie za boczną krawędź, a spod dolnej wraca na start. */
@@ -19,12 +21,12 @@ export interface InteractionSetup {
 
 /**
  * Elementy kooperacji z poziomu (Dokumentacja 3.5): dźwignie, przyciski tamy,
- * pchane bloki i bramy, którymi sterują.
+ * pchane bloki, bramy, którymi sterują, oraz ruchome platformy (liście, bąbelki).
  *
- * Kolejność w klatce ma znaczenie: najpierw ruszają się bloki, potem przyciski
- * i dźwignie zgłaszają, czy trzymają bramę, a dopiero na końcu bramy decydują,
- * czy się ruszyć. Odwrotnie brama reagowałaby z klatką opóźnienia i przez chwilę
- * „mrugała".
+ * Kolejność w klatce ma znaczenie: najpierw ruszają się platformy (niosą graczy)
+ * i bloki, potem przyciski i dźwignie zgłaszają, czy trzymają bramę, a dopiero
+ * na końcu bramy decydują, czy się ruszyć. Odwrotnie brama reagowałaby z klatką
+ * opóźnienia i przez chwilę „mrugała".
  *
  * System jest też „światem" dla pchanych bloków — tylko on wie jednocześnie
  * o kaflach, bramach, innych blokach i graczach.
@@ -37,6 +39,7 @@ export class InteractionSystem implements BlockWorld {
   private readonly plates: readonly PressurePlate[];
   private readonly gates: readonly Gate[];
   private readonly blocks: readonly PushBlock[];
+  private readonly platforms: readonly MovingPlatform[];
   private readonly solidLayers: readonly Phaser.Tilemaps.TilemapLayer[];
   private readonly bounds: Phaser.Geom.Rectangle;
 
@@ -46,6 +49,7 @@ export class InteractionSystem implements BlockWorld {
     this.plates = setup.plates;
     this.gates = setup.gates;
     this.blocks = setup.blocks;
+    this.platforms = setup.platforms;
     this.solidLayers = setup.solidLayers;
     this.bounds = setup.bounds;
     this.bottom = setup.bounds.bottom;
@@ -61,6 +65,9 @@ export class InteractionSystem implements BlockWorld {
   }
 
   update(delta: number): void {
+    for (const platform of this.platforms) {
+      platform.update(this.players, delta);
+    }
     for (const block of this.blocks) {
       block.update(this, delta);
     }

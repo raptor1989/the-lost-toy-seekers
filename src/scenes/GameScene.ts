@@ -6,6 +6,8 @@ import {
   GOAL_SIZE,
   GOAL_CELEBRATION_MS,
   GHOST_PATROL_DEFAULT,
+  LEAF_PATH_DEFAULT,
+  SOAP_BUBBLE_PATH_DEFAULT,
   DEPTH_DECOR,
   DEPTH_TILES,
   DEPTH_PLAYERS,
@@ -31,6 +33,7 @@ import { Gate } from '../objects/interactive/Gate';
 import { Lever } from '../objects/interactive/Lever';
 import { PressurePlate } from '../objects/interactive/PressurePlate';
 import { PushBlock } from '../objects/interactive/PushBlock';
+import { MovingPlatform } from '../objects/interactive/MovingPlatform';
 import type { AllowedPlayer } from '../objects/interactive/Interactive';
 import type { Player } from '../objects/Player';
 import { InputManager } from '../systems/InputManager';
@@ -42,6 +45,12 @@ import { setCandyState } from '../systems/GameState';
 
 export interface GameSceneData {
   levelId?: string;
+}
+
+/** Odcinek z mapy: trasa patrolu duszka albo kurs ruchomej platformy. */
+interface Route {
+  from: Phaser.Math.Vector2;
+  to: Phaser.Math.Vector2;
 }
 
 /**
@@ -259,7 +268,7 @@ export class GameScene extends Phaser.Scene {
   }
 
   /**
-   * Bramy, dźwignie, przyciski tamy i pchane bloki (Dokumentacja 3.5).
+   * Bramy, dźwignie, przyciski tamy, pchane bloki i ruchome platformy (Dokumentacja 3.5).
    * Powiązania pochodzą z mapy: dźwignia i przycisk wskazują swoją bramę
    * właściwością `target`.
    *
@@ -300,14 +309,32 @@ export class GameScene extends Phaser.Scene {
       (object) => new PushBlock(this, this.gridRectOf(object), this.allowedPlayerOf(object)),
     );
 
+    const platforms = [
+      ...this.findRoutes(map, OBJECT.leaf, new Phaser.Math.Vector2(LEAF_PATH_DEFAULT, 0)).map(
+        (route) => new MovingPlatform(this, 'leaf', route.from, route.to),
+      ),
+      ...this.findRoutes(map, OBJECT.bubble, new Phaser.Math.Vector2(0, -SOAP_BUBBLE_PATH_DEFAULT)).map(
+        (route) => new MovingPlatform(this, 'bubble', route.from, route.to),
+      ),
+    ];
+
     this.physics.add.collider(this.players, [...gates.values()], markTemporaryGround);
     this.physics.add.collider(this.players, blocks, markTemporaryGround);
+    // Platformy same zgłaszają graczy, których niosą (`Player.markPlatformGround`);
+    // znacznik gruntu tymczasowego z kolizji to druga, niezależna asekuracja przed
+    // checkpointem zapisanym na czymś, co odjedzie.
+    this.physics.add.collider(
+      this.players,
+      platforms.map((platform) => platform.collider),
+      markTemporaryGround,
+    );
     this.interactions = new InteractionSystem({
       players: this.players,
       interactives: levers,
       plates,
       gates: [...gates.values()],
       blocks,
+      platforms,
       solidLayers,
       bounds: new Phaser.Geom.Rectangle(0, 0, map.widthInPixels, map.heightInPixels),
     });
@@ -501,29 +528,49 @@ export class GameScene extends Phaser.Scene {
    * Zwykły punkt też jest obsłużony: dostaje domyślny odcinek w poziomie, żeby
    * szybki szkic poziomu nie wymagał precyzji.
    */
-  private findPatrols(
+  private findPatrols(map: Phaser.Tilemaps.Tilemap, name: string): Route[] {
+    return this.objectsNamed(map, name).map((object) => {
+      const half = GHOST_PATROL_DEFAULT / 2;
+      const x = object.x ?? 0;
+      const y = object.y ?? 0;
+      return (
+        this.polylineEnds(object) ?? {
+          from: new Phaser.Math.Vector2(x - half, y),
+          to: new Phaser.Math.Vector2(x + half, y),
+        }
+      );
+    });
+  }
+
+  /**
+   * Trasy ruchomych platform — jak patrole duszków, ale punkt (zamiast polilinii)
+   * jest **początkiem** trasy, a `fallback` jej przesunięciem: liść płynie w bok,
+   * bąbelek unosi się w górę.
+   */
+  private findRoutes(
     map: Phaser.Tilemaps.Tilemap,
     name: string,
-  ): { from: Phaser.Math.Vector2; to: Phaser.Math.Vector2 }[] {
+    fallback: Phaser.Math.Vector2,
+  ): Route[] {
     return this.objectsNamed(map, name).map((object) => {
-      const originX = object.x ?? 0;
-      const originY = object.y ?? 0;
-      const line = object.polyline;
-
-      if (line && line.length >= 2) {
-        const last = line[line.length - 1];
-        return {
-          from: new Phaser.Math.Vector2(originX + line[0].x, originY + line[0].y),
-          to: new Phaser.Math.Vector2(originX + last.x, originY + last.y),
-        };
-      }
-
-      const half = GHOST_PATROL_DEFAULT / 2;
-      return {
-        from: new Phaser.Math.Vector2(originX - half, originY),
-        to: new Phaser.Math.Vector2(originX + half, originY),
-      };
+      const start = new Phaser.Math.Vector2(object.x ?? 0, object.y ?? 0);
+      return this.polylineEnds(object) ?? { from: start, to: start.clone().add(fallback) };
     });
+  }
+
+  /** Pierwszy i ostatni punkt polilinii w układzie świata; `null` dla zwykłego punktu. */
+  private polylineEnds(object: Phaser.Types.Tilemaps.TiledObject): Route | null {
+    const line = object.polyline;
+    if (!line || line.length < 2) {
+      return null;
+    }
+    const x = object.x ?? 0;
+    const y = object.y ?? 0;
+    const last = line[line.length - 1];
+    return {
+      from: new Phaser.Math.Vector2(x + line[0].x, y + line[0].y),
+      to: new Phaser.Math.Vector2(x + last.x, y + last.y),
+    };
   }
 
   private requireObject(map: Phaser.Tilemaps.Tilemap, name: string): Phaser.Math.Vector2 {

@@ -8,7 +8,7 @@
  "orientation": "orthogonal",
  "renderorder": "right-down",
  "nextlayerid": 5,
- "nextobjectid": 48,
+ "nextobjectid": 52,
  "tiledversion": "1.10.2",
  "version": "1.10",
  "type": "map",
@@ -6058,9 +6058,9 @@
     0,
     0,
     0,
-    0,
-    0,
-    0,
+    3,
+    3,
+    3,
     0,
     0,
     0,
@@ -8249,6 +8249,68 @@
      "y": 704,
      "width": 64,
      "height": 64
+    },
+    {
+     "id": 48,
+     "name": "leaf",
+     "type": "",
+     "rotation": 0,
+     "visible": true,
+     "x": 1840,
+     "y": 768,
+     "polyline": [
+      {
+       "x": 0,
+       "y": 0
+      },
+      {
+       "x": 64,
+       "y": 0
+      }
+     ]
+    },
+    {
+     "id": 49,
+     "name": "bubble",
+     "type": "",
+     "rotation": 0,
+     "visible": true,
+     "x": 1472,
+     "y": 688,
+     "polyline": [
+      {
+       "x": 0,
+       "y": 0
+      },
+      {
+       "x": 0,
+       "y": -304
+      }
+     ]
+    },
+    {
+     "id": 50,
+     "name": "candy",
+     "type": "",
+     "point": true,
+     "rotation": 0,
+     "visible": true,
+     "x": 1536,
+     "y": 298,
+     "width": 0,
+     "height": 0
+    },
+    {
+     "id": 51,
+     "name": "candy",
+     "type": "",
+     "point": true,
+     "rotation": 0,
+     "visible": true,
+     "x": 1568,
+     "y": 298,
+     "width": 0,
+     "height": 0
     }
    ],
    "opacity": 1,

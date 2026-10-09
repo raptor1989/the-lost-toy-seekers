@@ -14,6 +14,9 @@ import {
   LEVER_HANDLE_HEIGHT,
   PLATE_WIDTH,
   PLATE_HEIGHT,
+  LEAF_WIDTH,
+  LEAF_HEIGHT,
+  SOAP_BUBBLE_SIZE,
   HUD_DIGIT_WIDTH,
   HUD_DIGIT_HEIGHT,
 } from '../config/constants';
@@ -25,6 +28,7 @@ import { GATE_TEXTURE } from '../objects/interactive/Gate';
 import { LEVER_BASE_TEXTURE, LEVER_HANDLE_TEXTURE, HINT_TEXTURE } from '../objects/interactive/Lever';
 import { PLATE_TEXTURE } from '../objects/interactive/PressurePlate';
 import { PUSH_BLOCK_TEXTURE, PUSH_MARKER_TEXTURE } from '../objects/interactive/PushBlock';
+import { LEAF_TEXTURE, SOAP_BUBBLE_TEXTURE } from '../objects/interactive/MovingPlatform';
 import { FLASHLIGHT_TEXTURE } from '../systems/FlashlightSystem';
 import { AudioManager } from '../systems/AudioManager';
 import { CONFETTI_TEXTURE, PLAY_TEXTURE } from './RewardScene';
@@ -256,6 +260,34 @@ export class PreloadScene extends Phaser.Scene {
     g.fillPath();
     g.strokePath();
     g.generateTexture(PUSH_MARKER_TEXTURE, 64, 64);
+    g.clear();
+
+    // Pływający liść. Wierzch liścia leży na górnej krawędzi tekstury — tam stoją
+    // stopy (platforma jest zaczepiona u góry).
+    const leafRadiusY = LEAF_HEIGHT / 2 - 2;
+    g.fillStyle(0x4e9a52, 1);
+    g.fillEllipse(LEAF_WIDTH / 2, LEAF_HEIGHT / 2, LEAF_WIDTH - 4, leafRadiusY * 2);
+    g.lineStyle(3, 0x4a3226, 1);
+    g.strokeEllipse(LEAF_WIDTH / 2, LEAF_HEIGHT / 2, LEAF_WIDTH - 4, leafRadiusY * 2);
+    g.lineStyle(2, 0x4a3226, 0.5);
+    g.lineBetween(14, LEAF_HEIGHT / 2, LEAF_WIDTH - 14, LEAF_HEIGHT / 2);
+    g.generateTexture(LEAF_TEXTURE, LEAF_WIDTH, LEAF_HEIGHT);
+    g.clear();
+
+    // Mydlany bąbelek: przejrzysta kula z jasnym konturem i odblaskiem
+    // (kolor koszulki z palety — kremowa biel zamiast czystej bieli).
+    const r = SOAP_BUBBLE_SIZE / 2;
+    g.fillStyle(0xf7f0e3, 0.2);
+    g.fillCircle(r, r, r - 2);
+    g.lineStyle(3, 0xf7f0e3, 0.85);
+    g.strokeCircle(r, r, r - 2);
+    g.lineStyle(4, 0xf7f0e3, 0.9);
+    g.beginPath();
+    g.arc(r, r, r - 12, Math.PI * 1.1, Math.PI * 1.45);
+    g.strokePath();
+    g.fillStyle(0xf7f0e3, 0.9);
+    g.fillCircle(r - 14, r - 22, 4);
+    g.generateTexture(SOAP_BUBBLE_TEXTURE, SOAP_BUBBLE_SIZE, SOAP_BUBBLE_SIZE);
     g.clear();
   }
 

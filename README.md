@@ -61,11 +61,13 @@ Gracz 1 ma swoje **dźwignie** (podnoszą bramy na zawsze), a obaj — **przycis
 jedno dziecko stoi na przycisku, drugie przechodzi przez otwartą bramę. Brama nigdy
 nie opada na kogoś, kto stoi w przejściu. Gracz 1 **pcha klocki** (wystarczy w nie iść) —
 klocek robi stopień, a położony na przycisku trzyma bramę otwartą za dziecko.
+Po wodzie pływają **liście-tratwy**, a **mydlane bąbelki** działają jak windy — obie
+platformy stają na chwilę na końcach trasy, żeby wsiadanie nie wymagało refleksu.
 
 Gra ma też już **dźwięki**: na razie syntezowane placeholdery (skok, cukierek, śmieszne
 wpadki, chichot duszka, fanfara), do podmiany na nagrania bez zmian w kodzie.
 
-**Następny krok:** bąbelki i pływające liście (ruchome platformy), potem trampoliny-grzyby.
+**Następny krok:** trampoliny-grzyby — ostatni element M3.
 
 ### Sterowanie
 
@@ -85,7 +87,7 @@ src/
 ├── config/      # constants.ts (strojenie), levels.ts (manifest poziomów), audio.ts (manifest dźwięków)
 ├── scenes/      # Boot, Preload, Menu, Game, UI, Reward
 ├── objects/     # klasy sprite'ów: Player, Candy, Ghost, Goal, HiddenObject
-│   └── interactive/  # Gate, Lever, PressurePlate, PushBlock + wspólne typy
+│   └── interactive/  # Gate, Lever, PressurePlate, PushBlock, MovingPlatform + wspólne typy
 ├── systems/     # InputManager, CoopCamera, RescueSystem, FlashlightSystem, InteractionSystem, AudioManager...
 └── utils/       # digits.ts (cyfry licznika), physics.ts (rozmiary ciał Arcade)
 public/assets/

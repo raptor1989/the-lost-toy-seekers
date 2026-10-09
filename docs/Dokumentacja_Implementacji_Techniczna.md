@@ -257,6 +257,30 @@ rescueZone.onOverlap(player, () => {
   dół zostaje otwarty dla `RescueSystem`. Wyszło przy poligonie: półka przy lewej krawędzi
   pozwalała zejść poza mapę.
 
+**Decyzje z wdrożenia (M3, liście i bąbelki):**
+
+* **Jedna klasa `MovingPlatform`, dwa warianty.** Liść płynie zwykle w poziomie (tratwa),
+  bąbelek w pionie (winda); oba kursują tam i z powrotem po trasie z Tiled z **postojem na
+  końcach** (`PLATFORM_END_PAUSE_MS`) — wsiadanie do jadącej platformy to zadanie na refleks,
+  a nie o to tu chodzi.
+* **Gracza niesiemy ręcznie.** Arcade umie wozić ciało tylko w poziomie; na opadającej
+  platformie postać odrywała się co kilka klatek (grawitacja nie nadąża za podłogą), co dawało
+  podskakiwanie i migający przysiad lądowania. Co klatkę gracz stojący na wierzchu jest
+  przesuwany razem z platformą i dociągany do jej wierzchu, a wbudowane wożenie jest wyłączone
+  (`friction.x = 0`), żeby nie liczyć ruchu podwójnie. Zmierzone w grze: ani jednego oderwania
+  w ~180 klatkach jazdy w górę i ~150 w dół.
+* **Ciało w niewidzialnej strefie (`Zone`) z `directControl`**, obrazek osobno — ugięcie
+  i falowanie bąbelka nie zmieniają kolizji.
+* **„Stoi" liczone względem prędkości platformy, nie zera.** Wznosząca się platforma pcha
+  gracza w górę, więc warunek `velocity.y >= 0` odrzucał go w części klatek. Skok
+  (`JUMP_VELOCITY`) jest wielokrotnie szybszy od każdej platformy, więc margines
+  `PLATFORM_RIDE_SPEED_MARGIN` go nie pomyli.
+* **Platforma to grunt tymczasowy** — z dwóch niezależnych źródeł (znacznik niesienia
+  i callback kolizji). Checkpoint zapisany na bąbelku odsyłałby dziecko w powietrze.
+* **Kolizja tylko od góry**, jak `oneway`.
+* **Bąbelek ugina się i „błupa", ale nie pęka.** Pękanie zamieniłoby windę w zadanie na czas;
+  jeśli playtest pokaże, że jest za nudno, można je dodać jako wariant.
+
 ### 3.6. Znajdźki i nagrody
 
 * Cukierki: grupa Arcade z `overlap` → dźwięk + licznik + particle burst + tween "wessania" do HUD.
@@ -287,8 +311,13 @@ samym `overlap` — wystarczy, że postać w locie musnie cukierek, duszka albo 
 `Player.isOnGround` czytało tę flagę, więc dotknięcie cukierka w powietrzu liczyło się jak
 lądowanie: dawało dodatkowy skok, odpalało przysiad lądowania i mogło zapisać checkpoint nad
 przepaścią (dwa cukierki wiszą właśnie nad pierwszą). Ziemię rozpoznajemy wyłącznie po
-`blocked.down`, które stawia prawdziwa kolizja z kaflem albo ciałem statycznym. Ruchome
-platformy (reszta M3) `blocked` nie ustawiają — dostaną własny znacznik z callbacku kolizji.
+`blocked.down`, które stawia prawdziwa kolizja z kaflem albo ciałem statycznym.
+
+Przy ruchomych platformach (ciała dynamiczne `immovable`) na `blocked.down` **nie da się
+polegać**: Arcade ustawia je tylko w niektórych klatkach (przez `Body.processY` przy separacji),
+więc platforma sama zgłasza gracza, którego niesie (`Player.markPlatformGround`, sekcja 3.5).
+Pierwsza wersja zakładała, że `blocked` przy nich w ogóle nie występuje — i właśnie w tych
+„niektórych klatkach" checkpoint zapisywał się na wznoszącym się bąbelku.
 
 **Rozmiar ciała podaje się w pikselach tekstury.** `Body.setSize()` mnoży podany rozmiar przez
 skalę sprite'a. SVG rasteryzowany w jednym rozmiarze i pokazany w innym (`setDisplaySize`)
@@ -360,7 +389,7 @@ Zasady stylu, paleta, kolejność warstw postaci i checklista QA:
 * **Nazwy obiektów** wpisuje się w Tiled w pole **Name** (nie Class) — Phaser zawsze wystawia
   `name`, więc jest to najpewniejszy klucz. Rozpoznawane nazwy trzyma `config/levels.ts`
   (`OBJECT`): `player1`, `player2`, `checkpoint`, `candy`, `goal`, `ghost`, `hidden`,
-  `gate`, `lever`, `plate`, `block`.
+  `gate`, `lever`, `plate`, `block`, `leaf`, `bubble`.
 * **`hidden` rysuje się prostokątem**, nie punktem (M3): rozmiar prostokąta jest wprost
   rozmiarem mostu czy półki, więc w edytorze widać dokładnie to, co dostaniemy w grze.
   Górna krawędź prostokąta to powierzchnia, po której się chodzi — kładąc most w poprzek
@@ -383,6 +412,10 @@ Zasady stylu, paleta, kolejność warstw postaci i checklista QA:
 * **Pchany blok** (`block`) to prostokąt **wyrównany do siatki** — pozycja i rozmiar
   w wielokrotnościach 32 px, inaczej mapa zgłasza błąd (blok porusza się o całe kafle).
   Opcjonalne `allowedPlayer` jak przy dźwigni.
+* **Liście i bąbelki** (`leaf`, `bubble`) rysuje się **polilinią o dwóch punktach** — to
+  trasa **środka wierzchu** platformy, czyli miejsca, gdzie stoją stopy. Liść kładziony
+  w przepaści na wysokości podłogi wyrównuj do górnego rzędu kafli. Zwykły punkt dostaje
+  domyślną trasę: liść `LEAF_PATH_DEFAULT` w prawo, bąbelek `SOAP_BUBBLE_PATH_DEFAULT` w górę.
 * **Korytarz bloku musi dać się pchać z obu stron.** Blok dopchnięty do ściany, za którą
   gracz nie stanie na wysokości bloku, zostaje tam na zawsze. W poligonie przy starcie
   blok ogranicza z prawej niski krawężnik: blok o niego się zatrzyma, a gracz stojący na
@@ -451,7 +484,7 @@ Kolejność zoptymalizowana pod zasadę: **najpierw grywalny prototyp, grafika n
 | **M0** — Szkielet projektu | ✅ **ukończony** | Boot/Preload/Game, jeden gracz na strzałkach, platformy z prostokątów |
 | **M1** — Rdzeń ruchu i strojenie | ✅ **ukończony** | `InputManager`, `CoopCamera` z bańką, `RescueSystem`, coyote time + jump buffering, squash & stretch. **Playtest z dziećmi zaliczony** — 5-latek przechodzi tor testowy samodzielnie |
 | **M2** — Pętla rozgrywki | ✅ **ukończony** | Pipeline map z Tiled, generyczna `GameScene`, manifest `levels.ts`, checkpointy z mapy, cukierki, `UIScene` z ikonowym HUD, meta poziomu + `RewardScene`, `SaveManager` z paskiem odzyskanych zabawek, `MenuScene`, duszki-psotniki. **Kryterium spełnione: pełne przejście szarego poziomu 1 od menu do nagrody.** Czeka na playtest z dziećmi |
-| **M3** — Mechaniki kooperacji | 🟡 **w trakcie** | Gotowe: magiczna latarka Gracza 2 (`FlashlightSystem`) i obiekty odkrywane światłem (`HiddenObject`) — z „szeptem", grace periodem, kolizją tylko od góry i zabezpieczeniem checkpointów; dźwignie, przyciski tamy i bramy (`interactive/`, `InteractionSystem`); pchane bloki (snap do siatki, powrót na start, dociskanie przycisków). Zostają: bąbelki i pływające liście, trampoliny-grzyby |
+| **M3** — Mechaniki kooperacji | 🟡 **w trakcie** | Gotowe: magiczna latarka Gracza 2 (`FlashlightSystem`) i obiekty odkrywane światłem (`HiddenObject`) — z „szeptem", grace periodem, kolizją tylko od góry i zabezpieczeniem checkpointów; dźwignie, przyciski tamy i bramy (`interactive/`, `InteractionSystem`); pchane bloki (snap do siatki, powrót na start, dociskanie przycisków); pływające liście i mydlane bąbelki (`MovingPlatform`). Zostają: trampoliny-grzyby |
 | **M4** — Poziomy w Tiled | ⬜ nierozpoczęty | |
 | **M5** — Art pass | 🟡 **rozpoczęty poza kolejnością** | Zmiana pipeline'u na SVG (sekcja 4). Gotowe: `char_bear_idle`, `world_box_small`, `pickup_candy_orange`, `reward_teddy`, `ghost_mischief_idle`, `fx_sparkle`, [Styleguide_Wektorowy.md](Styleguide_Wektorowy.md), podgląd assetów. Greybox dźwięku: 14 syntezowanych SFX + `AudioManager` (sekcja 4). Brak: nagrania głosu, muzyka |
 | **M6** — Polish i playtesty | ⬜ nierozpoczęty | |
@@ -585,8 +618,24 @@ półkę i po cukierek; blok położony na przycisku otwiera pomieszczenie, a ze
 przepaść spada, znika i wraca na start. Krawędzie mapy zatrzymują graczy, przepaść nadal
 odsyła na checkpoint. Scenariusze dźwigni i przycisku z wieczoru 2 dają te same wyniki.
 
-**Następne:** bąbelki i pływające liście (ruchome platformy — `blocked.down` ich nie
-obejmuje, patrz sekcja 3.7), potem trampoliny-grzyby.
+**Zrealizowano (wieczór 4):** [MovingPlatform.ts](../src/objects/interactive/MovingPlatform.ts)
+— pływający liść i mydlany bąbelek na trasie z polilinii, z postojem na końcach, niesieniem
+gracza i kolizją tylko od góry; znacznik `Player.markPlatformGround`; dźwięk `squish`.
+Patrole duszków i trasy platform czytają polilinie wspólną funkcją (`polylineEnds`).
+Decyzje — sekcja 3.5.
+
+Poligon w [level1.tmj](../public/assets/tilemaps/level1.tmj): **liść-prom** w drugiej
+przepaści na wysokości podłogi (przewozi przez przepaść bez skakania; skok i platformy nad
+przepaścią zostają) oraz **bąbelek-winda** na długim płaskim odcinku, wynoszący z podłogi pod
+nową wysoką platformę z dwoma cukierkami — bez bąbelka poza zasięgiem (sprawdzone rachunkiem,
+najbliższa powierzchnia jest 256 px niżej).
+
+**Zweryfikowane w grze:** wskoczenie na bąbelek z podłogi, jazda w górę i w dół bez oderwania,
+zeskok na wysoką platformę i oba cukierki, skok z jadącego bąbelka; liść przewozi przez
+przepaść i pozwala zejść na drugi brzeg; checkpoint nie zapisuje się na żadnej platformie.
+Regresja dźwigni, przycisku tamy i bloków — bez zmian.
+
+**Następne:** trampoliny-grzyby — ostatni element M3.
 
 ### M4 — Poziomy w Tiled (3–4 wieczory)
 Greybox wszystkich 4 poziomów zgodnie z GDD sekcja 4 + playtest każdego z dziećmi **przed** art passem (przesuwanie platform w Tiled jest darmowe, po oklejeniu grafiką — bolesne).

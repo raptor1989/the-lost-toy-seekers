@@ -10,6 +10,7 @@ import {
   LAND_SQUASH_X,
   LAND_SQUASH_Y,
   TEMPORARY_GROUND_MEMORY_MS,
+  PLATFORM_GROUND_MEMORY_MS,
 } from '../config/constants';
 import { InputManager, type PlayerId, type PlayerInput } from '../systems/InputManager';
 import { AudioManager } from '../systems/AudioManager';
@@ -32,6 +33,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
   private controlDisabledUntil = 0;
   private wasOnGround = false;
   private temporaryGroundAt = Number.NEGATIVE_INFINITY;
+  private platformGroundAt = Number.NEGATIVE_INFINITY;
   private squashTween?: Phaser.Tweens.Tween;
 
   constructor(
@@ -81,11 +83,25 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
    * kolizji. Dotknięcie cukierka w locie liczyło się wtedy jak lądowanie —
    * dawało dodatkowy skok w powietrzu, a `RescueSystem` mógł zapisać checkpoint
    * nad przepaścią. `blocked.down` stawia wyłącznie prawdziwa kolizja z kaflem
-   * lub ciałem statycznym. Ruchome platformy (M3) będą wymagały osobnego
-   * znacznika z callbacku kolizji, bo ciało dynamiczne `blocked` nie ustawia.
+   * lub ciałem statycznym.
+   *
+   * Ruchome platformy (liście, bąbelki) są ciałami dynamicznymi i `blocked` nie
+   * ustawiają — same zgłaszają gracza, który na nich stoi (`markPlatformGround`).
    */
   get isOnGround(): boolean {
-    return this.arcadeBody.blocked.down;
+    return (
+      this.arcadeBody.blocked.down ||
+      this.scene.time.now - this.platformGroundAt <= PLATFORM_GROUND_MEMORY_MS
+    );
+  }
+
+  /**
+   * Wołane co klatkę przez ruchomą platformę, która niesie gracza. Platforma
+   * zaraz odjedzie, więc to też grunt tymczasowy — checkpoint się na niej nie zapisze.
+   */
+  markPlatformGround(): void {
+    this.platformGroundAt = this.scene.time.now;
+    this.markTemporaryGround();
   }
 
   get hasControl(): boolean {
