@@ -6,6 +6,7 @@ import {
   GOAL_CELEBRATION_MS,
   DEPTH_PICKUPS,
 } from '../config/constants';
+import { setBodySizeInWorld } from '../utils/physics';
 
 /**
  * Meta poziomu: odzyskiwana zabawka stoi na końcu mapy i jest **widoczna z daleka**
@@ -31,7 +32,7 @@ export class Goal extends Phaser.Physics.Arcade.Sprite {
     const body = this.body as Phaser.Physics.Arcade.Body;
     body.setAllowGravity(false);
     body.setImmovable(true);
-    body.setSize(GOAL_SIZE, GOAL_SIZE);
+    setBodySizeInWorld(this, GOAL_SIZE, GOAL_SIZE);
 
     this.startIdleMotion();
   }

@@ -16,6 +16,13 @@ export interface PlayerInput {
    */
   leftJustPressed: boolean;
   rightJustPressed: boolean;
+  /**
+   * Przycisk umiejętności **trzymany** — latarka Gracza 2 świeci tak długo,
+   * jak długo dziecko go trzyma (Dokumentacja 3.3).
+   */
+  action: boolean;
+  /** Zbocze przycisku umiejętności — dźwignie i przyciski (M3). */
+  actionJustPressed: boolean;
 }
 
 const NEUTRAL: PlayerInput = {
@@ -24,12 +31,16 @@ const NEUTRAL: PlayerInput = {
   jumpJustPressed: false,
   leftJustPressed: false,
   rightJustPressed: false,
+  action: false,
+  actionJustPressed: false,
 };
 
-interface KeyTriple {
+interface KeySet {
   left: Phaser.Input.Keyboard.Key;
   right: Phaser.Input.Keyboard.Key;
   jump: Phaser.Input.Keyboard.Key;
+  /** Umiejętność specjalna — kilka klawiszy naraz, patrz komentarz przy mapowaniu. */
+  action: Phaser.Input.Keyboard.Key[];
 }
 
 /**
@@ -39,11 +50,12 @@ interface KeyTriple {
  */
 export class InputManager {
   private readonly scene: Phaser.Scene;
-  private readonly keys: Record<PlayerId, KeyTriple>;
+  private readonly keys: Record<PlayerId, KeySet>;
   /** Poprzedni stan przycisków na padzie — pad nie ma odpowiednika JustDown. */
   private readonly padJumpWasDown: Record<PlayerId, boolean> = { 1: false, 2: false };
   private readonly padLeftWasDown: Record<PlayerId, boolean> = { 1: false, 2: false };
   private readonly padRightWasDown: Record<PlayerId, boolean> = { 1: false, 2: false };
+  private readonly padActionWasDown: Record<PlayerId, boolean> = { 1: false, 2: false };
 
   constructor(scene: Phaser.Scene) {
     this.scene = scene;
@@ -53,17 +65,29 @@ export class InputManager {
       throw new Error('InputManager: brak klawiatury w tej scenie');
     }
 
+    /*
+     * Przycisk umiejętności to **klawisz „w dół" własnego zestawu**: ↓ dla Gracza 1,
+     * S dla Gracza 2. Jedna zasada do zapamiętania dla obojga dzieci („twój dolny
+     * klawisz to magia"), zero konfliktów z ruchem i zero ryzyka ghostingu, bo oba
+     * leżą w tym samym rzędzie co reszta ich klawiszy.
+     *
+     * Spacja działa równolegle jako latarka Gracza 2 (Dokumentacja 3.3) — kciuk
+     * lewej ręki trafia w nią z WASD bez patrzenia. Zostaje jako wygoda, ale S jest
+     * wariantem pewnym: spacja bywa pierwszą ofiarą ghostingu na tanich klawiaturach.
+     */
     const K = Phaser.Input.Keyboard.KeyCodes;
     this.keys = {
       1: {
         left: kb.addKey(K.LEFT),
         right: kb.addKey(K.RIGHT),
         jump: kb.addKey(K.UP),
+        action: [kb.addKey(K.DOWN)],
       },
       2: {
         left: kb.addKey(K.A),
         right: kb.addKey(K.D),
         jump: kb.addKey(K.W),
+        action: [kb.addKey(K.S), kb.addKey(K.SPACE)],
       },
     };
   }
@@ -85,12 +109,19 @@ export class InputManager {
       jumpJustPressed: Phaser.Input.Keyboard.JustDown(k.jump),
       leftJustPressed: Phaser.Input.Keyboard.JustDown(k.left),
       rightJustPressed: Phaser.Input.Keyboard.JustDown(k.right),
+      action: k.action.some((key) => key.isDown),
+      // `filter`, nie `some`: `JustDown` konsumuje zbocze, więc każdy klawisz
+      // trzeba odpytać w tej samej klatce. Przy `some` zbocze niesprawdzonego
+      // klawisza zostałoby na później i odpaliłoby akcję bez wciśnięcia.
+      actionJustPressed: k.action.filter((key) => Phaser.Input.Keyboard.JustDown(key)).length > 0,
     };
   }
 
   private readPad(id: PlayerId, pad: Phaser.Input.Gamepad.Gamepad): PlayerInput {
     const stickX = pad.leftStick.x;
     const jumpDown = pad.A || pad.B;
+    // Skok zajmuje dolne przyciski (A/B), więc umiejętność siada na górnych (X/Y).
+    const actionDown = pad.X || pad.Y;
     const leftDown = pad.left || stickX < -GAMEPAD_DEADZONE;
     const rightDown = pad.right || stickX > GAMEPAD_DEADZONE;
 
@@ -100,11 +131,14 @@ export class InputManager {
       jumpJustPressed: jumpDown && !this.padJumpWasDown[id],
       leftJustPressed: leftDown && !this.padLeftWasDown[id],
       rightJustPressed: rightDown && !this.padRightWasDown[id],
+      action: actionDown,
+      actionJustPressed: actionDown && !this.padActionWasDown[id],
     };
 
     this.padJumpWasDown[id] = jumpDown;
     this.padLeftWasDown[id] = leftDown;
     this.padRightWasDown[id] = rightDown;
+    this.padActionWasDown[id] = actionDown;
     return input;
   }
 

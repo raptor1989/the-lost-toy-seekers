@@ -56,7 +56,13 @@ export class RescueSystem {
     }
   }
 
-  /** Zapamiętuje pozycję gracza, gdy ten spokojnie stoi na czymś stałym. */
+  /**
+   * Zapamiętuje pozycję gracza, gdy ten spokojnie stoi na czymś **stałym**.
+   *
+   * Ukryty most stały nie jest: gaśnie po grace periodzie, a checkpoint zapisany
+   * nad przepaścią odsyłałby dziecko przy każdej wpadce w to samo puste miejsce.
+   * Dlatego grunt tymczasowy jest tu pomijany (`Player.isOnTemporaryGround`).
+   */
   private sampleSafeGround(delta: number): void {
     this.sampleTimer += delta;
     if (this.sampleTimer < CHECKPOINT_SAMPLE_MS) {
@@ -65,7 +71,7 @@ export class RescueSystem {
     this.sampleTimer = 0;
 
     for (const player of this.players) {
-      if (this.beingRescued.has(player) || !player.isOnGround) {
+      if (this.beingRescued.has(player) || !player.isOnGround || player.isOnTemporaryGround) {
         continue;
       }
       this.setCheckpoint(player, player.x, player.y);

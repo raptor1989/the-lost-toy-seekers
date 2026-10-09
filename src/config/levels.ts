@@ -26,8 +26,8 @@ export const LAYER = {
  * Nazwy obiektów na warstwie `objects`. W Tiled wpisuje się je w pole **Name**
  * (nie Class) — Phaser zawsze wystawia `name`, więc jest to najpewniejszy klucz.
  *
- * Punkty spawnu i checkpointów stawiamy **na podłodze** — `GameScene` sama
- * podnosi postać o połowę jej wysokości.
+ * Punkty spawnu i checkpointów stawiamy **wprost tam, gdzie gracz ma stanąć** —
+ * postacie są zaczepione na stopach (Dokumentacja 3.1).
  */
 export const OBJECT = {
   playerOne: 'player1',
@@ -42,6 +42,12 @@ export const OBJECT = {
    * domyślny zasięg patrolu z `constants.ts`.
    */
   ghost: 'ghost',
+  /**
+   * Obiekt widoczny dopiero w świetle latarki Gracza 2 (most, kładka, półka).
+   * Rysowany w Tiled jako **prostokąt** — jego rozmiar jest wprost rozmiarem
+   * mostu, więc projektant widzi w edytorze dokładnie to, co dostanie w grze.
+   */
+  hidden: 'hidden',
 } as const;
 
 export interface LevelDefinition {

@@ -11,7 +11,9 @@ description: Dodaj nowy obiekt gry (znajdźka, duszek, element interaktywny, ukr
 2. **Elementy interaktywne** implementują wspólny interfejs `Interactive` z metodą `activate(player)`; który gracz może użyć, określa właściwość `allowedPlayer` z obiektu w Tiled (Dokumentacja, sekcja 3.5).
 3. **Spawn z danych, nie z kodu**: obiekt powinien być tworzony przez `GameScene` na podstawie warstwy `objects` mapy Tiled (nazwa/typ obiektu + właściwości). Pozycje na sztywno w kodzie tylko na etapie prototypu.
 4. **Stałe strojenia** (prędkości, czasy, zasięgi) → `src/config/constants.ts`, nigdy magic numbers w klasie.
-5. **Placeholder**: dopóki nie ma grafik, dodaj teksturę-prostokąt w `PreloadScene.createPlaceholderTextures()` w wyrazistym kolorze.
+5. **Rozmiar ciała fizycznego** ustawiaj przez `setBodySizeInWorld` z `src/utils/physics.ts`, po `setDisplaySize`. Gołe `body.setSize()` przyjmuje piksele tekstury i Arcade mnoży je przez skalę sprite'a — sprite zmniejszony z SVG dostaje wtedy za małą strefę.
+6. **„Stoi na ziemi" = `blocked.down`**, nie `touching.down` — tę drugą flagę Arcade ustawia także przy samym `overlap` (znajdźki, strefy).
+7. **Placeholder**: dopóki nie ma grafik, dodaj teksturę-prostokąt w `PreloadScene.createPlaceholderTextures()` w wyrazistym kolorze.
 
 ## Gotowe decyzje projektowe (nie wymyślaj od nowa)
 
@@ -19,7 +21,7 @@ description: Dodaj nowy obiekt gry (znajdźka, duszek, element interaktywny, ukr
 - **Cukierki**: grupa Arcade z `overlap` → dźwięk + licznik + particle burst + tween lotu do HUD.
 - **Pchane bloki**: `immovable` + ręczny snap do siatki 32 px (Arcade nie ma prawdziwego pchania).
 - **Przycisk przytrzymywany**: aktywny dopóki gracz na nim stoi — czysta kolizja, zero timerów.
-- **HiddenObject** (latarka): renderowany z `alpha: 0.15`, pulsujący zarys co kilka sekund; w świetle tween `alpha → 1` + włączenie kolizji; grace period ~3 s po zgaśnięciu.
+- **HiddenObject** (latarka): renderowany z `alpha: 0.15`, pulsujący zarys co kilka sekund; w świetle tween `alpha → 1` + włączenie kolizji; grace period ~3 s po zgaśnięciu. Platforma **przenikalna od dołu** (kolizja tylko górną krawędzią), a gracz stojący na niej nie zapisuje checkpointu (`Player.isOnTemporaryGround`).
 
 ## Zasady bezwzględne
 

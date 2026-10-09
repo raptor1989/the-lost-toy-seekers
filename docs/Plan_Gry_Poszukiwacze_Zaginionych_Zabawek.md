@@ -5,7 +5,7 @@
 * **Gatunek:** Przygodowa gra platformowa 2D / Kooperacja
 * **Grupa docelowa:** Dzieci (5 i 7 lat)
 * **Główny cel:** Odzyskanie ulubionych zabawek skradzionych przez psotne Duszki.
-* **Styl wizualny:** Grafiki generowane przez AI (np. styl rysunkowy/kredkowy lub magiczny, bazujący na klockach/zabawkach) z zachowaniem spójności.
+* **Styl wizualny:** Rysunkowy, „kredkowy" nocny ogród widziany oczami dziecka, bazujący na klockach i zabawkach. Grafiki rysowane wektorowo (SVG) ze wspólnej palety — szczegóły w [Styleguide_Wektorowy.md](Styleguide_Wektorowy.md).
 
 ## 2. Mechanika Gry (Game Mechanics)
 Zaprojektowana tak, aby zniwelować frustrację i wymagać współpracy między starszym i młodszym dzieckiem.
@@ -22,7 +22,7 @@ Zaprojektowana tak, aby zniwelować frustrację i wymagać współpracy między 
 ### 2.2. Interakcje
 * **Znajdźki:** Zbieranie monet-czekoladek lub cukierków rozsianych na mapie.
 * **Przeciwnicy (Duszki-Psotniki):** Nie zadają obrażeń. Przy kontakcie z graczem chichoczą, upuszczają cukierek i znikają w chmurce brokatu. Są elementem zabawnym, a nie strasznym.
-* **Nagrody:** Na końcu każdego poziomu gracze znajdują jedną ze swoich prawdziwych zabawek (wygenerowaną lub nałożoną jako grafika).
+* **Nagrody:** Na końcu każdego poziomu gracze znajdują jedną ze swoich prawdziwych zabawek (narysowaną na jej wzór).
 
 ## 3. Interfejs Użytkownika (UI)
 Zoptymalizowany dla dzieci, które mogą jeszcze płynnie nie czytać.
@@ -59,6 +59,12 @@ Ogród z perspektywy małego dziecka jako wielka, magiczna kraina.
 * **Zabawka do odzyskania:** Wielka Skrzynia Skarbów z resztą zabawek.
 
 ## 5. Plan Implementacji (Rozwój Krok po Kroku)
+
+> **Pierwotny plan z etapu koncepcji.** Dwie decyzje zostały od tego czasu zmienione:
+> silnikiem jest **Phaser 3 + TypeScript** (nie GDevelop), a grafiki **rysujemy wektorowo
+> (SVG)** zamiast generować je przez AI (decyzja z 2026-08-07). Aktualny plan wdrożenia
+> i stan realizacji: [Dokumentacja implementacyjna, sekcja 8](Dokumentacja_Implementacji_Techniczna.md#8-plan-wdrożenia--kamienie-milowe).
+> Kroki poniżej zostają jako opis kolejności prac.
 
 ### Krok 1: Faza Przygotowawcza (Assety - Generowanie)
 * Wybór ostatecznego stylu w promptach AI (np. Magiczny Glimmer / Toy Box).

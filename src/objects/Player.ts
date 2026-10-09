@@ -9,13 +9,14 @@ import {
   JUMP_STRETCH_Y,
   LAND_SQUASH_X,
   LAND_SQUASH_Y,
+  TEMPORARY_GROUND_MEMORY_MS,
 } from '../config/constants';
-import type { PlayerId, PlayerInput } from '../systems/InputManager';
+import { InputManager, type PlayerId, type PlayerInput } from '../systems/InputManager';
 
 /**
  * Klasa bazowa gracza: ruch, skok wybaczający błędy, squash & stretch.
  * Umiejętności specjalne trafiają do podklas (PlayerOne — interakcje,
- * PlayerTwo — magiczna latarka w M3).
+ * PlayerTwo — magiczna latarka).
  *
  * Skok jest celowo wybaczający na dwa sposoby (GDD: frustration-proof):
  *  - **coyote time** — skok działa jeszcze chwilę po zejściu z krawędzi,
@@ -29,6 +30,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
   private lastJumpPressedAt = Number.NEGATIVE_INFINITY;
   private controlDisabledUntil = 0;
   private wasOnGround = false;
+  private temporaryGroundAt = Number.NEGATIVE_INFINITY;
   private squashTween?: Phaser.Tweens.Tween;
 
   constructor(
@@ -41,6 +43,24 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
     super(scene, x, y, texture);
     this.playerId = playerId;
 
+    /*
+     * Punkt zaczepienia na **stopach**, nie w środku postaci.
+     *
+     * Arcade skaluje ciało fizyczne razem ze sprite'em:
+     *   height     = sourceHeight * scaleY
+     *   position.y = y + scaleY * (offset.y - displayOriginY)
+     * Przy środku (displayOriginY = 32) spłaszczenie na lądowaniu unosiło dolną
+     * krawędź ciała o kilka pikseli: postać odklejała się od podłoża, spadała,
+     * lądowała ponownie — i tak w kółko, co wyglądało jak drżenie prostokąta.
+     * Przy zaczepieniu na stopach (displayOriginY = PLAYER_HEIGHT, offset.y = 0)
+     * dolna krawędź wychodzi po prostu `y`, niezależnie od skali — sprzężenie
+     * znika samo, bez korygowania ciała co klatkę.
+     *
+     * Przy okazji tak wygląda poprawny squash & stretch: postać ugina się do
+     * ziemi, a nie zapada w siebie.
+     */
+    this.setOrigin(0.5, 1);
+
     scene.add.existing(this);
     scene.physics.add.existing(this);
     this.setCollideWorldBounds(false); // wypadnięcie poza świat obsługuje RescueSystem
@@ -50,8 +70,19 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
     return this.body as Phaser.Physics.Arcade.Body;
   }
 
+  /**
+   * Stoi na czymś stałym: kaflu albo ciele statycznym (ukryty most).
+   *
+   * Celowo **bez** `touching.down`: Arcade ustawia tę flagę także przy samym
+   * `overlap` (cukierek, duszek, meta, strefa checkpointu), nie tylko przy
+   * kolizji. Dotknięcie cukierka w locie liczyło się wtedy jak lądowanie —
+   * dawało dodatkowy skok w powietrzu, a `RescueSystem` mógł zapisać checkpoint
+   * nad przepaścią. `blocked.down` stawia wyłącznie prawdziwa kolizja z kaflem
+   * lub ciałem statycznym. Ruchome platformy (M3) będą wymagały osobnego
+   * znacznika z callbacku kolizji, bo ciało dynamiczne `blocked` nie ustawia.
+   */
   get isOnGround(): boolean {
-    return this.arcadeBody.blocked.down || this.arcadeBody.touching.down;
+    return this.arcadeBody.blocked.down;
   }
 
   get hasControl(): boolean {
@@ -73,6 +104,11 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
       }
     }
     this.wasOnGround = onGround;
+
+    // Umiejętność specjalna liczy się nawet bez kontroli — dostaje wtedy stan
+    // „nic nie wciśnięte", żeby latarka zgasła na czas lotu w bańce czy powrotu
+    // na checkpoint, zamiast zostać zapalona w powietrzu.
+    this.updateAbility(this.hasControl ? input : InputManager.neutral());
 
     if (!this.hasControl) {
       return;
@@ -103,6 +139,33 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
       this.lastJumpPressedAt = Number.NEGATIVE_INFINITY;
       this.lastGroundedAt = Number.NEGATIVE_INFINITY;
     }
+  }
+
+  /**
+   * Hak umiejętności specjalnej — nadpisywany w podklasach (latarka, interakcje).
+   * Dzięki niemu `GameScene` steruje graczami jednolicie i nie wie, który z nich
+   * co potrafi.
+   */
+  protected updateAbility(_input: PlayerInput): void {
+    // Klasa bazowa nie ma umiejętności.
+  }
+
+  /**
+   * Znacznik „stoję na czymś, co zaraz może zniknąć" (ukryty most).
+   * Ustawiany co klatkę przez kolizję w `GameScene`.
+   */
+  markTemporaryGround(): void {
+    this.temporaryGroundAt = this.scene.time.now;
+  }
+
+  /**
+   * `RescueSystem` nie może zapisać checkpointu na ukrytym moście: most gaśnie,
+   * a dziecko przy następnej wpadce byłoby odsyłane nad przepaść i spadało
+   * w kółko. Krótka pamięć zamiast flagi zerowanej co klatkę — kolizja i
+   * próbkowanie gruntu dzieją się w różnych momentach klatki.
+   */
+  get isOnTemporaryGround(): boolean {
+    return this.scene.time.now - this.temporaryGroundAt <= TEMPORARY_GROUND_MEMORY_MS;
   }
 
   private jump(): void {

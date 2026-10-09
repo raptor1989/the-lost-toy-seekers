@@ -45,18 +45,20 @@ Koncept nastroju i palety: [docs/concept/](docs/concept/).
 
 ## Stan projektu
 
-**M0 i M1 ukończone** (playtest z dziećmi zaliczony): dwóch graczy (strzałki + WASD,
+**M0–M2 ukończone** (playtest ruchu z dziećmi zaliczony): dwóch graczy (strzałki + WASD,
 pady przejmują automatycznie), wspólna kamera kooperacyjna z „magiczną bańką", system
-ratunkowy bez śmierci, skok z coyote time i buforowaniem.
+ratunkowy bez śmierci, skok z coyote time i buforowaniem — a na tym pełna pętla rozgrywki:
+menu z mapką ogrodu → poziom z mapy Tiled (jedna generyczna `GameScene` + manifest
+w [`src/config/levels.ts`](src/config/levels.ts)) → cukierki, duszki-psotniki i ikonowy HUD
+→ meta z zabawką → ekran nagrody z konfetti → zapis postępu w `localStorage` i z powrotem
+do menu, gdzie odzyskana zabawka świeci pełnym kolorem.
 
-**M0–M2 ukończone.** Pełna pętla rozgrywki: menu z mapką ogrodu → poziom z mapy Tiled
-(jedna generyczna `GameScene` + manifest w [`src/config/levels.ts`](src/config/levels.ts))
-→ cukierki, duszki-psotniki i ikonowy HUD → meta z zabawką → ekran nagrody z konfetti
-→ zapis postępu w `localStorage` i z powrotem do menu, gdzie odzyskana zabawka świeci
-pełnym kolorem.
+**M3 w trakcie.** Działa **magiczna latarka Gracza 2**: trzymany przycisk zapala krąg
+światła, a w jego zasięgu pojawiają się ukryte mosty i półki — solidne jeszcze przez
+3 sekundy po zgaszeniu, żeby młodszy nie musiał świecić w rytm kroków starszego.
 
-**Następny krok: playtest z dziećmi**, a potem M3 — magiczna latarka Gracza 2, ukryte
-obiekty i elementy interaktywne (dźwignie, pchane bloki).
+**Następny krok:** elementy interaktywne (dźwignie, przycisk tamy, pchane bloki),
+potem bąbelki i trampoliny-grzyby.
 
 ### Sterowanie
 
@@ -64,7 +66,8 @@ obiekty i elementy interaktywne (dźwignie, pchane bloki).
 |---|---|---|
 | Ruch | ← → | A D |
 | Skok | ↑ | W |
-| Pad | pad 1 (gałka / d-pad + A) | pad 2 |
+| Umiejętność | ↓ | S (albo Spacja) — latarka |
+| Pad | pad 1 (gałka / d-pad, A = skok, X = umiejętność) | pad 2 |
 
 Aktualna tabela postępu: [sekcja 8 dokumentacji implementacyjnej](docs/Dokumentacja_Implementacji_Techniczna.md#8-plan-wdrożenia--kamienie-milowe).
 
@@ -74,9 +77,9 @@ Aktualna tabela postępu: [sekcja 8 dokumentacji implementacyjnej](docs/Dokument
 src/
 ├── config/      # constants.ts (strojenie) + levels.ts (manifest poziomów)
 ├── scenes/      # Boot, Preload, Menu, Game, UI, Reward
-├── objects/     # klasy sprite'ów: Player, Candy, Ghost, Goal
-├── systems/     # InputManager, CoopCamera, RescueSystem, GameState, SaveManager...
-└── utils/       # digits.ts — bitmapowe cyfry licznika
+├── objects/     # klasy sprite'ów: Player, Candy, Ghost, Goal, HiddenObject
+├── systems/     # InputManager, CoopCamera, RescueSystem, FlashlightSystem, GameState, SaveManager...
+└── utils/       # digits.ts (cyfry licznika), physics.ts (rozmiary ciał Arcade)
 public/assets/
 ├── svg/         # assety gry (char_*, world_*, pickup_*, ui_*)
 └── tilemaps/    # mapy poziomów z Tiled

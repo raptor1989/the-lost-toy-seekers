@@ -35,7 +35,7 @@ Jeśli proces przeżył zatrzymanie zadania, dobij go po porcie:
 
 ## Stan projektu vs architektura docelowa
 
-Projekt jest realizowany milestone'ami M0–M6 (Dokumentacja, sekcja 8 — tam jest tabela stanu realizacji, czytaj ją przed zmianami). **M0–M2 ukończone**: dwóch graczy przez `InputManager`, `CoopCamera` z „magiczną bańką", `RescueSystem`, skok z coyote time i buforowaniem, a na tym pełna pętla menu → poziom z Tiled → cukierki i duszki → meta → nagroda → zapis. Postacie i kafle to nadal placeholdery (prostokąty z `PreloadScene`, greyboxowy tileset) — podmiana na SVG należy do M5.
+Projekt jest realizowany milestone'ami M0–M6 (Dokumentacja, sekcja 8 — tam jest tabela stanu realizacji, czytaj ją przed zmianami). **M0–M2 ukończone**: dwóch graczy przez `InputManager`, `CoopCamera` z „magiczną bańką", `RescueSystem`, skok z coyote time i buforowaniem, a na tym pełna pętla menu → poziom z Tiled → cukierki i duszki → meta → nagroda → zapis. **M3 w trakcie**: magiczna latarka Gracza 2 i obiekty ukryte gotowe, zostały elementy interaktywne, bąbelki i grzyby. Postacie i kafle to nadal placeholdery (prostokąty z `PreloadScene`, greyboxowy tileset) — podmiana na SVG należy do M5.
 
 Docelowa struktura `src/` (sekcja 2.1 Dokumentacji) — twórz nowe pliki zgodnie z nią:
 
@@ -43,7 +43,7 @@ Docelowa struktura `src/` (sekcja 2.1 Dokumentacji) — twórz nowe pliki zgodni
 - `scenes/` — Boot, Preload, Menu, Game, UI (HUD jako równoległa scena-nakładka), Reward.
 - `objects/` — klasy sprite'ów: `Player` (baza) → `PlayerOne`/`PlayerTwo`, `Ghost`, `Candy`, `HiddenObject`, `interactive/` (wspólny interfejs `Interactive` z `activate(player)`).
 - `systems/` — `InputManager`, `CoopCamera`, `RescueSystem`, `FlashlightSystem`, `AudioManager`, `SaveManager`.
-- `utils/juice.ts` — helpery efektów.
+- `utils/` — `juice.ts` (helpery efektów), `physics.ts` (`setBodySizeInWorld` — rozmiar ciała Arcade zawsze w pikselach świata, sekcja 3.7 Dokumentacji).
 
 Kluczowa decyzja architektoniczna: **jedna generyczna `GameScene` sterowana danymi** (mapa Tiled `.tmj` + manifest w `levels.ts`). Nowy poziom = nowa mapa + wpis w manifeście, zero nowego kodu scen. Warstwy map Tiled: `ground`, `oneway`, `objects`, `decor` (sekcja 5 Dokumentacji).
 

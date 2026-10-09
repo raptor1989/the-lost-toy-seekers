@@ -69,7 +69,9 @@ the-lost-toy-seekers/
     │   ├── AudioManager.ts     # SFX, muzyka, kolejka komunikatów głosowych
     │   └── SaveManager.ts      # localStorage (postęp, odzyskane zabawki)
     └── utils/
-        └── juice.ts        # helpery: tween-bounce, particle-burst, flash
+        ├── juice.ts        # helpery: tween-bounce, particle-burst, flash
+        ├── digits.ts       # bitmapowe cyfry licznika (jedyny „tekst" w grze)
+        └── physics.ts      # rozmiar ciała Arcade w pikselach świata (sekcja 3.7)
 ```
 
 ### 2.2. Przepływ scen
@@ -98,6 +100,27 @@ flowchart LR
   * **"magiczna bańka":** jeśli mimo maks. oddalenia gracz wypada poza kadr (np. młodszy został z tyłu), po 2 s zostaje delikatnie przeniesiony w bańce do drugiego gracza — z dźwiękiem "bąbelka", jako element zabawy, nie kara. Eliminuje to 90% frustracji w co-opie dzieci.
 * Poziomy projektowane **głównie horyzontalnie** z łagodnym pionem (poza poziomem 4), co ułatwia pracę wspólnej kamery.
 
+**Pułapka: squash & stretch potrafi zerwać kontakt z gruntem.** Arcade skaluje ciało
+fizyczne razem ze sprite'em:
+
+```
+height     = sourceHeight * scaleY
+position.y = y + scaleY * (offset.y - displayOriginY)
+```
+
+Przy zaczepieniu w środku postaci (`displayOriginY = PLAYER_HEIGHT / 2`) spłaszczenie na
+lądowaniu unosiło dolną krawędź ciała o kilka pikseli. Postać odklejała się od podłoża,
+spadała, lądowała ponownie — i tak w kółko, co wyglądało jak **drżenie postaci** i psuło
+też coyote time. Korygowanie rozmiaru ciała co klatkę nie pomaga: `Body.setSize()` liczy
+z **zapamiętanej** skali (`_sx`, `_sy`), więc korekta zawsze spóźnia się o klatkę względem
+tweena.
+
+Rozwiązanie: **postacie zaczepiamy na stopach** (`setOrigin(0.5, 1)`). Wtedy
+`displayOriginY = PLAYER_HEIGHT`, `offset.y = 0`, a dolna krawędź ciała wychodzi po prostu
+`y` — niezależnie od skali. Sprzężenie znika z samej matematyki i przy okazji tak wygląda
+poprawny squash: postać ugina się do ziemi, zamiast zapadać w siebie. Konsekwencja dla map:
+punkty z warstwy `objects` są **wprost** miejscem, gdzie gracz stanie (patrz sekcja 5).
+
 ### 3.2. Brak śmierci — `RescueSystem`
 
 ```ts
@@ -118,6 +141,40 @@ rescueZone.onOverlap(player, () => {
 * Implementacja: obiekty `HiddenObject` (mosty, znajdźki) renderowane z `alpha: 0.15` + delikatny "szept" wizualny (pulsujący zarys co kilka sekund, żeby dziecko wiedziało, że coś tam jest). W zasięgu światła: tween `alpha → 1` i włączenie kolizji.
 * Efekt światła: `Phaser.GameObjects.Light` (pipeline Light2D) **lub prostszy fallback** — maskowana tekstura poświaty. Rekomendacja: zacząć od maski (prostsze, pewne na każdym sprzęcie), Light2D tylko jeśli wydajność pozwoli.
 * Ukryty most pozostaje aktywny ~3 s po zgaśnięciu światła (grace period), żeby 5-latek nie musiał precyzyjnie synchronizować.
+
+**Decyzje z wdrożenia (M3):**
+
+* **Poświata, nie Light2D** — zgodnie z rekomendacją powyżej krąg to sprite z gradientem
+  radialnym w trybie `ADD` (tekstura generowana na canvasie w `PreloadScene`, kolor brokatu
+  `#FFD166` z palety). Nie ma przełączania pipeline'u, więc nie ma czego zepsuć na słabszym
+  sprzęcie. Light2D zostaje jako opcjonalne ulepszenie w M6.
+* **Odkrywanie liczy przecięcie koła z prostokątem obiektu**, nie odległość środków.
+  Most zapala się w całości, gdy światło musnie jego brzeg — wariant „po środkach"
+  gasiłby dziecku kładkę pod nogami w połowie przejścia.
+* **Checkpoint nie zapisuje się na ukrytym moście.** To była realna pułapka: `RescueSystem`
+  próbkuje „ostatni bezpieczny grunt", więc bez zabezpieczenia dziecko dostawało checkpoint
+  nad przepaścią, a po zgaśnięciu mostu każda wpadka odsyłała je w to samo puste miejsce —
+  pętla nie do przerwania. Gracz stojący na obiekcie ukrytym jest znakowany
+  (`Player.isOnTemporaryGround`), a próbkowanie takie miejsca pomija.
+* **Kolizja włącza się natychmiast, a gaśnie dopiero po wygaszeniu.** Most jest solidny
+  od pierwszej klatki świecenia (dziecko, które zaświeciło i od razu ruszyło, nie może przez
+  niego przelecieć), a znika dopiero, gdy przestaje być widoczny — nigdy odwrotnie.
+* **Obiekty ukryte są przenikalne od dołu**, jak platformy `oneway` — kolidują wyłącznie
+  górną krawędzią. Zapalona półka nie może stać się sufitem, w który dziecko uderza głową
+  w pół skoku, ani ścianą, która wypycha je z miejsca, gdzie stało, gdy dosięgło go światło.
+  Przy okazji na półkę da się wskoczyć od spodu.
+* **Puls „szeptu" celowo daleki od pełnej widoczności** (`HIDDEN_HINT_ALPHA`). Zarys ma
+  zapraszać do zaświecenia, a nie wyglądać jak gotowa kładka: zbyt mocny puls kusi dziecko,
+  żeby weszło na coś, czego jeszcze nie ma.
+* **Latarka powstaje na każdej mapie**, także bez ani jednego ukrytego obiektu — umiejętność,
+  która czasem znika, jest dla dziecka niezrozumiała. Bez celów po prostu ładnie świeci.
+* **Przycisk umiejętności to „dolny klawisz" własnego zestawu**: ↓ dla Gracza 1, S dla
+  Gracza 2 (plus Spacja jako wygoda przy WASD). Jedna zasada do zapamiętania dla obojga
+  dzieci, zero konfliktów z ruchem. Na padzie skok zajmuje A/B, więc umiejętność siada na X/Y.
+* **Umiejętność liczy się także bez kontroli** — dostaje wtedy „nic nie wciśnięte", żeby
+  latarka gasła na czas lotu w bańce i powrotu na checkpoint, zamiast zostać zapalona
+  w powietrzu. Steruje tym hak `Player.updateAbility`, dzięki któremu `GameScene` nie wie,
+  który gracz co potrafi.
 
 ### 3.4. Duszki-Psotniki
 
@@ -159,6 +216,25 @@ rescueZone.onOverlap(player, () => {
   a migracje byłyby kosztem bez pokrycia.
 * Odblokowania liczymy z kolejności w manifeście: pierwszy poziom otwarty zawsze, każdy kolejny
   po przejściu poprzedniego.
+
+### 3.7. Pułapki Arcade Physics
+
+Dwie pułapki znalezione przy przeglądzie M3 (trzecia, o squash & stretch, jest w sekcji 3.1).
+Obie działały „prawie dobrze", więc nie było ich widać w zwykłej grze.
+
+**„Dotyka od dołu" to nie to samo co „stoi".** Arcade ustawia `touching.down` także przy
+samym `overlap` — wystarczy, że postać w locie musnie cukierek, duszka albo strefę checkpointu.
+`Player.isOnGround` czytało tę flagę, więc dotknięcie cukierka w powietrzu liczyło się jak
+lądowanie: dawało dodatkowy skok, odpalało przysiad lądowania i mogło zapisać checkpoint nad
+przepaścią (dwa cukierki wiszą właśnie nad pierwszą). Ziemię rozpoznajemy wyłącznie po
+`blocked.down`, które stawia prawdziwa kolizja z kaflem albo ciałem statycznym. Ruchome
+platformy (reszta M3) `blocked` nie ustawiają — dostaną własny znacznik z callbacku kolizji.
+
+**Rozmiar ciała podaje się w pikselach tekstury.** `Body.setSize()` mnoży podany rozmiar przez
+skalę sprite'a. SVG rasteryzowany w jednym rozmiarze i pokazany w innym (`setDisplaySize`)
+dostawał przez to ciało przeskalowane drugi raz: strefa cukierka miała 35 px zamiast 56,
+a meta — 18 px zamiast 96. Strefy ustawiamy helperem `setBodySizeInWorld`
+([utils/physics.ts](../src/utils/physics.ts)), który przelicza rozmiar ze świata na teksturę.
 
 ---
 
@@ -209,9 +285,20 @@ Zasady stylu, paleta, kolejność warstw postaci i checklista QA:
 
 * **Nazwy obiektów** wpisuje się w Tiled w pole **Name** (nie Class) — Phaser zawsze wystawia
   `name`, więc jest to najpewniejszy klucz. Rozpoznawane nazwy trzyma `config/levels.ts`
-  (`OBJECT`): `player1`, `player2`, `checkpoint`, `candy`, `goal`, `ghost`.
-* **Punkty stawiane na podłodze** (spawny, checkpointy, meta) `GameScene` podnosi o połowę
-  wysokości stawianego obiektu. Punkt cukierka to jego środek.
+  (`OBJECT`): `player1`, `player2`, `checkpoint`, `candy`, `goal`, `ghost`, `hidden`.
+* **`hidden` rysuje się prostokątem**, nie punktem (M3): rozmiar prostokąta jest wprost
+  rozmiarem mostu czy półki, więc w edytorze widać dokładnie to, co dostaniemy w grze.
+  Górna krawędź prostokąta to powierzchnia, po której się chodzi — kładąc most w poprzek
+  przepaści, wyrównaj go do górnego rzędu kafli gruntu.
+* **Ukryty obiekt, który ma coś zamykać, musi być poza zasięgiem bez latarki.** Zgaszony most
+  nie koliduje, więc da się przez niego przeskoczyć, a strefę cukierka sięga się czubkiem
+  głowy. Ze stałego gruntu gracz dosięga ~`JUMP_HEIGHT_MAX + PLAYER_HEIGHT` (≈215 px) w górę
+  i ~`JUMP_DISTANCE_MAX` (≈275 px) w bok, a z coyote time i sterowaniem w locie jeszcze
+  trochę dalej. Pierwsza wersja poligonu miała półkę 96 px nad podłogą i jej cukierek dało się
+  złapać zwykłym podskokiem — dlatego sprawdzamy to rachunkiem, nie na oko.
+* **Punkt postawiony na podłodze jest wprost miejscem, gdzie gracz stanie** — postacie są
+  zaczepione na stopach (sekcja 3.1). Dotyczy spawnów i checkpointów. Obiekty zaczepione
+  w środku (meta, cukierek) biorą punkt jako swój środek.
 * **Meta jest opcjonalna** — mapa bez obiektu `goal` uruchamia się normalnie (przydatne przy
   torach testowych).
 * **Nie sumować skoku w górę i w bok.** Reguła 70% dotyczy każdej osi z osobna; schodek
@@ -252,10 +339,10 @@ Zasady stylu, paleta, kolejność warstw postaci i checklista QA:
 
 ## 7. Polerowanie (Juiciness) — checklista
 
-- [ ] Squash & stretch przy skoku i lądowaniu (tween skali, 100 ms)
+- [x] Squash & stretch przy skoku i lądowaniu (tween skali, ~110 ms) — M1
 - [ ] Chmurka kurzu przy lądowaniu (particle emitter, 5–8 cząstek)
-- [ ] Cukierki: rotacja + sinusoidalne unoszenie; przy zebraniu lot do licznika HUD
-- [ ] Brokat duszków, konfetti w `RewardScene`
+- [x] Cukierki: rotacja + sinusoidalne unoszenie; przy zebraniu lot do licznika HUD — M2
+- [x] Brokat duszków, konfetti w `RewardScene` — M2
 - [ ] Świetliki w tle (particles z łagodnym ruchem — jak na konceptach)
 - [ ] Delikatny "camera bump" przy odbiciu z grzyba-trampoliny
 - [ ] Wszystkie dźwięki z lekko losowym pitch (0.95–1.05) — nie nużą przy powtórkach
@@ -266,22 +353,22 @@ Zasady stylu, paleta, kolejność warstw postaci i checklista QA:
 
 Kolejność zoptymalizowana pod zasadę: **najpierw grywalny prototyp, grafika na końcu** (rozszerzenie Kroków 1–5 z GDD).
 
-### Stan realizacji — *aktualizacja: 2026-08-11*
+### Stan realizacji — *aktualizacja: 2026-10-09*
 
 | Etap | Stan | Uwagi |
 |---|---|---|
 | **M0** — Szkielet projektu | ✅ **ukończony** | Boot/Preload/Game, jeden gracz na strzałkach, platformy z prostokątów |
 | **M1** — Rdzeń ruchu i strojenie | ✅ **ukończony** | `InputManager`, `CoopCamera` z bańką, `RescueSystem`, coyote time + jump buffering, squash & stretch. **Playtest z dziećmi zaliczony** — 5-latek przechodzi tor testowy samodzielnie |
 | **M2** — Pętla rozgrywki | ✅ **ukończony** | Pipeline map z Tiled, generyczna `GameScene`, manifest `levels.ts`, checkpointy z mapy, cukierki, `UIScene` z ikonowym HUD, meta poziomu + `RewardScene`, `SaveManager` z paskiem odzyskanych zabawek, `MenuScene`, duszki-psotniki. **Kryterium spełnione: pełne przejście szarego poziomu 1 od menu do nagrody.** Czeka na playtest z dziećmi |
-| **M3** — Mechaniki kooperacji | ⬜ nierozpoczęty | |
+| **M3** — Mechaniki kooperacji | 🟡 **w trakcie** | Gotowe: magiczna latarka Gracza 2 (`FlashlightSystem`) i obiekty odkrywane światłem (`HiddenObject`) — z „szeptem", grace periodem, kolizją tylko od góry i zabezpieczeniem checkpointów. Zostają: dźwignie / przyciski / pchane bloki, bąbelki i pływające liście, trampoliny-grzyby |
 | **M4** — Poziomy w Tiled | ⬜ nierozpoczęty | |
 | **M5** — Art pass | 🟡 **rozpoczęty poza kolejnością** | Zmiana pipeline'u na SVG (sekcja 4). Gotowe: `char_bear_idle`, `world_box_small`, `pickup_candy_orange`, `reward_teddy`, `ghost_mischief_idle`, `fx_sparkle`, [Styleguide_Wektorowy.md](Styleguide_Wektorowy.md), podgląd assetów |
 | **M6** — Polish i playtesty | ⬜ nierozpoczęty | |
 
 > **Uwaga o kolejności:** M5 ruszył przed M1–M4, bo zmiana pipeline'u grafiki wymagała
-> weryfikacji na realnym assecie. To wyjątek, nie nowa kolejność — **priorytetem pozostaje M2**
-> (grywalność przed grafiką). Assety powstają w tle, w miarę potrzeb: `pickup_candy_orange`
-> trafił już do gry, reszta świata to nadal greybox.
+> weryfikacji na realnym assecie. To wyjątek, nie nowa kolejność — **priorytetem pozostaje
+> grywalność** (M3, potem M4). Assety powstają w tle, w miarę potrzeb: w grze są już cukierek,
+> duszek, brokat i miś-nagroda; postacie i świat to nadal greybox.
 
 **Legenda:** ✅ ukończony · 🟡 w trakcie · ⬜ nierozpoczęty.
 Po zamknięciu etapu zaktualizuj tabelę **i** datę w nagłówku.
@@ -337,8 +424,38 @@ gęstość cukierków, tempo patrolu duszków i czas ich powrotu (wartości ⚙ 
 Mapka ogrodu w menu jest na razie greyboxem (gwiazdy i kamienie rysowane kodem);
 rysunkowe tło należy do M5.
 
-### M3 — Mechaniki kooperacji (2–3 wieczory)
+### M3 — Mechaniki kooperacji (2–3 wieczory) 🟡
 Magiczna latarka + obiekty ukryte, dźwignie/przyciski/pchane bloki, bąbelki i pływające liście (poziom 2), trampoliny-grzyby (poziom 4).
+
+**Zrealizowano (wieczór 1):** [FlashlightSystem.ts](../src/systems/FlashlightSystem.ts) —
+krąg światła Gracza 2 na trzymanym przycisku (poświata z gradientu, nie Light2D),
+[HiddenObject.ts](../src/objects/HiddenObject.ts) — mosty i półki widoczne dopiero w świetle,
+z pulsującym „szeptem", 3-sekundowym grace periodem i znacznikiem gruntu tymczasowego
+w [Player.ts](../src/objects/Player.ts) (checkpoint nie zapisze się na czymś, co zniknie).
+Przycisk umiejętności w [InputManager.ts](../src/systems/InputManager.ts) (↓ / S + Spacja, pad X/Y)
+oraz hak `Player.updateAbility`, dzięki któremu `GameScene` steruje graczami jednolicie.
+Obiekty `hidden` czytane z warstwy `objects` jako **prostokąty** (sekcja 5).
+
+W [level1.tmj](../public/assets/tilemaps/level1.tmj) stanął poligon: most nad pierwszą
+przepaścią (dodatkowa, łatwiejsza droga — stara trasa po platformach zostaje) i — tuż przy
+starcie — dwa ukryte stopnie nad klockami, prowadzące do cukierka poza zasięgiem zwykłego
+skoku. Pierwsza wersja (pojedyncza półka 96 px nad podłogą) niczego nie zamykała: cukierek
+dało się złapać podskokiem spod półki, a zapalona półka jeszcze blokowała ten podskok od dołu.
+Stąd reguła zasięgu w sekcji 5 i kolizja tylko od góry (sekcja 3.3).
+
+**Zweryfikowane w grze:** bez światła Gracz 2 spada w przepaść i wraca na checkpoint;
+ze światłem most staje się widoczny i solidny, a postać przechodzi po nim na drugą stronę;
+po zgaszeniu latarki most trzyma jeszcze ~3 s i dopiero potem znika. Schodki: Gracz 2 świeci
+z niższego klocka, Gracz 1 wchodzi po obu stopniach i zbiera cukierek; checkpoint przez cały
+czas zostaje na ostatnim stałym gruncie, a po zgaśnięciu stopni postać spada bezpiecznie
+na podłogę.
+
+**Poprawki z przeglądu (2026-10-09):** strefy kolizji cukierka i mety były kilkukrotnie
+mniejsze niż w `constants.ts`, a dotknięcie cukierka w locie liczyło się jak stanie na ziemi
+— obie pułapki opisuje sekcja 3.7.
+
+**Następne:** `interactive/` — dźwignia, przycisk przytrzymywany (tama), pchane bloki
+(snap do siatki 32 px), potem bąbelki i trampoliny-grzyby.
 
 ### M4 — Poziomy w Tiled (3–4 wieczory)
 Greybox wszystkich 4 poziomów zgodnie z GDD sekcja 4 + playtest każdego z dziećmi **przed** art passem (przesuwanie platform w Tiled jest darmowe, po oklejeniu grafiką — bolesne).

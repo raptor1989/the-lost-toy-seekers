@@ -4,12 +4,16 @@ import {
   GAME_HEIGHT,
   PLAYER_WIDTH,
   PLAYER_HEIGHT,
+  TILE_SIZE,
+  FLASHLIGHT_TEXTURE_SIZE,
   HUD_DIGIT_WIDTH,
   HUD_DIGIT_HEIGHT,
 } from '../config/constants';
 import { LEVELS, TILESET_TEXTURE_KEY } from '../config/levels';
 import { CANDY_TEXTURE } from '../objects/Candy';
 import { GHOST_TEXTURE, SPARKLE_TEXTURE } from '../objects/Ghost';
+import { HIDDEN_TEXTURE } from '../objects/HiddenObject';
+import { FLASHLIGHT_TEXTURE } from '../systems/FlashlightSystem';
 import { CONFETTI_TEXTURE, PLAY_TEXTURE } from './RewardScene';
 import { LOCK_TEXTURE } from './MenuScene';
 import { DIGIT_TEXTURE_PREFIX } from '../utils/digits';
@@ -53,6 +57,7 @@ export class PreloadScene extends Phaser.Scene {
     this.textures.get(TILESET_TEXTURE_KEY).setFilter(Phaser.Textures.FilterMode.NEAREST);
 
     this.createPlaceholderTextures();
+    this.createFlashlightTexture();
     this.createDigitTextures();
     this.scene.start('Menu');
   }
@@ -106,6 +111,19 @@ export class PreloadScene extends Phaser.Scene {
     g.generateTexture(PLAY_TEXTURE, 96, 96);
     g.clear();
 
+    // Deska ukrytego mostu — greybox w kolorach kartonu z palety (Styleguide).
+    // Kładziona `TileSprite`em, więc musi się zazębiać krawędziami: kontur idzie
+    // tylko górą i dołem, inaczej co 32 px pojawiłaby się pionowa krecha.
+    g.fillStyle(0xc89257, 1);
+    g.fillRect(0, 0, TILE_SIZE, TILE_SIZE);
+    g.fillStyle(0xdca96d, 1);
+    g.fillRect(0, 5, TILE_SIZE, 6);
+    g.fillStyle(0x6b4a2a, 1);
+    g.fillRect(0, 0, TILE_SIZE, 3);
+    g.fillRect(0, TILE_SIZE - 3, TILE_SIZE, 3);
+    g.generateTexture(HIDDEN_TEXTURE, TILE_SIZE, TILE_SIZE);
+    g.clear();
+
     // Kłódka na zablokowanym poziomie — jedyny komunikat „jeszcze nie teraz".
     g.lineStyle(7, 0x4a3226, 1);
     g.beginPath();
@@ -120,6 +138,35 @@ export class PreloadScene extends Phaser.Scene {
     g.generateTexture(LOCK_TEXTURE, 96, 96);
 
     g.destroy();
+  }
+
+  /**
+   * Poświata latarki: gradient radialny w kolorze brokatu (`#FFD166` z palety).
+   *
+   * Rysujemy ją na canvasie, a nie w SVG, bo miękkie przejście alfy to dokładnie
+   * to, w czym `createRadialGradient` jest dobry — a jako plik SVG byłby to
+   * gradient bez żadnego rysunku, więc i bez pożytku z wektorów.
+   * Środek celowo nie jest w pełni biały: światło ma dopowiadać kształty,
+   * a nie wypalać dziury w kadrze.
+   */
+  private createFlashlightTexture(): void {
+    const size = FLASHLIGHT_TEXTURE_SIZE;
+    const canvas = this.textures.createCanvas(FLASHLIGHT_TEXTURE, size, size);
+    if (!canvas) {
+      return;
+    }
+
+    const ctx = canvas.getContext();
+    const r = size / 2;
+    const gradient = ctx.createRadialGradient(r, r, 0, r, r, r);
+    gradient.addColorStop(0, 'rgba(255, 209, 102, 0.95)');
+    gradient.addColorStop(0.45, 'rgba(255, 209, 102, 0.5)');
+    gradient.addColorStop(0.75, 'rgba(255, 209, 102, 0.16)');
+    gradient.addColorStop(1, 'rgba(255, 209, 102, 0)');
+
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, size, size);
+    canvas.refresh();
   }
 
   /**

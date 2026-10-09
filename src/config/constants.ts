@@ -95,7 +95,11 @@ export const CHECKPOINT_ZONE_SIZE = 96;
 
 export const DEPTH_DECOR = -10;
 export const DEPTH_TILES = 0;
+/** Ukryte mosty leżą tuż nad kaflami — mają czytać się jak część świata. */
+export const DEPTH_HIDDEN = 1;
 export const DEPTH_PICKUPS = 5;
+/** Poświata latarki pod postaciami: światło oświetla świat, nie zasłania graczy. */
+export const DEPTH_FLASHLIGHT = 9;
 export const DEPTH_PLAYERS = 10;
 
 // ---------------------------------------------------------------- cukierki
@@ -139,6 +143,51 @@ export const GHOST_RESPAWN_MAX_MS = 15000;
 export const GHOST_RESPAWN_POP_MS = 420;
 /** Co ile sprawdzać ponownie, gdy w miejscu powrotu stoi gracz. */
 export const GHOST_RESPAWN_RETRY_MS = 1200;
+
+// ---------------------------------------------------------------- magiczna latarka (Gracz 2)
+// Dokumentacja 3.3. Świeci, dopóki dziecko trzyma przycisk — zero trybów,
+// zero przełączania. Wariant z maskowaną poświatą, nie Light2D (pewny na każdym sprzęcie).
+
+/** ⚙ Promień kręgu światła (px). Musi obejmować cały most z sąsiedniej krawędzi przepaści. */
+export const FLASHLIGHT_RADIUS = 240;
+/** Bok generowanej tekstury poświaty — potęga dwójki, żeby skalowała się gładko. */
+export const FLASHLIGHT_TEXTURE_SIZE = 256;
+/** Jasność poświaty w szczycie. Światło ma dopowiadać, a nie zalewać kadr. */
+export const FLASHLIGHT_ALPHA = 0.5;
+/** Zapalanie i gaszenie — na tyle krótkie, że reaguje „od razu", ale nie mruga. */
+export const FLASHLIGHT_FADE_MS = 150;
+/** Wysokość źródła światła nad stopami Gracza 2 (postać jest zaczepiona na stopach). */
+export const FLASHLIGHT_OFFSET_Y = 40;
+
+// ---------------------------------------------------------------- obiekty ukryte
+// Mosty i znajdźki widoczne dopiero w świetle latarki.
+
+/** ⚙ Ledwo widoczny zarys — dziecko ma wiedzieć, że „coś tam jest", zanim zaświeci. */
+export const HIDDEN_ALPHA = 0.15;
+/**
+ * ⚙ Szczyt pulsującego „szeptu" — obiekt sam się przypomina co kilka sekund.
+ * Celowo daleko od pełnej widoczności: zarys ma zapraszać do zaświecenia, a nie
+ * wyglądać jak gotowy most. Za mocny puls kusi dziecko, żeby weszło na coś,
+ * czego jeszcze nie ma.
+ */
+export const HIDDEN_HINT_ALPHA = 0.32;
+export const HIDDEN_HINT_MS = 800;
+export const HIDDEN_HINT_INTERVAL_MS = 2200;
+/** Pojawianie się w świetle. */
+export const HIDDEN_REVEAL_MS = 200;
+export const HIDDEN_FADE_MS = 320;
+/**
+ * ⚙ Ile most zostaje solidny po wyjściu ze światła (GDD: grace period ~3 s).
+ * Dzięki temu 5-latek nie musi synchronizować świecenia z krokami starszego.
+ */
+export const HIDDEN_GRACE_MS = 3000;
+
+/**
+ * Jak długo po zejściu z ukrytego mostu gracz nadal liczy się jako „stojący na
+ * czymś tymczasowym" — patrz `Player.isOnTemporaryGround`. Kilka klatek wystarczy,
+ * bo chodzi tylko o rozjechanie się kolizji i próbkowania checkpointu w klatce.
+ */
+export const TEMPORARY_GROUND_MEMORY_MS = 150;
 
 // ---------------------------------------------------------------- meta poziomu
 

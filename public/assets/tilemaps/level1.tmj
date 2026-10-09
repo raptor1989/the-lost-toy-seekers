@@ -8,7 +8,7 @@
  "orientation": "orthogonal",
  "renderorder": "right-down",
  "nextlayerid": 5,
- "nextobjectid": 36,
+ "nextobjectid": 40,
  "tiledversion": "1.10.2",
  "version": "1.10",
  "type": "map",
@@ -8092,6 +8092,51 @@
        "y": 0
       }
      ]
+    },
+    {
+     "id": 36,
+     "name": "hidden",
+     "type": "",
+     "rotation": 0,
+     "visible": true,
+     "x": 864,
+     "y": 768,
+     "width": 160,
+     "height": 32
+    },
+    {
+     "id": 37,
+     "name": "hidden",
+     "type": "",
+     "rotation": 0,
+     "visible": true,
+     "x": 448,
+     "y": 512,
+     "width": 128,
+     "height": 32
+    },
+    {
+     "id": 39,
+     "name": "hidden",
+     "type": "",
+     "rotation": 0,
+     "visible": true,
+     "x": 192,
+     "y": 416,
+     "width": 256,
+     "height": 32
+    },
+    {
+     "id": 38,
+     "name": "candy",
+     "type": "",
+     "point": true,
+     "rotation": 0,
+     "visible": true,
+     "x": 240,
+     "y": 394,
+     "width": 0,
+     "height": 0
     }
    ],
    "opacity": 1,

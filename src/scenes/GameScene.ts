@@ -1,6 +1,5 @@
 import Phaser from 'phaser';
 import {
-  PLAYER_HEIGHT,
   FALL_LINE_MARGIN,
   CHECKPOINT_ZONE_SIZE,
   GOAL_SIZE,
@@ -24,10 +23,12 @@ import { PlayerTwo } from '../objects/PlayerTwo';
 import { Candy } from '../objects/Candy';
 import { Goal } from '../objects/Goal';
 import { Ghost } from '../objects/Ghost';
+import { HiddenObject } from '../objects/HiddenObject';
 import type { Player } from '../objects/Player';
 import { InputManager } from '../systems/InputManager';
 import { CoopCamera } from '../systems/CoopCamera';
 import { RescueSystem } from '../systems/RescueSystem';
+import { FlashlightSystem } from '../systems/FlashlightSystem';
 import { setCandyState } from '../systems/GameState';
 
 export interface GameSceneData {
@@ -79,6 +80,7 @@ export class GameScene extends Phaser.Scene {
     this.rescue = new RescueSystem(this, this.players, map.heightInPixels + FALL_LINE_MARGIN);
 
     this.spawnCheckpoints(map);
+    this.spawnHiddenObjects(map);
     this.spawnCandies(map);
     this.spawnGhosts(map);
     this.spawnGoal(map);
@@ -188,6 +190,31 @@ export class GameScene extends Phaser.Scene {
     }
   }
 
+  /**
+   * Obiekty ukryte + latarka Gracza 2 (Dokumentacja 3.3).
+   *
+   * Latarka powstaje **zawsze**, także na mapie bez ani jednego ukrytego mostu:
+   * umiejętność, która czasem znika, jest dla dziecka niezrozumiała. Bez celów
+   * po prostu ładnie świeci.
+   */
+  private spawnHiddenObjects(map: Phaser.Tilemaps.Tilemap): void {
+    const hidden = this.findRects(map, OBJECT.hidden).map(
+      (rect) => new HiddenObject(this, rect.centerX, rect.centerY, rect.width, rect.height),
+    );
+
+    this.physics.add.collider(this.players, hidden, (playerObject) => {
+      const player = playerObject as Player;
+      if (player.isOnGround) {
+        // Grunt, który zaraz zgaśnie, nie może zostać checkpointem — patrz
+        // `Player.isOnTemporaryGround`.
+        player.markTemporaryGround();
+      }
+    });
+
+    const owner = this.players.find((p) => p instanceof PlayerTwo) as PlayerTwo | undefined;
+    owner?.attachFlashlight(new FlashlightSystem(this, owner, hidden));
+  }
+
   private spawnCandies(map: Phaser.Tilemaps.Tilemap): void {
     this.candies = this.add.group();
     this.candiesCollected = 0;
@@ -271,14 +298,15 @@ export class GameScene extends Phaser.Scene {
   // ------------------------------------------------------------------ odczyt warstwy `objects`
 
   /**
-   * Punkty, które projektant stawia **na podłodze** (spawny, checkpointy, meta),
-   * podnosimy o połowę wysokości stawianego obiektu — inaczej wszystko wrastałoby
-   * w grunt. Cukierki podajemy z `liftY = 0`, bo ich punkt jest wprost środkiem.
+   * Punkty z warstwy `objects` bierzemy wprost, bo postacie są zaczepione na
+   * stopach — punkt postawiony w Tiled na podłodze jest od razu miejscem, gdzie
+   * gracz stanie. Obiekty zaczepione w środku (jak meta) podają `liftY` równe
+   * połowie swojej wysokości.
    */
   private findObjects(
     map: Phaser.Tilemaps.Tilemap,
     name: string,
-    liftY = PLAYER_HEIGHT / 2,
+    liftY = 0,
   ): Phaser.Math.Vector2[] {
     const layer = map.getObjectLayer(LAYER.objects);
     if (!layer) {
@@ -288,6 +316,30 @@ export class GameScene extends Phaser.Scene {
     return layer.objects
       .filter((object) => object.name === name)
       .map((object) => new Phaser.Math.Vector2(object.x ?? 0, (object.y ?? 0) - liftY));
+  }
+
+  /**
+   * Prostokąty z warstwy `objects` (ukryte mosty, a w dalszej części M3 również
+   * strefy interaktywne). Tiled podaje je narożnikiem lewy-górny — oddajemy
+   * środek i rozmiar, bo tak ustawia się sprite'y.
+   */
+  private findRects(map: Phaser.Tilemaps.Tilemap, name: string): Phaser.Geom.Rectangle[] {
+    const layer = map.getObjectLayer(LAYER.objects);
+    if (!layer) {
+      throw new Error(`Mapa "${this.level.mapKey}" nie ma warstwy "${LAYER.objects}".`);
+    }
+
+    return layer.objects
+      .filter((object) => object.name === name && !!object.width && !!object.height)
+      .map(
+        (object) =>
+          new Phaser.Geom.Rectangle(
+            object.x ?? 0,
+            object.y ?? 0,
+            object.width ?? 0,
+            object.height ?? 0,
+          ),
+      );
   }
 
   /**

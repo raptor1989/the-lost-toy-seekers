@@ -12,6 +12,7 @@ import {
   GHOST_RESPAWN_RETRY_MS,
   DEPTH_PICKUPS,
 } from '../config/constants';
+import { setBodySizeInWorld } from '../utils/physics';
 import { Player } from './Player';
 
 export const GHOST_TEXTURE = 'ghost_mischief';
@@ -52,7 +53,9 @@ export class Ghost extends Phaser.Physics.Arcade.Sprite {
     const body = this.body as Phaser.Physics.Arcade.Body;
     body.setAllowGravity(false);
     body.setImmovable(true);
-    body.setSize(GHOST_SIZE, GHOST_SIZE);
+    // Dziś skala duszka wynosi 1 (SVG wczytany w 96 px), ale strefa nie może
+    // zależeć od tego, w jakim rozmiarze ktoś kiedyś wczyta grafikę.
+    setBodySizeInWorld(this, GHOST_SIZE, GHOST_SIZE);
 
     this.startPatrol();
   }

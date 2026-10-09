@@ -12,6 +12,7 @@ import {
   HUD_MARGIN,
   HUD_ICON_SIZE,
 } from '../config/constants';
+import { setBodySizeInWorld } from '../utils/physics';
 
 /** Klucz tekstury cukierka (ładowany z SVG w `PreloadScene`). */
 export const CANDY_TEXTURE = 'pickup_candy';
@@ -40,7 +41,7 @@ export class Candy extends Phaser.Physics.Arcade.Sprite {
     const body = this.body as Phaser.Physics.Arcade.Body;
     body.setAllowGravity(false);
     body.setImmovable(true);
-    body.setSize(CANDY_PICKUP_SIZE, CANDY_PICKUP_SIZE);
+    setBodySizeInWorld(this, CANDY_PICKUP_SIZE, CANDY_PICKUP_SIZE);
 
     this.startIdleMotion();
   }
