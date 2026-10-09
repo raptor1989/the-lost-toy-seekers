@@ -36,7 +36,7 @@ Jeśli proces przeżył zatrzymanie zadania, dobij go po porcie:
 
 ## Stan projektu vs architektura docelowa
 
-Projekt jest realizowany milestone'ami M0–M6 (Dokumentacja, sekcja 8 — tam jest tabela stanu realizacji, czytaj ją przed zmianami). **M0–M2 ukończone**: dwóch graczy przez `InputManager`, `CoopCamera` z „magiczną bańką", `RescueSystem`, skok z coyote time i buforowaniem, a na tym pełna pętla menu → poziom z Tiled → cukierki i duszki → meta → nagroda → zapis. **M3 w trakcie**: magiczna latarka Gracza 2, obiekty ukryte oraz dźwignie / przyciski tamy / bramy (`objects/interactive/`, `InteractionSystem`) gotowe; zostały pchane bloki, bąbelki i grzyby. Postacie i kafle to nadal placeholdery (prostokąty z `PreloadScene`, greyboxowy tileset) — podmiana na SVG należy do M5.
+Projekt jest realizowany milestone'ami M0–M6 (Dokumentacja, sekcja 8 — tam jest tabela stanu realizacji, czytaj ją przed zmianami). **M0–M2 ukończone**: dwóch graczy przez `InputManager`, `CoopCamera` z „magiczną bańką", `RescueSystem`, skok z coyote time i buforowaniem, a na tym pełna pętla menu → poziom z Tiled → cukierki i duszki → meta → nagroda → zapis. **M3 w trakcie**: magiczna latarka Gracza 2, obiekty ukryte oraz dźwignie / przyciski tamy / bramy / pchane bloki (`objects/interactive/`, `InteractionSystem`) gotowe; zostały bąbelki i grzyby. Postacie i kafle to nadal placeholdery (prostokąty z `PreloadScene`, greyboxowy tileset) — podmiana na SVG należy do M5.
 
 Docelowa struktura `src/` (sekcja 2.1 Dokumentacji) — twórz nowe pliki zgodnie z nią:
 

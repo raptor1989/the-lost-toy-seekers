@@ -19,7 +19,7 @@ description: Dodaj nowy obiekt gry (znajdźka, duszek, element interaktywny, ukr
 
 - **Duszek**: maszyna stanów `patrol → giggle → drop-candy → poof`, patrol wahadłowy między dwoma punktami z Tiled, respawn po 10–15 s. Bez pathfindingu. Nie zadaje obrażeń.
 - **Cukierki**: grupa Arcade z `overlap` → dźwięk + licznik + particle burst + tween lotu do HUD.
-- **Pchane bloki**: `immovable` + ręczny snap do siatki 32 px (Arcade nie ma prawdziwego pchania).
+- **Pchane bloki** (`PushBlock`): ciało statyczne przesuwane tweenem o cały kafel (snap do siatki 32 px) — ciało trzeba synchronizować ręcznie (`body.updateFromGameObject()`). Ruch tylko na wolne pole (`BlockWorld.isFree`: kafle, bramy, bloki, gracze), spadanie kafel po kaflu, powrót na start po wypadnięciu z mapy.
 - **Przycisk przytrzymywany**: aktywny dopóki gracz na nim stoi — czysta kolizja, zero timerów.
 - **HiddenObject** (latarka): renderowany z `alpha: 0.15`, pulsujący zarys co kilka sekund; w świetle tween `alpha → 1` + włączenie kolizji; grace period ~3 s po zgaśnięciu. Platforma **przenikalna od dołu** (kolizja tylko górną krawędzią), a gracz stojący na niej nie zapisuje checkpointu (`Player.isOnTemporaryGround`).
 

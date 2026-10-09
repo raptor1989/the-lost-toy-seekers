@@ -263,6 +263,27 @@ const SOUNDS = {
     return b;
   },
 
+  /** Pchany blok — krótkie drewniane „szur" o jeden kafel. */
+  push() {
+    const d = 0.2;
+    const b = buffer(d);
+    const drag = (t) => Math.min(1, t / 0.02) * Math.max(0, 1 - t / d);
+    noise(b, {
+      dur: d, cutoff: 1500, gain: 0.9, seed: 71,
+      env: (t) => drag(t) * (0.7 + 0.3 * Math.sin(2 * Math.PI * 30 * t)),
+    });
+    tone(b, { dur: d, freq: 95, wave: 'triangle', env: drag, gain: 0.3 });
+    return b;
+  },
+
+  /** Blok spada i opiera się — głuche „bum". */
+  thud() {
+    const b = buffer(0.3);
+    tone(b, { dur: 0.3, freq: sweep(120, 55), env: pluck(0.002, 0.07) });
+    noise(b, { dur: 0.08, cutoff: 400, env: (t) => Math.exp(-t / 0.02), gain: 0.6, seed: 81 });
+    return b;
+  },
+
   /** Menu — przeskok zaznaczenia na inny przystanek. */
   tick() {
     const b = buffer(0.08);

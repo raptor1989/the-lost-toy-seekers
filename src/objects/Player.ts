@@ -64,7 +64,9 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
 
     scene.add.existing(this);
     scene.physics.add.existing(this);
-    this.setCollideWorldBounds(false); // wypadnięcie poza świat obsługuje RescueSystem
+    // Boczne krawędzie mapy są ścianami; dół zostaje otwarty (`GameScene` wyłącza
+    // tam kolizję z granicą świata) — wypadnięcie w przepaść obsługuje RescueSystem.
+    this.setCollideWorldBounds(true);
   }
 
   get arcadeBody(): Phaser.Physics.Arcade.Body {

@@ -233,6 +233,30 @@ rescueZone.onOverlap(player, () => {
   wyjścia — wypuszcza je drugi gracz albo bańka, gdy pokój wyjdzie z kadru — ale projektując
   poziomy (M4) warto o tym pamiętać.
 
+**Decyzje z wdrożenia (M3, pchane bloki):**
+
+* **Pcha się, idąc w bok bloku** — bez żadnego klawisza. Po chwili napierania
+  (`PUSH_DELAY_MS`) blok przeskakuje o jeden kafel; otarcie się o blok niczego nie rusza,
+  a ciągłe pchanie daje poczucie ciężaru (~3 kafle na sekundę, wolniej niż chód).
+* **Ciało statyczne przesuwane tweenem o cały kafel**, zgodnie z założeniem „snap do siatki".
+  Ciało statyczne nie podąża samo za obiektem — synchronizujemy je co klatkę ruchu
+  (`body.updateFromGameObject()`).
+* **Blok nigdy nie wjedzie w gracza.** Docelowy kafel musi być wolny od ścian, zamkniętych
+  bram, innych bloków i graczy — dlatego blok nie przygniecie dziecka, ani pchając, ani spadając
+  (zawiśnie nad nim i spadnie, kiedy dziecko odejdzie).
+* **Bez podparcia spada kafel po kaflu; poza mapą wraca na start** w chmurce brokatu
+  (`BLOCK_RESPAWN_MS`), gdy tylko miejsce startowe jest wolne. Bloku nie da się stracić
+  na zawsze, więc nie da się też zepsuć poziomu.
+* **Blok na przycisku tamy dociska go** niezależnie od `allowedPlayer` — to sposób na
+  zwolnienie rąk, nie trzeci gracz. Blok wepchnięty w przejście **podpiera bramę**: brama
+  nie opada na nic, co stoi w przejściu.
+* **Wierzch bloku to grunt tymczasowy** (blok może odjechać) — jak most i brama.
+* **Bloki ignorują ukryte mosty** — latarka odkrywa drogę dla graczy, nie dla klocków.
+* **Znacznik „⇆"** w kolorze uprawnionego gracza mówi bez słów, że blok się pcha i kto może.
+* **Boczne krawędzie mapy są ścianami** (`setBoundsCollision(true, true, false, false)`),
+  dół zostaje otwarty dla `RescueSystem`. Wyszło przy poligonie: półka przy lewej krawędzi
+  pozwalała zejść poza mapę.
+
 ### 3.6. Znajdźki i nagrody
 
 * Cukierki: grupa Arcade z `overlap` → dźwięk + licznik + particle burst + tween "wessania" do HUD.
@@ -336,7 +360,7 @@ Zasady stylu, paleta, kolejność warstw postaci i checklista QA:
 * **Nazwy obiektów** wpisuje się w Tiled w pole **Name** (nie Class) — Phaser zawsze wystawia
   `name`, więc jest to najpewniejszy klucz. Rozpoznawane nazwy trzyma `config/levels.ts`
   (`OBJECT`): `player1`, `player2`, `checkpoint`, `candy`, `goal`, `ghost`, `hidden`,
-  `gate`, `lever`, `plate`.
+  `gate`, `lever`, `plate`, `block`.
 * **`hidden` rysuje się prostokątem**, nie punktem (M3): rozmiar prostokąta jest wprost
   rozmiarem mostu czy półki, więc w edytorze widać dokładnie to, co dostaniemy w grze.
   Górna krawędź prostokąta to powierzchnia, po której się chodzi — kładąc most w poprzek
@@ -356,6 +380,13 @@ Zasady stylu, paleta, kolejność warstw postaci i checklista QA:
 * **Brama stojąca wolno musi być wyższa niż skok** — co najmniej 5 kafli (160 px przy
   `JUMP_HEIGHT_MAX` ≈ 151 px), inaczej da się ją przeskoczyć. Brama w otworze ściany potrzebuje
   tylko wysokości otworu.
+* **Pchany blok** (`block`) to prostokąt **wyrównany do siatki** — pozycja i rozmiar
+  w wielokrotnościach 32 px, inaczej mapa zgłasza błąd (blok porusza się o całe kafle).
+  Opcjonalne `allowedPlayer` jak przy dźwigni.
+* **Korytarz bloku musi dać się pchać z obu stron.** Blok dopchnięty do ściany, za którą
+  gracz nie stanie na wysokości bloku, zostaje tam na zawsze. W poligonie przy starcie
+  blok ogranicza z prawej niski krawężnik: blok o niego się zatrzyma, a gracz stojący na
+  krawężniku nadal sięga boku bloku i może go pchnąć z powrotem.
 * **Punkt postawiony na podłodze jest wprost miejscem, gdzie gracz stanie** — postacie są
   zaczepione na stopach (sekcja 3.1). Dotyczy spawnów i checkpointów. Obiekty zaczepione
   w środku (meta, cukierek) biorą punkt jako swój środek.
@@ -420,7 +451,7 @@ Kolejność zoptymalizowana pod zasadę: **najpierw grywalny prototyp, grafika n
 | **M0** — Szkielet projektu | ✅ **ukończony** | Boot/Preload/Game, jeden gracz na strzałkach, platformy z prostokątów |
 | **M1** — Rdzeń ruchu i strojenie | ✅ **ukończony** | `InputManager`, `CoopCamera` z bańką, `RescueSystem`, coyote time + jump buffering, squash & stretch. **Playtest z dziećmi zaliczony** — 5-latek przechodzi tor testowy samodzielnie |
 | **M2** — Pętla rozgrywki | ✅ **ukończony** | Pipeline map z Tiled, generyczna `GameScene`, manifest `levels.ts`, checkpointy z mapy, cukierki, `UIScene` z ikonowym HUD, meta poziomu + `RewardScene`, `SaveManager` z paskiem odzyskanych zabawek, `MenuScene`, duszki-psotniki. **Kryterium spełnione: pełne przejście szarego poziomu 1 od menu do nagrody.** Czeka na playtest z dziećmi |
-| **M3** — Mechaniki kooperacji | 🟡 **w trakcie** | Gotowe: magiczna latarka Gracza 2 (`FlashlightSystem`) i obiekty odkrywane światłem (`HiddenObject`) — z „szeptem", grace periodem, kolizją tylko od góry i zabezpieczeniem checkpointów; dźwignie, przyciski tamy i bramy (`interactive/`, `InteractionSystem`). Zostają: pchane bloki, bąbelki i pływające liście, trampoliny-grzyby |
+| **M3** — Mechaniki kooperacji | 🟡 **w trakcie** | Gotowe: magiczna latarka Gracza 2 (`FlashlightSystem`) i obiekty odkrywane światłem (`HiddenObject`) — z „szeptem", grace periodem, kolizją tylko od góry i zabezpieczeniem checkpointów; dźwignie, przyciski tamy i bramy (`interactive/`, `InteractionSystem`); pchane bloki (snap do siatki, powrót na start, dociskanie przycisków). Zostają: bąbelki i pływające liście, trampoliny-grzyby |
 | **M4** — Poziomy w Tiled | ⬜ nierozpoczęty | |
 | **M5** — Art pass | 🟡 **rozpoczęty poza kolejnością** | Zmiana pipeline'u na SVG (sekcja 4). Gotowe: `char_bear_idle`, `world_box_small`, `pickup_candy_orange`, `reward_teddy`, `ghost_mischief_idle`, `fx_sparkle`, [Styleguide_Wektorowy.md](Styleguide_Wektorowy.md), podgląd assetów. Greybox dźwięku: 14 syntezowanych SFX + `AudioManager` (sekcja 4). Brak: nagrania głosu, muzyka |
 | **M6** — Polish i playtesty | ⬜ nierozpoczęty | |
@@ -535,7 +566,27 @@ kolidować i przepuszcza do mety. Przycisk otwiera pomieszczenie; gdy Gracz 2 st
 a Gracz 1 zejdzie z przycisku, brama czeka i opada dopiero, gdy przejście jest wolne;
 zamknięta zatrzymuje gracza w środku, a ponowne wciśnięcie go wypuszcza.
 
-**Następne:** pchane bloki (snap do siatki 32 px), potem bąbelki i trampoliny-grzyby.
+**Zrealizowano (wieczór 3):** [PushBlock.ts](../src/objects/interactive/PushBlock.ts) —
+pchany blok przesuwany o cały kafel, spadający kafel po kaflu i wracający na start, gdy
+wypadnie poza mapę. `InteractionSystem` stał się dla bloków „światem" (kafle, bramy, inne
+bloki, gracze); przycisk tamy dociska też leżący blok, a brama nie opada na blok
+w przejściu. Dźwięki `push` / `thud`. Boczne krawędzie mapy są teraz ścianami.
+Decyzje — sekcja 3.5.
+
+Poligon w [level1.tmj](../public/assets/tilemaps/level1.tmj): przy lewej krawędzi stanęła
+**półka 5 kafli nad podłogą z cukierkiem**, a na podłodze klocek 2×2 — dopchnięty pod półkę
+robi z siebie stopień (96 px w górę, w zasięgu 5-latka). Z klocka stojącego dalej da się
+jeszcze doskoczyć długim skokiem, więc pchanie ułatwia, a nie jest jedyną drogą. Spawn
+Gracza 1 i startowy checkpoint przesunięte o kafel w prawo.
+
+**Zweryfikowane w grze:** Gracz 1 pcha blok w obie strony (192 → 160 → 128 → 96 → 64,
+zatrzymanie na półce); Gracz 2 napierający na blok Gracza 1 niczego nie rusza; z bloku na
+półkę i po cukierek; blok położony na przycisku otwiera pomieszczenie, a zepchnięty nad
+przepaść spada, znika i wraca na start. Krawędzie mapy zatrzymują graczy, przepaść nadal
+odsyła na checkpoint. Scenariusze dźwigni i przycisku z wieczoru 2 dają te same wyniki.
+
+**Następne:** bąbelki i pływające liście (ruchome platformy — `blocked.down` ich nie
+obejmuje, patrz sekcja 3.7), potem trampoliny-grzyby.
 
 ### M4 — Poziomy w Tiled (3–4 wieczory)
 Greybox wszystkich 4 poziomów zgodnie z GDD sekcja 4 + playtest każdego z dziećmi **przed** art passem (przesuwanie platform w Tiled jest darmowe, po oklejeniu grafiką — bolesne).

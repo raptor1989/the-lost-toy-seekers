@@ -10,8 +10,8 @@ import type { PlayerId } from '../../systems/InputManager';
 export type AllowedPlayer = PlayerId | 0;
 
 /**
- * Obiekt uruchamiany przyciskiem akcji — dźwignia, a w dalszej części M3 pchany blok
- * (Dokumentacja 3.5).
+ * Obiekt uruchamiany przyciskiem akcji — dźwignia (Dokumentacja 3.5). Pchany blok
+ * tego interfejsu nie potrzebuje: pcha się go zwyczajnie, idąc w jego bok.
  *
  * Przycisk akcji to „dolny klawisz" zestawu gracza (↓ / S), ten sam, który u
  * Gracza 2 zapala latarkę. O tym, kto może czego użyć, decyduje obiekt

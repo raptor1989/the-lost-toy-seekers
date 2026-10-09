@@ -251,6 +251,30 @@ export const GATE_CLOSE_MS = 700;
 /** Ile bramy zostaje widać po otwarciu (ułamek wysokości) — znak, że wróci. */
 export const GATE_OPEN_SCALE_Y = 0.12;
 
+/**
+ * ⚙ Ile trzeba napierać na blok, zanim drgnie o jeden kafel. Chroni przed
+ * przypadkowym przesunięciem przy otarciu się o blok, a przy ciągłym pchaniu
+ * daje poczucie ciężaru.
+ */
+export const PUSH_DELAY_MS = 160;
+/** Przesunięcie o jeden kafel (snap do siatki, Dokumentacja 3.5). */
+export const PUSH_SLIDE_MS = 180;
+/** Gracz „dotyka" boku bloku, jeśli dzieli ich najwyżej tyle pikseli. */
+export const PUSH_CONTACT = 2;
+/**
+ * Stopy gracza muszą być przynajmniej tyle poniżej wierzchu bloku — stojący
+ * na bloku nie pcha go, nawet jeśli idzie w bok.
+ */
+export const PUSH_MIN_OVERLAP = 8;
+/** Spadanie bloku o jeden kafel. */
+export const BLOCK_FALL_CELL_MS = 70;
+/** Po ilu ms blok, który wypadł poza mapę, wraca na swoje miejsce startowe. */
+export const BLOCK_RESPAWN_MS = 1200;
+export const BLOCK_RESPAWN_FADE_MS = 300;
+export const BLOCK_RESPAWN_PARTICLES = 12;
+/** Znacznik „można pchać" na bloku. */
+export const BLOCK_MARKER_SIZE = 30;
+
 // ---------------------------------------------------------------- meta poziomu
 
 /** Rozmiar zabawki stojącej na mecie (w świecie gry). */

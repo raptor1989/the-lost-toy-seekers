@@ -34,6 +34,8 @@ export const SFX = {
   lever: { file: 'sfx_lever.wav', volume: 0.6, when: 'pociągnięcie dźwigni' },
   gate: { file: 'sfx_gate.wav', volume: 0.5, when: 'brama się podnosi / opada' },
   plate: { file: 'sfx_plate.wav', volume: 0.5, when: 'wciśnięcie przycisku tamy' },
+  push: { file: 'sfx_push.wav', volume: 0.5, when: 'pchany blok przesuwa się o kafel' },
+  thud: { file: 'sfx_thud.wav', volume: 0.6, when: 'blok spada i ląduje' },
   goal: { file: 'sfx_goal.wav', volume: 0.7, when: 'dotknięcie mety' },
   fanfare: { file: 'sfx_fanfare.wav', volume: 0.7, when: 'ekran nagrody' },
   tick: { file: 'sfx_tick.wav', volume: 0.4, when: 'menu — zmiana przystanku' },

@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import {
+  TILE_SIZE,
   FALL_LINE_MARGIN,
   CHECKPOINT_ZONE_SIZE,
   GOAL_SIZE,
@@ -29,6 +30,7 @@ import { HiddenObject } from '../objects/HiddenObject';
 import { Gate } from '../objects/interactive/Gate';
 import { Lever } from '../objects/interactive/Lever';
 import { PressurePlate } from '../objects/interactive/PressurePlate';
+import { PushBlock } from '../objects/interactive/PushBlock';
 import type { AllowedPlayer } from '../objects/interactive/Interactive';
 import type { Player } from '../objects/Player';
 import { InputManager } from '../systems/InputManager';
@@ -105,9 +107,14 @@ export class GameScene extends Phaser.Scene {
     const oneway = this.createOneWayLayer(map, tileset);
 
     this.physics.world.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
+    // Krawędzie mapy z boku to ściany — zejście z mapy w bok nie jest niczym, czego
+    // dziecko by chciało. Góra i dół otwarte: skok może wyjść nad kadr, a dziura
+    // w podłodze ma prowadzić do przepaści i powrotu na checkpoint.
+    this.physics.world.setBoundsCollision(true, true, false, false);
 
     this.spawnPlayers(map);
-    this.physics.add.collider(this.players, [ground, oneway].filter(Boolean) as Phaser.Tilemaps.TilemapLayer[]);
+    const solidLayers = [ground, oneway].filter(Boolean) as Phaser.Tilemaps.TilemapLayer[];
+    this.physics.add.collider(this.players, solidLayers);
 
     this.input_ = new InputManager(this);
     this.coopCamera = new CoopCamera(this, this.players, map.widthInPixels, map.heightInPixels);
@@ -116,7 +123,7 @@ export class GameScene extends Phaser.Scene {
 
     this.spawnCheckpoints(map);
     this.spawnHiddenObjects(map);
-    this.spawnInteractives(map);
+    this.spawnInteractives(map, solidLayers);
     this.spawnCandies(map);
     this.spawnGhosts(map);
     this.spawnGoal(map);
@@ -135,7 +142,7 @@ export class GameScene extends Phaser.Scene {
       }
     }
 
-    this.interactions.update();
+    this.interactions.update(delta);
     this.coopCamera.update(delta);
     this.rescue.update(delta);
   }
@@ -252,16 +259,20 @@ export class GameScene extends Phaser.Scene {
   }
 
   /**
-   * Bramy, dźwignie i przyciski tamy (Dokumentacja 3.5). Powiązania pochodzą
-   * z mapy: dźwignia i przycisk wskazują swoją bramę właściwością `target`.
+   * Bramy, dźwignie, przyciski tamy i pchane bloki (Dokumentacja 3.5).
+   * Powiązania pochodzą z mapy: dźwignia i przycisk wskazują swoją bramę
+   * właściwością `target`.
    *
-   * Stanie na bramie liczy się jak stanie na ukrytym moście — brama może się
-   * otworzyć, więc jej wierzch nie może zostać checkpointem.
+   * Stanie na bramie albo bloku liczy się jak stanie na ukrytym moście — brama
+   * może się otworzyć, a blok odjechać, więc ich wierzch nie może zostać checkpointem.
    */
-  private spawnInteractives(map: Phaser.Tilemaps.Tilemap): void {
+  private spawnInteractives(
+    map: Phaser.Tilemaps.Tilemap,
+    solidLayers: readonly Phaser.Tilemaps.TilemapLayer[],
+  ): void {
     const gates = new Map<number, Gate>();
     for (const object of this.objectsNamed(map, OBJECT.gate)) {
-      gates.set(object.id, new Gate(this, this.rectOf(object), this.players));
+      gates.set(object.id, new Gate(this, this.rectOf(object)));
     }
 
     const levers = this.objectsNamed(map, OBJECT.lever).map(
@@ -285,8 +296,38 @@ export class GameScene extends Phaser.Scene {
         ),
     );
 
+    const blocks = this.objectsNamed(map, OBJECT.block).map(
+      (object) => new PushBlock(this, this.gridRectOf(object), this.allowedPlayerOf(object)),
+    );
+
     this.physics.add.collider(this.players, [...gates.values()], markTemporaryGround);
-    this.interactions = new InteractionSystem(this.players, levers, plates, [...gates.values()]);
+    this.physics.add.collider(this.players, blocks, markTemporaryGround);
+    this.interactions = new InteractionSystem({
+      players: this.players,
+      interactives: levers,
+      plates,
+      gates: [...gates.values()],
+      blocks,
+      solidLayers,
+      bounds: new Phaser.Geom.Rectangle(0, 0, map.widthInPixels, map.heightInPixels),
+    });
+  }
+
+  /**
+   * Prostokąt bloku — musi leżeć na siatce kafli, bo blok przesuwa się o całe
+   * kafle. Obiekt przesunięty o kilka pikseli w Tiled to błąd mapy, nie coś,
+   * co gra ma po cichu „poprawiać".
+   */
+  private gridRectOf(object: Phaser.Types.Tilemaps.TiledObject): Phaser.Geom.Rectangle {
+    const rect = this.rectOf(object);
+    const onGrid = [rect.x, rect.y, rect.width, rect.height].every((value) => value % TILE_SIZE === 0);
+    if (!onGrid || rect.width <= 0 || rect.height <= 0) {
+      throw new Error(
+        `Mapa "${this.level.mapKey}": blok id ${object.id} musi być prostokątem na siatce ` +
+          `${TILE_SIZE} px (pozycja i rozmiar w wielokrotnościach kafla).`,
+      );
+    }
+    return rect;
   }
 
   /** Brama wskazana właściwością `target` — błąd mapy, jeśli jej brak. */

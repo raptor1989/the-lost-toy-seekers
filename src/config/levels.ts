@@ -64,6 +64,12 @@ export const OBJECT = {
    * dopóki ktoś na nim stoi.
    */
   plate: 'plate',
+  /**
+   * Pchany blok — **prostokąt wyrównany do siatki kafli** (pozycja i rozmiar
+   * w wielokrotnościach 32 px). Przesuwa się o cały kafel, więc musi startować
+   * na siatce. Opcjonalne `allowedPlayer` mówi, kto może go pchać.
+   */
+  block: 'block',
 } as const;
 
 /** Właściwości obiektów (Custom Properties w Tiled). */
@@ -74,7 +80,7 @@ export const PROPERTY = {
    */
   target: 'target',
   /**
-   * Kto może użyć dźwigni lub przycisku: `1`, `2` albo `0` = obaj.
+   * Kto może użyć dźwigni, przycisku lub pchać blok: `1`, `2` albo `0` = obaj.
    * Bez tej właściwości — {@link DEFAULT_ALLOWED_PLAYER}.
    */
   allowedPlayer: 'allowedPlayer',

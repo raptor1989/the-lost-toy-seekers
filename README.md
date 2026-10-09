@@ -59,12 +59,13 @@ do menu, gdzie odzyskana zabawka świeci pełnym kolorem.
 3 sekundy po zgaszeniu, żeby młodszy nie musiał świecić w rytm kroków starszego.
 Gracz 1 ma swoje **dźwignie** (podnoszą bramy na zawsze), a obaj — **przyciski tamy**:
 jedno dziecko stoi na przycisku, drugie przechodzi przez otwartą bramę. Brama nigdy
-nie opada na kogoś, kto stoi w przejściu.
+nie opada na kogoś, kto stoi w przejściu. Gracz 1 **pcha klocki** (wystarczy w nie iść) —
+klocek robi stopień, a położony na przycisku trzyma bramę otwartą za dziecko.
 
 Gra ma też już **dźwięki**: na razie syntezowane placeholdery (skok, cukierek, śmieszne
 wpadki, chichot duszka, fanfara), do podmiany na nagrania bez zmian w kodzie.
 
-**Następny krok:** pchane bloki, potem bąbelki i trampoliny-grzyby.
+**Następny krok:** bąbelki i pływające liście (ruchome platformy), potem trampoliny-grzyby.
 
 ### Sterowanie
 
@@ -84,7 +85,7 @@ src/
 ├── config/      # constants.ts (strojenie), levels.ts (manifest poziomów), audio.ts (manifest dźwięków)
 ├── scenes/      # Boot, Preload, Menu, Game, UI, Reward
 ├── objects/     # klasy sprite'ów: Player, Candy, Ghost, Goal, HiddenObject
-│   └── interactive/  # Gate, Lever, PressurePlate + wspólne typy
+│   └── interactive/  # Gate, Lever, PressurePlate, PushBlock + wspólne typy
 ├── systems/     # InputManager, CoopCamera, RescueSystem, FlashlightSystem, InteractionSystem, AudioManager...
 └── utils/       # digits.ts (cyfry licznika), physics.ts (rozmiary ciał Arcade)
 public/assets/

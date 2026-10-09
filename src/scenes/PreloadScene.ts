@@ -24,6 +24,7 @@ import { HIDDEN_TEXTURE } from '../objects/HiddenObject';
 import { GATE_TEXTURE } from '../objects/interactive/Gate';
 import { LEVER_BASE_TEXTURE, LEVER_HANDLE_TEXTURE, HINT_TEXTURE } from '../objects/interactive/Lever';
 import { PLATE_TEXTURE } from '../objects/interactive/PressurePlate';
+import { PUSH_BLOCK_TEXTURE, PUSH_MARKER_TEXTURE } from '../objects/interactive/PushBlock';
 import { FLASHLIGHT_TEXTURE } from '../systems/FlashlightSystem';
 import { AudioManager } from '../systems/AudioManager';
 import { CONFETTI_TEXTURE, PLAY_TEXTURE } from './RewardScene';
@@ -221,6 +222,40 @@ export class PreloadScene extends Phaser.Scene {
     g.fillPath();
     g.strokePath();
     g.generateTexture(HINT_TEXTURE, 64, 64);
+    g.clear();
+
+    // Pchany blok — drewniany klocek-zabawka. Rysowany w 64 px i skalowany do
+    // rozmiaru z mapy (zwykle 2×2 kafle); `TileSprite` pokroiłby go na cztery
+    // małe klocki.
+    g.fillStyle(0xc89257, 1);
+    g.fillRoundedRect(2, 2, 60, 60, 8);
+    g.fillStyle(0xdca96d, 1);
+    g.fillRoundedRect(12, 12, 40, 40, 6);
+    g.lineStyle(4, 0x6b4a2a, 1);
+    g.strokeRoundedRect(2, 2, 60, 60, 8);
+    g.lineStyle(2, 0x6b4a2a, 1);
+    g.strokeRoundedRect(12, 12, 40, 40, 6);
+    g.generateTexture(PUSH_BLOCK_TEXTURE, 64, 64);
+    g.clear();
+
+    // Znacznik „można pchać": strzałka w obie strony.
+    g.fillStyle(0xffffff, 1);
+    g.lineStyle(5, 0x4a3226, 1);
+    g.beginPath();
+    g.moveTo(4, 32);
+    g.lineTo(20, 16);
+    g.lineTo(20, 26);
+    g.lineTo(44, 26);
+    g.lineTo(44, 16);
+    g.lineTo(60, 32);
+    g.lineTo(44, 48);
+    g.lineTo(44, 38);
+    g.lineTo(20, 38);
+    g.lineTo(20, 48);
+    g.closePath();
+    g.fillPath();
+    g.strokePath();
+    g.generateTexture(PUSH_MARKER_TEXTURE, 64, 64);
     g.clear();
   }
 

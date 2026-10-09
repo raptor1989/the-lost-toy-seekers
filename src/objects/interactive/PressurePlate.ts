@@ -8,6 +8,7 @@ import {
 import type { Player } from '../Player';
 import { AudioManager } from '../../systems/AudioManager';
 import { isAllowed, allowedPlayerColor, type AllowedPlayer, type Switchable } from './Interactive';
+import type { PushBlock } from './PushBlock';
 
 /** Klucz tekstury płytki (placeholder do M5, generowany w `PreloadScene`). */
 export const PLATE_TEXTURE = 'world_plate';
@@ -22,6 +23,10 @@ export const PLATE_TEXTURE = 'world_plate';
  *
  * Płytka jest tylko obrazkiem wtopionym w podłogę; dziecko stoi na zwykłym gruncie.
  * Dzięki temu przycisk nie zmienia niczego w fizyce poziomu.
+ *
+ * Dociska go też **pchany blok** — niezależnie od `allowedPlayer`, bo blok nie jest
+ * graczem, tylko sposobem na zwolnienie rąk: wepchnięty na przycisk trzyma bramę
+ * otwartą dla obojga.
  */
 export class PressurePlate {
   private readonly scene: Phaser.Scene;
@@ -53,8 +58,10 @@ export class PressurePlate {
       .setDepth(DEPTH_INTERACTIVE);
   }
 
-  update(players: readonly Player[]): void {
-    const pressed = players.some((player) => this.isStandingOn(player));
+  update(players: readonly Player[], blocks: readonly PushBlock[]): void {
+    const pressed =
+      players.some((player) => this.isStandingOn(player)) ||
+      blocks.some((block) => block.pressesPlateAt(this.x, this.y));
     if (pressed === this.pressed) {
       return;
     }
