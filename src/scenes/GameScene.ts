@@ -36,6 +36,16 @@ export interface GameSceneData {
 }
 
 /**
+ * Filtr nakładek dla znajdziek i duszków: gracz bez kontroli (lot w bańce,
+ * powrót łukiem na checkpoint) niczego nie zbiera i nikogo nie trąca.
+ *
+ * Bańka niesie zostającego w tyle gracza przez spory kawałek poziomu — bez tego
+ * filtra zgarniała po drodze wszystkie cukierki i duszki. Zbieranie ma być
+ * nagrodą za ruch, a nie za to, że ktoś został z tyłu.
+ */
+const onlyWithControl = (playerObject: unknown): boolean => (playerObject as Player).hasControl;
+
+/**
  * M2: **jedna generyczna scena dla wszystkich poziomów**, sterowana danymi.
  *
  * Scena nie wie nic o konkretnym poziomie — dostaje `levelId`, bierze wpis
@@ -224,9 +234,14 @@ export class GameScene extends Phaser.Scene {
     }
     this.candiesTotal = this.candies.getLength();
 
-    this.physics.add.overlap(this.players, this.candies, (_player, candyObject) => {
-      (candyObject as Candy).collect(() => this.countCandy());
-    });
+    this.physics.add.overlap(
+      this.players,
+      this.candies,
+      (_player, candyObject) => {
+        (candyObject as Candy).collect(() => this.countCandy());
+      },
+      onlyWithControl,
+    );
   }
 
   private countCandy(): void {
@@ -241,9 +256,14 @@ export class GameScene extends Phaser.Scene {
       ghosts.add(new Ghost(this, patrol.from, patrol.to));
     }
 
-    this.physics.add.overlap(this.players, ghosts, (_player, ghostObject) => {
-      (ghostObject as Ghost).bump((x, y) => this.dropCandy(x, y));
-    });
+    this.physics.add.overlap(
+      this.players,
+      ghosts,
+      (_player, ghostObject) => {
+        (ghostObject as Ghost).bump((x, y) => this.dropCandy(x, y));
+      },
+      onlyWithControl,
+    );
   }
 
   /** Cukierek zostawiony przez duszka dolicza się do puli poziomu jak każdy inny. */

@@ -208,6 +208,11 @@ rescueZone.onOverlap(player, () => {
 ### 3.6. Znajdźki i nagrody
 
 * Cukierki: grupa Arcade z `overlap` → dźwięk + licznik + particle burst + tween "wessania" do HUD.
+* **Gracz bez kontroli niczego nie zbiera** — ani w locie w bańce, ani w drodze łukiem na
+  checkpoint; to samo dotyczy trącania duszków (filtr `onlyWithControl` w `GameScene`).
+  Bańka niesie zostającego w tyle gracza przez spory kawałek poziomu i bez filtra zgarniała
+  po drodze wszystkie cukierki i duszki. Zbieranie ma być nagrodą za ruch, a nie za to,
+  że ktoś został z tyłu.
 * Nagroda-zabawka na końcu poziomu: przejście do `RewardScene` — duża grafika zabawki, konfetti, fanfary, głos rodzica "Brawo!", wypełnienie konturu zabawki w HUD. `SaveManager` zapisuje postęp.
 * **Co zapisujemy (`SaveManager`, klucz `poszukiwacze.postep`):** wyłącznie osiągnięcia —
   ukończenie poziomu i najlepszy wynik zbiórki cukierków. Gorszy przebieg nigdy nie nadpisuje
@@ -469,7 +474,8 @@ na podłogę.
 
 **Poprawki z przeglądu (2026-10-09):** strefy kolizji cukierka i mety były kilkukrotnie
 mniejsze niż w `constants.ts`, a dotknięcie cukierka w locie liczyło się jak stanie na ziemi
-— obie pułapki opisuje sekcja 3.7.
+— obie pułapki opisuje sekcja 3.7. Gracz niesiony w bańce zbierał po drodze cukierki
+i duszki — teraz bez kontroli niczego nie zbiera (sekcja 3.6).
 
 **Następne:** `interactive/` — dźwignia, przycisk przytrzymywany (tama), pchane bloki
 (snap do siatki 32 px), potem bąbelki i trampoliny-grzyby.
