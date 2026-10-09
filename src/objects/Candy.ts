@@ -13,6 +13,7 @@ import {
   HUD_ICON_SIZE,
 } from '../config/constants';
 import { setBodySizeInWorld } from '../utils/physics';
+import { AudioManager } from '../systems/AudioManager';
 
 /** Klucz tekstury cukierka (ładowany z SVG w `PreloadScene`). */
 export const CANDY_TEXTURE = 'pickup_candy';
@@ -62,7 +63,8 @@ export class Candy extends Phaser.Physics.Arcade.Sprite {
     this.scene.tweens.killTweensOf(this);
     (this.body as Phaser.Physics.Arcade.Body).enable = false;
 
-    // TODO(M5): dźwięk „ding" z losowym pitch + drobny wybuch cząsteczek.
+    AudioManager.play(this.scene, 'candy');
+    // TODO(M6): drobny wybuch cząsteczek w miejscu zebrania.
     const target = this.hudAnchorInWorld();
     this.scene.tweens.add({
       targets: this,

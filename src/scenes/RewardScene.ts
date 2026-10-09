@@ -14,6 +14,7 @@ import {
 import { getLevel, getNextLevel } from '../config/levels';
 import { CANDY_TEXTURE } from '../objects/Candy';
 import { saveLevelResult } from '../systems/SaveManager';
+import { AudioManager } from '../systems/AudioManager';
 import { createDigits } from '../utils/digits';
 
 /** Klucze tekstur generowanych w `PreloadScene` na użytek tej sceny. */
@@ -60,7 +61,8 @@ export class RewardScene extends Phaser.Scene {
     this.showCandySummary(data.candiesCollected);
     this.showContinueButton();
 
-    // TODO(M5): fanfary, konfetti dźwiękowe i nagrany głos rodzica „Brawo!".
+    AudioManager.play(this, 'fanfare');
+    // TODO(M5): nagrany głos rodzica „Brawo!" (assets/audio/voice/) — tego nie zsyntezujemy.
   }
 
   private showConfetti(): void {
@@ -157,6 +159,7 @@ export class RewardScene extends Phaser.Scene {
       return;
     }
     this.continueArmed = false;
+    AudioManager.play(this, 'start');
 
     const next = getNextLevel(this.data_.levelId);
     if (next) {

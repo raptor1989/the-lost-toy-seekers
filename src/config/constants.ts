@@ -266,6 +266,17 @@ export const HUD_TOY_LOCKED_ALPHA = 0.35;
 export const HUD_TOY_SOCKET_PAD = 7;
 export const HUD_TOY_SOCKET_RADIUS = 14;
 
+// ---------------------------------------------------------------- dźwięk
+// Głośności poszczególnych efektów trzyma manifest w `AudioManager`.
+
+/** ⚙ Głośność wszystkich efektów naraz — jedno pokrętło dla rodzica. */
+export const AUDIO_SFX_VOLUME = 0.8;
+/**
+ * Losowe odchylenie wysokości przy każdym odtworzeniu (±5%, checklista juiciness,
+ * sekcja 7). Setny cukierek brzmi wtedy odrobinę inaczej niż pierwszy i nie nuży.
+ */
+export const AUDIO_PITCH_VARIATION = 0.05;
+
 // ---------------------------------------------------------------- sterowanie
 
 /** Martwa strefa gałki analogowej — pady dziecięce bywają rozkalibrowane. */

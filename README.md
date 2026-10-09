@@ -26,6 +26,7 @@ npm run dev       # dev-server z hot-reload
 | `npm run build` | typecheck (`tsc`) + build produkcyjny |
 | `npm run preview` | podgląd builda produkcyjnego |
 | `npx tsc --noEmit` | sam typecheck |
+| `npm run sfx` | wygenerowanie placeholderów dźwięków (`tools/generate-sfx.mjs`) |
 
 Brak testów i lintera — weryfikacja to `tsc` plus ręczne uruchomienie gry.
 
@@ -57,6 +58,9 @@ do menu, gdzie odzyskana zabawka świeci pełnym kolorem.
 światła, a w jego zasięgu pojawiają się ukryte mosty i półki — solidne jeszcze przez
 3 sekundy po zgaszeniu, żeby młodszy nie musiał świecić w rytm kroków starszego.
 
+Gra ma też już **dźwięki**: na razie syntezowane placeholdery (skok, cukierek, śmieszne
+wpadki, chichot duszka, fanfara), do podmiany na nagrania bez zmian w kodzie.
+
 **Następny krok:** elementy interaktywne (dźwignie, przycisk tamy, pchane bloki),
 potem bąbelki i trampoliny-grzyby.
 
@@ -75,14 +79,16 @@ Aktualna tabela postępu: [sekcja 8 dokumentacji implementacyjnej](docs/Dokument
 
 ```
 src/
-├── config/      # constants.ts (strojenie) + levels.ts (manifest poziomów)
+├── config/      # constants.ts (strojenie), levels.ts (manifest poziomów), audio.ts (manifest dźwięków)
 ├── scenes/      # Boot, Preload, Menu, Game, UI, Reward
 ├── objects/     # klasy sprite'ów: Player, Candy, Ghost, Goal, HiddenObject
 ├── systems/     # InputManager, CoopCamera, RescueSystem, FlashlightSystem, GameState, SaveManager...
 └── utils/       # digits.ts (cyfry licznika), physics.ts (rozmiary ciał Arcade)
 public/assets/
 ├── svg/         # assety gry (char_*, world_*, pickup_*, ui_*)
+├── audio/sfx/   # efekty dźwiękowe (sfx_*.wav)
 └── tilemaps/    # mapy poziomów z Tiled
+tools/           # generate-sfx.mjs — synteza placeholderów dźwięków
 ```
 
 Dokumentacja i komentarze w kodzie są **po polsku**.

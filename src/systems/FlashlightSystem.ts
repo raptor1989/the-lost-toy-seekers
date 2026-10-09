@@ -8,6 +8,7 @@ import {
 } from '../config/constants';
 import type { Player } from '../objects/Player';
 import type { HiddenObject } from '../objects/HiddenObject';
+import { AudioManager } from './AudioManager';
 
 /** Klucz generowanej tekstury poświaty (`PreloadScene`). */
 export const FLASHLIGHT_TEXTURE = 'fx_flashlight_glow';
@@ -84,7 +85,11 @@ export class FlashlightSystem {
   private setOn(on: boolean): void {
     this.on = on;
 
-    // TODO(M5): miękkie „fwiiit" przy zapalaniu i cichy szum, dopóki świeci (AudioManager).
+    // Dźwięk tylko przy zapalaniu. Ciągły szum, dopóki świeci, męczyłby przy
+    // dłuższym świeceniu, a gaszenie nie potrzebuje potwierdzenia — widać je.
+    if (on) {
+      AudioManager.play(this.scene, 'light');
+    }
     this.fade?.stop();
     this.fade = this.scene.tweens.add({
       targets: this.glow,

@@ -12,6 +12,7 @@ import {
   TEMPORARY_GROUND_MEMORY_MS,
 } from '../config/constants';
 import { InputManager, type PlayerId, type PlayerInput } from '../systems/InputManager';
+import { AudioManager } from '../systems/AudioManager';
 
 /**
  * Klasa bazowa gracza: ruch, skok wybaczający błędy, squash & stretch.
@@ -170,6 +171,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
 
   private jump(): void {
     this.setVelocityY(JUMP_VELOCITY);
+    AudioManager.play(this.scene, 'jump');
     this.playSquash(JUMP_STRETCH_X, JUMP_STRETCH_Y);
   }
 

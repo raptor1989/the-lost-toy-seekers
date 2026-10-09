@@ -7,6 +7,8 @@ import {
 } from '../config/constants';
 import type { Player } from '../objects/Player';
 import { quadraticBezier } from './CoopCamera';
+import { RESCUE_SOUNDS } from '../config/audio';
+import { AudioManager } from './AudioManager';
 
 /**
  * „Brak śmierci" (GDD sekcja 2.1) — filar całej gry.
@@ -95,7 +97,8 @@ export class RescueSystem {
     const from = new Phaser.Math.Vector2(player.x, player.y);
     const peakY = Math.min(from.y, target.y) - RESCUE_ARC_HEIGHT;
 
-    // TODO(M5): losowy śmieszny dźwięk ('boing' / 'plum' / 'wiii') + gwiazdki wzdłuż łuku.
+    AudioManager.playOneOf(this.scene, RESCUE_SOUNDS);
+    // TODO(M6): gwiazdki wzdłuż łuku.
     this.scene.tweens.addCounter({
       from: 0,
       to: 1,

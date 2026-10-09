@@ -18,6 +18,7 @@ import {
 import { LEVELS, type LevelDefinition } from '../config/levels';
 import { InputManager, type PlayerId } from '../systems/InputManager';
 import { isLevelCompleted, isLevelUnlocked } from '../systems/SaveManager';
+import { AudioManager } from '../systems/AudioManager';
 
 /** Klucz tekstury kłódki generowanej w `PreloadScene`. */
 export const LOCK_TEXTURE = 'ui_lock';
@@ -218,6 +219,7 @@ export class MenuScene extends Phaser.Scene {
     }
     this.selected = this.unlockedIndexes[next];
     this.moveRingTo(this.selected);
+    AudioManager.play(this, 'tick');
   }
 
   private moveRingTo(index: number): void {
@@ -239,7 +241,8 @@ export class MenuScene extends Phaser.Scene {
       return;
     }
 
-    // TODO(M5): dźwięk „tup" wejścia w poziom + krótkie przejście kamerą.
+    AudioManager.play(this, 'start');
+    // TODO(M5): krótkie przejście kamerą przy wejściu w poziom.
     this.scene.start('Game', { levelId: level.id });
   }
 

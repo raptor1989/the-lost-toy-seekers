@@ -43,4 +43,12 @@ Pełne zasady: `docs/Styleguide_Wektorowy.md`. Ten skill to operacyjny skrót.
 
 SFX z freesound.org (CC0) + nagrania głosu rodzica; format `.ogg` (+ fallback `.mp3`),
 normalizacja w Audacity. Katalogi: `public/assets/audio/{sfx,voice,music}/`.
-Wszystkie SFX odtwarzać z losowym pitch 0.95–1.05.
+
+- **Manifest dźwięków:** `src/config/audio.ts` (plik, głośność względna, opis „kiedy gra").
+  Odtwarzanie wyłącznie przez `AudioManager.play(scene, 'klucz')` — losowy pitch
+  (`AUDIO_PITCH_VARIATION`, ±5%) i głośność ogólna (`AUDIO_SFX_VOLUME`) są w `constants.ts`.
+- **Greybox dźwięku:** obecne `sfx_*.wav` są syntezowane przez `tools/generate-sfx.mjs`
+  (`npm run sfx`). Podmiana na nagranie = nadpisanie pliku albo zmiana `file` w manifeście;
+  nowy dźwięk = funkcja w generatorze (albo plik) + wpis w manifeście.
+- **Podgląd:** `/asset_preview.html` czyta manifest i gra każdy dźwięk z głośnością z gry.
+  Tam porównuj nowy dźwięk z resztą — zbyt głośny efekt przy setnym powtórzeniu męczy.

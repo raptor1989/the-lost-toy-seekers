@@ -31,6 +31,8 @@
 the-lost-toy-seekers/
 ├── index.html
 ├── package.json / tsconfig.json / vite.config.ts
+├── tools/
+│   └── generate-sfx.mjs    # synteza „greyboxu dźwięku" (npm run sfx, sekcja 4)
 ├── public/
 │   ├── asset_preview.html  # podgląd assetów (narzędzie dev, patrz Styleguide sekcja 7)
 │   └── assets/
@@ -45,7 +47,8 @@ the-lost-toy-seekers/
     ├── main.ts             # konfiguracja Phaser.Game
     ├── config/
     │   ├── constants.ts    # grawitacja, prędkości, wysokość skoku (JEDNO miejsce strojenia!)
-    │   └── levels.ts       # manifest poziomów (klucze map, muzyka, zabawka-nagroda)
+    │   ├── levels.ts       # manifest poziomów (klucze map, muzyka, zabawka-nagroda)
+    │   └── audio.ts        # manifest efektów dźwiękowych (plik, głośność)
     ├── scenes/
     │   ├── BootScene.ts    # minimalne assety (logo, pasek ładowania)
     │   ├── PreloadScene.ts # ładowanie paczki danego poziomu z paskiem postępu
@@ -269,6 +272,20 @@ Zasady stylu, paleta, kolejność warstw postaci i checklista QA:
 5. **Audio:** SFX z freesound.org (CC0) + nagrania głosu rodzica (telefon wystarczy;
    normalizacja w Audacity, eksport `.ogg` 96 kbps).
 
+   **Na start — greybox dźwięku (2026-10-09).** Zanim powstaną nagrania, efekty syntezuje
+   skrypt [tools/generate-sfx.mjs](../tools/generate-sfx.mjs) (`npm run sfx`; WAV 22 kHz
+   mono, razem ~400 KB) — tak jak prostokąty zamiast postaci: mają działać i dawać dziecku
+   informację zwrotną. Manifest jest w [config/audio.ts](../src/config/audio.ts), a gra
+   odtwarza dźwięki wyłącznie przez [AudioManager](../src/systems/AudioManager.ts)
+   (losowy pitch ±5%). Podmiana na nagranie = nadpisanie pliku albo zmiana nazwy w manifeście,
+   bez zmian w kodzie. Szum w generatorze ma stałe ziarno, więc zmiana pliku w gicie oznacza
+   zmianę brzmienia, nie losowość. Głosu rodzica się nie syntezuje — czeka na nagrania.
+
+   Decyzje: skok jest najcichszy (słychać go setki razy); gwizd „wiii" jest ściszony, bo jako
+   ciągły ton brzmi gęściej od reszty; latarka gra tylko przy zapalaniu — ciągły szum
+   męczyłby przy dłuższym świeceniu. Dźwięki da się przesłuchać w `/asset_preview.html`
+   z głośnościami z gry.
+
 ---
 
 ## 5. Pipeline Poziomów (Tiled)
@@ -345,7 +362,7 @@ Zasady stylu, paleta, kolejność warstw postaci i checklista QA:
 - [x] Brokat duszków, konfetti w `RewardScene` — M2
 - [ ] Świetliki w tle (particles z łagodnym ruchem — jak na konceptach)
 - [ ] Delikatny "camera bump" przy odbiciu z grzyba-trampoliny
-- [ ] Wszystkie dźwięki z lekko losowym pitch (0.95–1.05) — nie nużą przy powtórkach
+- [x] Wszystkie dźwięki z lekko losowym pitch (0.95–1.05) — nie nużą przy powtórkach (`AudioManager`)
 
 ---
 
@@ -362,7 +379,7 @@ Kolejność zoptymalizowana pod zasadę: **najpierw grywalny prototyp, grafika n
 | **M2** — Pętla rozgrywki | ✅ **ukończony** | Pipeline map z Tiled, generyczna `GameScene`, manifest `levels.ts`, checkpointy z mapy, cukierki, `UIScene` z ikonowym HUD, meta poziomu + `RewardScene`, `SaveManager` z paskiem odzyskanych zabawek, `MenuScene`, duszki-psotniki. **Kryterium spełnione: pełne przejście szarego poziomu 1 od menu do nagrody.** Czeka na playtest z dziećmi |
 | **M3** — Mechaniki kooperacji | 🟡 **w trakcie** | Gotowe: magiczna latarka Gracza 2 (`FlashlightSystem`) i obiekty odkrywane światłem (`HiddenObject`) — z „szeptem", grace periodem, kolizją tylko od góry i zabezpieczeniem checkpointów. Zostają: dźwignie / przyciski / pchane bloki, bąbelki i pływające liście, trampoliny-grzyby |
 | **M4** — Poziomy w Tiled | ⬜ nierozpoczęty | |
-| **M5** — Art pass | 🟡 **rozpoczęty poza kolejnością** | Zmiana pipeline'u na SVG (sekcja 4). Gotowe: `char_bear_idle`, `world_box_small`, `pickup_candy_orange`, `reward_teddy`, `ghost_mischief_idle`, `fx_sparkle`, [Styleguide_Wektorowy.md](Styleguide_Wektorowy.md), podgląd assetów |
+| **M5** — Art pass | 🟡 **rozpoczęty poza kolejnością** | Zmiana pipeline'u na SVG (sekcja 4). Gotowe: `char_bear_idle`, `world_box_small`, `pickup_candy_orange`, `reward_teddy`, `ghost_mischief_idle`, `fx_sparkle`, [Styleguide_Wektorowy.md](Styleguide_Wektorowy.md), podgląd assetów. Greybox dźwięku: 14 syntezowanych SFX + `AudioManager` (sekcja 4). Brak: nagrania głosu, muzyka |
 | **M6** — Polish i playtesty | ⬜ nierozpoczęty | |
 
 > **Uwaga o kolejności:** M5 ruszył przed M1–M4, bo zmiana pipeline'u grafiki wymagała
@@ -470,6 +487,11 @@ oczy, kokardę i łatkę, zamiast ubrania i plecaka), `ghost_mischief_idle` (bla
 nie błękit — żeby nie mylił się z Graczem 2; szeroki uśmiech i uniesione brwi, bo duszek
 ma być zabawny, nie straszny) i `fx_sparkle`.
 **Następne:** pozostałe pozy misia (run/jump/land) z zatwierdzonej sylwetki, potem królik i duszek.
+
+**Dźwięk (2026-10-09):** greybox dźwięku (sekcja 4) — 14 syntezowanych efektów podpiętych
+we wszystkich miejscach dawnych `TODO(M5)`: skok, cukierek, trzy warianty wpadki, trzy
+chichoty duszka, bańka, latarka, meta, fanfara nagrody i dwa dźwięki menu. Zostają nagrania
+głosu rodzica („Brawo!", „Ojej, spróbuj jeszcze raz!") i muzyka.
 
 ### M6 — Polish i playtesty finalne (1–2 wieczory)
 Checklista z sekcji 7, obserwacja dzieci przy pełnym przejściu, korekty trudności, build produkcyjny (`vite build`) i wrzucenie na hosting/itch.io.

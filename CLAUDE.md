@@ -19,6 +19,7 @@ npm run dev       # dev-server Vite z hot-reload
 npm run build     # tsc (typecheck) + vite build
 npm run preview   # podgląd builda produkcyjnego
 npx tsc --noEmit  # sam typecheck, bez builda
+npm run sfx       # regeneracja placeholderów dźwięków (tools/generate-sfx.mjs)
 ```
 
 Brak testów i lintera — weryfikacja to `tsc` + ręczne uruchomienie gry (`npm run dev`).
@@ -39,7 +40,7 @@ Projekt jest realizowany milestone'ami M0–M6 (Dokumentacja, sekcja 8 — tam j
 
 Docelowa struktura `src/` (sekcja 2.1 Dokumentacji) — twórz nowe pliki zgodnie z nią:
 
-- `config/` — `constants.ts` (JEDYNE miejsce strojenia fizyki: grawitacja, prędkość, skok) i docelowo `levels.ts` (manifest poziomów).
+- `config/` — `constants.ts` (JEDYNE miejsce strojenia fizyki: grawitacja, prędkość, skok), `levels.ts` (manifest poziomów) i `audio.ts` (manifest dźwięków).
 - `scenes/` — Boot, Preload, Menu, Game, UI (HUD jako równoległa scena-nakładka), Reward.
 - `objects/` — klasy sprite'ów: `Player` (baza) → `PlayerOne`/`PlayerTwo`, `Ghost`, `Candy`, `HiddenObject`, `interactive/` (wspólny interfejs `Interactive` z `activate(player)`).
 - `systems/` — `InputManager`, `CoopCamera`, `RescueSystem`, `FlashlightSystem`, `AudioManager`, `SaveManager`.
@@ -69,6 +70,9 @@ Grafiki **rysujemy wektorowo (SVG)**, nie generujemy AI — pipeline Leonardo.ai
   z jednego źródła wartości. Nowy kolor = najpierw wpis w tabeli palety.
 - Podgląd: `npm run dev` → `/asset_preview.html`. Każdy nowy asset dopisz do tej strony
   i obejrzyj w skali gry — to jedyny wiarygodny test czytelności.
+- **Dźwięki:** manifest `src/config/audio.ts`, odtwarzanie tylko przez `AudioManager.play()`
+  (losowy pitch). Obecne `sfx_*.wav` to syntezowany greybox z `tools/generate-sfx.mjs` —
+  podmiana na nagranie nie wymaga zmian w kodzie. Strona podglądu sama czyta manifest.
 
 ## Aktualizacja dokumentacji
 

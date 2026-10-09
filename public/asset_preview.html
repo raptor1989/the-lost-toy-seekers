@@ -2,7 +2,7 @@
 <html lang="pl">
 <head>
 <meta charset="utf-8">
-<title>Podgląd assetów SVG — Poszukiwacze Zaginionych Zabawek</title>
+<title>Podgląd assetów — Poszukiwacze Zaginionych Zabawek</title>
 <style>
   :root { --grass: #4E9A52; }
   body { margin:0; font-family: system-ui, sans-serif; background: #101a2e; color:#e8eefc; }
@@ -23,14 +23,19 @@
   figcaption { font-size:11px; margin-top:8px; opacity:.7; color:#333; }
   figure.dark figcaption { color:#cfd9ee; }
   h2 { font-size:13px; margin:24px 24px 10px; text-transform:uppercase; letter-spacing:.08em; opacity:.55; }
+  .sfx { gap:12px; }
+  .sfx button { font:inherit; font-size:14px; padding:10px 14px; border:0; border-radius:10px;
+    background:#f7f4ec; color:#4A3226; cursor:pointer; text-align:left; }
+  .sfx button:hover { background:#FFD166; }
+  .sfx small { display:block; font-size:11px; opacity:.65; margin-top:2px; }
 </style>
 </head>
 <body>
 
 <header>
-  <h1>Podgląd assetów SVG — POC</h1>
+  <h1>Podgląd assetów — POC</h1>
   <p class="sub">Miś (128 px), karton (64 px), cukierek (32 px) w skali gry oraz w powiększeniu.
-  Zabawka-nagroda w skali ekranu nagrody (512 px) i ikony HUD (96 px).</p>
+  Zabawka-nagroda w skali ekranu nagrody (512 px) i ikony HUD (96 px). Na dole — dźwięki.</p>
 </header>
 
 <h2>W scenie (skala docelowa)</h2>
@@ -67,6 +72,29 @@
   <figure class="dark"><img src="/assets/svg/reward_teddy.svg" width="96"><figcaption>reward_teddy.svg — 96 px (HUD)</figcaption></figure>
   <figure class="dark"><img src="/assets/svg/ghost_mischief_idle.svg" width="96"><figcaption>ghost_mischief_idle.svg — skala gry</figcaption></figure>
 </div>
+
+<h2>Dźwięki — greybox z tools/generate-sfx.mjs, głośności jak w grze</h2>
+<div class="row sfx" id="sfx"></div>
+
+<script type="module">
+  // Lista i głośności prosto z manifestu gry (Vite tłumaczy plik .ts w locie,
+  // dlatego podgląd działa tylko pod `npm run dev`). Wysokość bez losowania —
+  // tu porównujemy same pliki.
+  import { SFX, SFX_DIR } from '/src/config/audio.ts';
+  import { AUDIO_SFX_VOLUME } from '/src/config/constants.ts';
+
+  const row = document.getElementById('sfx');
+  for (const [name, sfx] of Object.entries(SFX)) {
+    const button = document.createElement('button');
+    button.innerHTML = `▶ ${name}<small>${sfx.when}</small>`;
+    button.onclick = () => {
+      const audio = new Audio('/' + SFX_DIR + sfx.file);
+      audio.volume = sfx.volume * AUDIO_SFX_VOLUME;
+      audio.play();
+    };
+    row.appendChild(button);
+  }
+</script>
 
 <script>
   // rozsiane gwiazdy — dekoracja podglądu, nie asset gry

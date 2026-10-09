@@ -13,6 +13,8 @@ import {
   DEPTH_PICKUPS,
 } from '../config/constants';
 import { setBodySizeInWorld } from '../utils/physics';
+import { GIGGLE_SOUNDS } from '../config/audio';
+import { AudioManager } from '../systems/AudioManager';
 import { Player } from './Player';
 
 export const GHOST_TEXTURE = 'ghost_mischief';
@@ -76,7 +78,7 @@ export class Ghost extends Phaser.Physics.Arcade.Sprite {
     (this.body as Phaser.Physics.Arcade.Body).enable = false;
     this.patrol?.pause();
 
-    // TODO(M5): chichot losowany z trzech wariantów (AudioManager).
+    AudioManager.playOneOf(this.scene, GIGGLE_SOUNDS);
     dropCandy(this.x, this.y);
     this.poof();
     this.setVisible(false);

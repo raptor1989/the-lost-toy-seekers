@@ -11,6 +11,7 @@ import {
   BUBBLE_DROP_OFFSET,
 } from '../config/constants';
 import type { Player } from '../objects/Player';
+import { AudioManager } from './AudioManager';
 
 /**
  * Jedna wspólna kamera dla obojga graczy — **nigdy split-screen**, bo dzieli
@@ -110,7 +111,8 @@ export class CoopCamera {
     body.setAllowGravity(false);
     body.setVelocity(0, 0);
 
-    // TODO(M5): dźwięk bąbelka + wizualna bańka wokół gracza (AudioManager, fx_bubble).
+    AudioManager.play(this.scene, 'bubble');
+    // TODO(M5): wizualna bańka wokół gracza (fx_bubble).
     this.scene.tweens.addCounter({
       from: 0,
       to: 1,

@@ -14,6 +14,7 @@ import { CANDY_TEXTURE } from '../objects/Candy';
 import { GHOST_TEXTURE, SPARKLE_TEXTURE } from '../objects/Ghost';
 import { HIDDEN_TEXTURE } from '../objects/HiddenObject';
 import { FLASHLIGHT_TEXTURE } from '../systems/FlashlightSystem';
+import { AudioManager } from '../systems/AudioManager';
 import { CONFETTI_TEXTURE, PLAY_TEXTURE } from './RewardScene';
 import { LOCK_TEXTURE } from './MenuScene';
 import { DIGIT_TEXTURE_PREFIX } from '../utils/digits';
@@ -49,6 +50,8 @@ export class PreloadScene extends Phaser.Scene {
       height: 96,
     });
     this.load.svg(SPARKLE_TEXTURE, 'assets/svg/fx_sparkle.svg', { width: 32, height: 32 });
+
+    AudioManager.preload(this.load);
   }
 
   create(): void {

@@ -7,6 +7,7 @@ import {
   DEPTH_PICKUPS,
 } from '../config/constants';
 import { setBodySizeInWorld } from '../utils/physics';
+import { AudioManager } from '../systems/AudioManager';
 
 /**
  * Meta poziomu: odzyskiwana zabawka stoi na końcu mapy i jest **widoczna z daleka**
@@ -52,7 +53,7 @@ export class Goal extends Phaser.Physics.Arcade.Sprite {
     this.scene.tweens.killTweensOf(this);
     (this.body as Phaser.Physics.Arcade.Body).enable = false;
 
-    // TODO(M5): fanfara + głos rodzica „Brawo!" (AudioManager).
+    AudioManager.play(this.scene, 'goal');
     this.scene.tweens.add({
       targets: this,
       y: this.y - GOAL_BOB_DISTANCE * 4,
