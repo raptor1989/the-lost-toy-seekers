@@ -11,6 +11,8 @@ import {
   ACORN_DROP_MIN_MS,
   ACORN_DROP_MAX_MS,
   ACORN_WARN_MS,
+  ACORN_HIT_PARTICLES,
+  ACORN_HIT_LIFESPAN_MS,
   LEAF_PATH_DEFAULT,
   SOAP_BUBBLE_PATH_DEFAULT,
   DEPTH_DECOR,
@@ -142,6 +144,7 @@ export class GameScene extends Phaser.Scene {
     this.rescue = new RescueSystem(this, this.players, map.heightInPixels + FALL_LINE_MARGIN);
 
     this.spawnCheckpoints(map);
+    this.spawnRescueZones(map);
     this.spawnHiddenObjects(map);
     this.spawnInteractives(map, solidLayers);
     this.spawnMushrooms(map);
@@ -259,6 +262,29 @@ export class GameScene extends Phaser.Scene {
       this.physics.add.overlap(this.players, zone, (playerObject) => {
         this.rescue.setCheckpoint(playerObject as Player, point.x, point.y);
       });
+    }
+  }
+
+  /**
+   * Strefy ratunkowe z mapy (`rescue`, prostokąt) — „przepaść" w środku poziomu,
+   * np. przerwa w gałęzi w poziomie 4, z której spadłoby się piętro niżej bez
+   * żadnego ratunku. Wpadka działa tu tak samo jak w przepaść: śmieszny dźwięk
+   * i łuk na checkpoint (Dokumentacja 3.2, „strefy mokre").
+   *
+   * Liczy się **tylko spadający** gracz: przelot w górę (grzyb) przez strefę nie
+   * jest wpadką. Strefę stawia się tak, żeby podskok spod niej jej nie sięgał.
+   */
+  private spawnRescueZones(map: Phaser.Tilemaps.Tilemap): void {
+    for (const rect of this.findRects(map, OBJECT.rescue)) {
+      const zone = this.add.zone(rect.centerX, rect.centerY, rect.width, rect.height);
+      this.physics.add.existing(zone, true);
+      this.physics.add.overlap(
+        this.players,
+        zone,
+        (playerObject) => this.rescue.rescueNow(playerObject as Player),
+        (playerObject) =>
+          onlyWithControl(playerObject) && (playerObject as Player).arcadeBody.velocity.y > 0,
+      );
     }
   }
 
@@ -511,13 +537,13 @@ export class GameScene extends Phaser.Scene {
   private sparkleAt(x: number, y: number): void {
     const emitter = this.add.particles(x, y, SPARKLE_TEXTURE, {
       speed: { min: 40, max: 120 },
-      lifespan: 400,
+      lifespan: ACORN_HIT_LIFESPAN_MS,
       scale: { start: 0.8, end: 0 },
       emitting: false,
     });
     emitter.setDepth(DEPTH_PLAYERS);
-    emitter.explode(6);
-    this.time.delayedCall(600, () => emitter.destroy());
+    emitter.explode(ACORN_HIT_PARTICLES);
+    this.time.delayedCall(ACORN_HIT_LIFESPAN_MS + 200, () => emitter.destroy());
   }
 
   /**
@@ -563,6 +589,8 @@ export class GameScene extends Phaser.Scene {
     }
 
     const goal = new Goal(this, point.x, point.y, this.level.rewardKey);
+    // Kamera wie, gdzie jest meta — przy rozjechaniu się graczy bańka zabiera tego w tyle.
+    this.coopCamera.setGoal(point);
     this.physics.add.overlap(this.players, goal, () => {
       if (goal.reach(() => this.finishLevel())) {
         // Na czas świętowania odbieramy kontrolę, żeby postać nie odbiegła z kadru.

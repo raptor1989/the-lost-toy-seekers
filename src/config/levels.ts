@@ -92,6 +92,12 @@ export const OBJECT = {
    * domyślną trasę w prawo.
    */
   ant: 'ant',
+  /**
+   * Strefa ratunkowa — **prostokąt**. Spadający gracz, który w nią wpadnie, wraca
+   * łukiem na checkpoint jak z przepaści (np. przerwa w gałęzi w poziomie 4).
+   * Stawiaj ją tak, żeby podskok spod niej jej nie sięgał.
+   */
+  rescue: 'rescue',
 } as const;
 
 /** Właściwości obiektów (Custom Properties w Tiled). */

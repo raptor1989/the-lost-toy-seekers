@@ -103,6 +103,15 @@ flowchart LR
   * **"magiczna bańka":** jeśli mimo maks. oddalenia gracz wypada poza kadr (np. młodszy został z tyłu), po 2 s zostaje delikatnie przeniesiony w bańce do drugiego gracza — z dźwiękiem "bąbelka", jako element zabawy, nie kara. Eliminuje to 90% frustracji w co-opie dzieci.
 * Poziomy projektowane **głównie horyzontalnie** z łagodnym pionem (poza poziomem 4), co ułatwia pracę wspólnej kamery.
 
+**Kogo zabiera bańka (poprawka z M4).** Leci zawsze ten, kto **został w tyle** — dalej od mety
+(`CoopCamera.setGoal`) — i tylko jeden gracz naraz. Pierwsza wersja wysyłała w bańce każdego,
+kto był za długo poza kadrem, a gdy gracze rozjadą się dalej, niż sięga najmniejszy zoom, poza
+kadrem są **oboje** (kamera celuje w środek między nimi): lecieli wtedy do siebie nawzajem,
+zamieniali się miejscami i po 2 s wszystko zaczynało się od nowa — w pionowym poziomie 4 bez
+końca. Druga pułapka: przy krawędzi świata kamera jest dociśnięta i widzi akurat tego w tyle,
+a poza kadrem jest ten z przodu — wracał on na start do młodszego, zamiast młodszy dołączyć
+do niego. Na mapie bez mety zostaje dawne zachowanie (leci ten poza kadrem).
+
 **Pułapka: squash & stretch potrafi zerwać kontakt z gruntem.** Arcade skaluje ciało
 fizyczne razem ze sprite'em:
 
@@ -136,6 +145,11 @@ rescueZone.onOverlap(player, () => {
 ```
 
 * Checkpointy to obiekty na warstwie Tiled (`checkpoint`), zapisywane per gracz — każdy wraca na **swój** ostatni bezpieczny grunt.
+* **Strefy ratunkowe z mapy** (`rescue`, prostokąt; M4) — „przepaść" w środku poziomu, którą
+  wcześniej opisywano jako strefy „mokre". Pierwszy raz potrzebna w pionowym poziomie 4:
+  spadek przez przerwę w gałęzi kończył się piętro niżej, bez dźwięku i bez powrotu — utrata
+  postępu zamiast zabawnej wpadki. Strefa działa **tylko na spadającego** gracza (przelot
+  w górę z grzyba nie jest wpadką) i stawia się ją tak, żeby podskok spod niej jej nie sięgał.
 * Żadnego HP, liczników żyć ani ekranów porażki. Ekrany z konceptów pokazujące serduszka traktujemy wyłącznie jako dekorację lub w ogóle pomijamy — zgodnie z GDD sekcja 2.1.
 
 ### 3.3. Magiczna latarka (Gracz 2)
@@ -508,7 +522,7 @@ w `constants.ts`, nie zmiana assetu).
 * **Nazwy obiektów** wpisuje się w Tiled w pole **Name** (nie Class) — Phaser zawsze wystawia
   `name`, więc jest to najpewniejszy klucz. Rozpoznawane nazwy trzyma `config/levels.ts`
   (`OBJECT`): `player1`, `player2`, `checkpoint`, `candy`, `goal`, `ghost`, `hidden`,
-  `gate`, `lever`, `plate`, `block`, `leaf`, `bubble`, `mushroom`, `ant`.
+  `gate`, `lever`, `plate`, `block`, `leaf`, `bubble`, `mushroom`, `ant`, `rescue`.
 * **`hidden` rysuje się prostokątem**, nie punktem (M3): rozmiar prostokąta jest wprost
   rozmiarem mostu czy półki, więc w edytorze widać dokładnie to, co dostaniemy w grze.
   Górna krawędź prostokąta to powierzchnia, po której się chodzi — kładąc most w poprzek
@@ -539,6 +553,9 @@ w `constants.ts`, nie zmiana assetu).
   `MUSHROOM_BOUNCE_HEIGHT` (≈ 405 px nad kapeluszem, kapelusz `MUSHROOM_HEIGHT` nad podłogą).
   Projektując, sprawdź, czego grzyb pozwala dosięgnąć — także przez bramy, których nie wolno
   przeskoczyć.
+* **Strefa ratunkowa** (`rescue`, M4) to **prostokąt** — spadający gracz, który w nią wpadnie,
+  wraca łukiem na checkpoint. Kładź ją tuż pod przerwą, z której nie ma być „spadania piętro
+  niżej", i nie niżej niż zasięg podskoku z gruntu pod nią (≈ 215 px nad stopami).
 * **Mrówka** (`ant`, M4) to **polilinia o dwóch punktach na podłodze** — trasa stóp mrówki.
   **Duszek z żołędziami** to zwykły `ghost` z właściwością `acorns` (bool) — stawiaj go
   wysoko (żołądź ma spadać, nie wypadać tuż nad podłogą) i nad gruntem, na który dzieci

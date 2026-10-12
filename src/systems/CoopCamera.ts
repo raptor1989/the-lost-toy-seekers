@@ -30,6 +30,8 @@ export class CoopCamera {
   /** Ile ms każdy z graczy jest nieprzerwanie poza kadrem. */
   private offscreenFor = new Map<Player, number>();
   private travellingInBubble = new Set<Player>();
+  /** Meta poziomu — wyznacza, kto „został w tyle", gdy poza kadrem są oboje. */
+  private goal?: Phaser.Math.Vector2;
 
   constructor(scene: Phaser.Scene, players: Player[], worldWidth: number, worldHeight: number) {
     this.scene = scene;
@@ -46,6 +48,11 @@ export class CoopCamera {
   update(delta: number): void {
     this.followMidpoint();
     this.checkOffscreen(delta);
+  }
+
+  /** Punkt mety — ustawiany przez `GameScene`, jeśli mapa ją ma. */
+  setGoal(point: Phaser.Math.Vector2): void {
+    this.goal = point.clone();
   }
 
   private followMidpoint(): void {
@@ -70,11 +77,30 @@ export class CoopCamera {
     );
   }
 
+  /**
+   * Pilnuje, kto jak długo jest poza kadrem, i wysyła w bańce **jednego** gracza.
+   *
+   * Leci zawsze ten, kto **został w tyle** (dalej od mety), i tylko jeden naraz:
+   *  - gdy gracze rozjadą się dalej, niż sięga najmniejszy zoom, poza kadrem są
+   *    **oboje** (kamera celuje w środek między nimi). Pierwsza wersja wysyłała wtedy
+   *    oboje naraz: lecieli do siebie nawzajem, zamieniali się miejscami i po 2 s
+   *    wszystko zaczynało się od nowa — w pionowym poziomie 4 bez końca;
+   *  - przy krawędzi świata kamera jest dociśnięta i widzi akurat tego w tyle, a poza
+   *    kadrem jest ten z przodu — wracał on wtedy na start do młodszego, zamiast
+   *    młodszy dołączyć do niego.
+   * Na mapie bez mety leci ten, kto jest poza kadrem (dawne zachowanie).
+   */
   private checkOffscreen(delta: number): void {
+    if (this.travellingInBubble.size > 0) {
+      this.players.forEach((player) => this.offscreenFor.set(player, 0));
+      return;
+    }
+
+    const due: Player[] = [];
     for (const player of this.players) {
-      // Gracz bez kontroli jest już w trakcie ratunku albo lotu w bańce —
-      // drugi tween na tej samej postaci szarpałby ją w dwie strony.
-      if (this.travellingInBubble.has(player) || !player.hasControl) {
+      // Gracz bez kontroli jest w trakcie ratunku — drugi tween na tej samej
+      // postaci szarpałby ją w dwie strony.
+      if (!player.hasControl) {
         this.offscreenFor.set(player, 0);
         continue;
       }
@@ -84,11 +110,32 @@ export class CoopCamera {
         : (this.offscreenFor.get(player) ?? 0) + delta;
 
       this.offscreenFor.set(player, elapsed);
-
       if (elapsed >= BUBBLE_OFFSCREEN_MS) {
-        this.sendInBubble(player);
+        due.push(player);
       }
     }
+
+    if (due.length === 0) {
+      return;
+    }
+    const behind = this.goal ? this.furthestFromGoal(this.players) : due[0];
+    if (!behind.hasControl) {
+      // Ten w tyle właśnie wraca na checkpoint — bańka poczeka na koniec lotu.
+      return;
+    }
+    this.players.forEach((player) => this.offscreenFor.set(player, 0));
+    this.sendInBubble(behind);
+  }
+
+  /** Kto jest dalej od mety — czyli kto został w tyle. Bez mety: pierwszy z listy. */
+  private furthestFromGoal(players: readonly Player[]): Player {
+    const goal = this.goal;
+    if (!goal) {
+      return players[0];
+    }
+    const distance = (player: Player): number =>
+      Phaser.Math.Distance.Between(player.x, player.y, goal.x, goal.y);
+    return players.reduce((far, player) => (distance(player) > distance(far) ? player : far));
   }
 
   /** Przenosi gracza łukiem do drugiego gracza — bez odbierania punktów, bez kary. */

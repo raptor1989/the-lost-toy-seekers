@@ -7,6 +7,7 @@ import {
   ACORN_SPIN,
   ACORN_REST_MS,
   ACORN_LIFETIME_MS,
+  ACORN_BODY_RATIO,
   DEPTH_PICKUPS,
 } from '../config/constants';
 import { setBodySizeInWorld } from '../utils/physics';
@@ -32,7 +33,7 @@ export class Acorn extends Phaser.Physics.Arcade.Sprite {
 
     this.setDisplaySize(ACORN_SIZE, ACORN_SIZE);
     this.setDepth(DEPTH_PICKUPS);
-    setBodySizeInWorld(this, ACORN_SIZE * 0.8, ACORN_SIZE * 0.8);
+    setBodySizeInWorld(this, ACORN_SIZE * ACORN_BODY_RATIO, ACORN_SIZE * ACORN_BODY_RATIO);
 
     const body = this.body as Phaser.Physics.Arcade.Body;
     // Grawitacja ciała dodaje się do grawitacji świata — odejmujemy różnicę.

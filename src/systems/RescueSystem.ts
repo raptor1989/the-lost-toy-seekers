@@ -48,6 +48,16 @@ export class RescueSystem {
     this.checkpoints.set(player, new Phaser.Math.Vector2(x, y));
   }
 
+  /**
+   * Wpadka w strefę ratunkową z mapy (`rescue`) — działa jak przepaść, tylko
+   * w środku poziomu. Gracz już ratowany nie dostaje drugiego lotu.
+   */
+  rescueNow(player: Player): void {
+    if (!this.beingRescued.has(player)) {
+      this.rescue(player);
+    }
+  }
+
   update(delta: number): void {
     this.sampleSafeGround(delta);
 

@@ -8,7 +8,7 @@
  "orientation": "orthogonal",
  "renderorder": "right-down",
  "nextlayerid": 5,
- "nextobjectid": 50,
+ "nextobjectid": 51,
  "tiledversion": "1.10.2",
  "version": "1.10",
  "type": "map",
@@ -11562,6 +11562,17 @@
     },
     {
      "id": 31,
+     "name": "rescue",
+     "type": "",
+     "rotation": 0,
+     "visible": true,
+     "x": 512,
+     "y": 1056,
+     "width": 384,
+     "height": 96
+    },
+    {
+     "id": 32,
      "name": "checkpoint",
      "type": "",
      "point": true,
@@ -11573,7 +11584,7 @@
      "height": 0
     },
     {
-     "id": 32,
+     "id": 33,
      "name": "candy",
      "type": "",
      "point": true,
@@ -11585,7 +11596,7 @@
      "height": 0
     },
     {
-     "id": 33,
+     "id": 34,
      "name": "candy",
      "type": "",
      "point": true,
@@ -11597,7 +11608,7 @@
      "height": 0
     },
     {
-     "id": 34,
+     "id": 35,
      "name": "candy",
      "type": "",
      "point": true,
@@ -11609,7 +11620,7 @@
      "height": 0
     },
     {
-     "id": 35,
+     "id": 36,
      "name": "checkpoint",
      "type": "",
      "point": true,
@@ -11621,7 +11632,7 @@
      "height": 0
     },
     {
-     "id": 36,
+     "id": 37,
      "name": "candy",
      "type": "",
      "point": true,
@@ -11633,7 +11644,7 @@
      "height": 0
     },
     {
-     "id": 37,
+     "id": 38,
      "name": "candy",
      "type": "",
      "point": true,
@@ -11645,7 +11656,7 @@
      "height": 0
     },
     {
-     "id": 38,
+     "id": 39,
      "name": "candy",
      "type": "",
      "point": true,
@@ -11657,7 +11668,7 @@
      "height": 0
     },
     {
-     "id": 39,
+     "id": 40,
      "name": "ghost",
      "type": "",
      "properties": [
@@ -11683,7 +11694,7 @@
      ]
     },
     {
-     "id": 40,
+     "id": 41,
      "name": "gate",
      "type": "",
      "rotation": 0,
@@ -11694,7 +11705,7 @@
      "height": 192
     },
     {
-     "id": 41,
+     "id": 42,
      "name": "lever",
      "type": "",
      "point": true,
@@ -11702,7 +11713,7 @@
       {
        "name": "target",
        "type": "object",
-       "value": 40
+       "value": 41
       }
      ],
      "rotation": 0,
@@ -11713,7 +11724,7 @@
      "height": 0
     },
     {
-     "id": 42,
+     "id": 43,
      "name": "checkpoint",
      "type": "",
      "point": true,
@@ -11725,7 +11736,7 @@
      "height": 0
     },
     {
-     "id": 43,
+     "id": 44,
      "name": "candy",
      "type": "",
      "point": true,
@@ -11737,7 +11748,7 @@
      "height": 0
     },
     {
-     "id": 44,
+     "id": 45,
      "name": "candy",
      "type": "",
      "point": true,
@@ -11749,7 +11760,7 @@
      "height": 0
     },
     {
-     "id": 45,
+     "id": 46,
      "name": "candy",
      "type": "",
      "point": true,
@@ -11761,7 +11772,7 @@
      "height": 0
     },
     {
-     "id": 46,
+     "id": 47,
      "name": "candy",
      "type": "",
      "point": true,
@@ -11773,7 +11784,7 @@
      "height": 0
     },
     {
-     "id": 47,
+     "id": 48,
      "name": "candy",
      "type": "",
      "point": true,
@@ -11785,7 +11796,7 @@
      "height": 0
     },
     {
-     "id": 48,
+     "id": 49,
      "name": "candy",
      "type": "",
      "point": true,
@@ -11797,7 +11808,7 @@
      "height": 0
     },
     {
-     "id": 49,
+     "id": 50,
      "name": "goal",
      "type": "",
      "point": true,

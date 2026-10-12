@@ -397,6 +397,11 @@ export const ACORN_WARN_ANGLE = 12;
 export const ACORN_REST_MS = 700;
 /** Żołądź, który nigdzie nie spadł (przepaść), znika po tym czasie. */
 export const ACORN_LIFETIME_MS = 8000;
+/** Strefa trafienia żołędzia względem rysunku — trochę mniejsza, żeby „bęc" było uczciwe. */
+export const ACORN_BODY_RATIO = 0.8;
+/** Błysk brokatu po trafieniu żołędziem. */
+export const ACORN_HIT_PARTICLES = 6;
+export const ACORN_HIT_LIFESPAN_MS = 400;
 
 // ---------------------------------------------------------------- meta poziomu
 
