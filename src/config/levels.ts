@@ -134,10 +134,44 @@ export const LEVELS: readonly LevelDefinition[] = [
   },
 ];
 
+/**
+ * Mapy testowe — **poza** menu, paskiem zabawek i zapisem postępu. Otwiera się je
+ * parametrem adresu `?level=<id>` (patrz {@link levelFromUrl}). `poligon` to tor z M3:
+ * każda mechanika kooperacji w jednym miejscu, do sprawdzania po zmianach w kodzie.
+ */
+export const TEST_LEVELS: readonly LevelDefinition[] = [
+  {
+    id: 'poligon',
+    mapKey: 'map_poligon',
+    mapFile: 'assets/tilemaps/poligon.tmj',
+    backgroundColor: 0x1b1436,
+    rewardKey: 'reward_teddy',
+    rewardFile: 'assets/svg/reward_teddy.svg',
+  },
+];
+
+/** Wszystkie mapy do załadowania: poziomy z manifestu i mapy testowe. */
+export const ALL_LEVELS: readonly LevelDefinition[] = [...LEVELS, ...TEST_LEVELS];
+
 export const DEFAULT_LEVEL_ID = LEVELS[0].id;
 
+/** Czy to poziom gry (menu, pasek zabawek, zapis postępu), a nie mapa testowa. */
+export function isStoryLevel(id: string): boolean {
+  return LEVELS.some((level) => level.id === id);
+}
+
+/**
+ * Poziom wskazany w adresie: `?level=level3` uruchamia go od razu, z pominięciem menu
+ * i blokad. Narzędzie dla dorosłych — do playtestu konkretnego poziomu i do testów;
+ * dziecko klikające w menu nigdy tu nie trafi. Nieznany identyfikator = zwykłe menu.
+ */
+export function levelFromUrl(): string | null {
+  const id = new URLSearchParams(window.location.search).get('level');
+  return id && ALL_LEVELS.some((level) => level.id === id) ? id : null;
+}
+
 export function getLevel(id: string): LevelDefinition {
-  const level = LEVELS.find((l) => l.id === id);
+  const level = ALL_LEVELS.find((l) => l.id === id);
   if (!level) {
     throw new Error(`Nieznany poziom: "${id}". Dodaj wpis w config/levels.ts.`);
   }

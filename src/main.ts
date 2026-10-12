@@ -7,7 +7,7 @@ import { MenuScene } from './scenes/MenuScene';
 import { UIScene } from './scenes/UIScene';
 import { RewardScene } from './scenes/RewardScene';
 
-new Phaser.Game({
+const game = new Phaser.Game({
   type: Phaser.AUTO,
   parent: 'game',
   width: GAME_WIDTH,
@@ -31,3 +31,9 @@ new Phaser.Game({
   // UIScene startuje równolegle nad GameScene (uruchamia ją GameScene).
   scene: [BootScene, PreloadScene, MenuScene, GameScene, UIScene, RewardScene],
 });
+
+// Uchwyt do gry tylko w trybie dev — weryfikacja z Playwrighta i podgląd stanu z konsoli
+// przeglądarki (`__game.scene.getScene('Game')`). W buildzie produkcyjnym ta gałąź znika.
+if (import.meta.env.DEV) {
+  (window as unknown as { __game: Phaser.Game }).__game = game;
+}

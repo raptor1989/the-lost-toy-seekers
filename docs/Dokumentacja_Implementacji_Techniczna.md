@@ -537,6 +537,11 @@ w `constants.ts`, nie zmiana assetu).
   z pliku `.tmj`; przepisujemy je z `map.tilesets`. Sam obrazek tilesetu musi mieć
   **wytłoczone brzegi** (extrude: kolor kafla wchodzi 1 px w margines) — inaczej przy płynnym
   zoomie kamery kooperacyjnej na styku kafli pojawia się kratka.
+* **Poligon M3 to osobna mapa testowa** (`poligon.tmj`, `TEST_LEVELS` w `levels.ts`): każda
+  mechanika kooperacji w jednym miejscu, poza menu, paskiem zabawek i zapisem postępu.
+  Otwiera się go adresem `?level=poligon`; tak samo `?level=<id>` uruchamia dowolny poziom
+  z pominięciem menu i blokad (playtest konkretnego poziomu). W trybie dev gra jest pod
+  `window.__game` — z tego korzystają testy poziomów w Playwrighcie.
 * Greybox używa `public/assets/tilemaps/tileset_greybox.png` (4 kafle: powierzchnia gruntu,
   wypełnienie, platforma, kępka trawy) — placeholder do podmiany w M5.
 

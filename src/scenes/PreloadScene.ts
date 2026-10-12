@@ -22,7 +22,7 @@ import {
   HUD_DIGIT_WIDTH,
   HUD_DIGIT_HEIGHT,
 } from '../config/constants';
-import { LEVELS, TILESET_TEXTURE_KEY } from '../config/levels';
+import { ALL_LEVELS, TILESET_TEXTURE_KEY, levelFromUrl } from '../config/levels';
 import { CANDY_TEXTURE } from '../objects/Candy';
 import { GHOST_TEXTURE, SPARKLE_TEXTURE } from '../objects/Ghost';
 import { HIDDEN_TEXTURE } from '../objects/HiddenObject';
@@ -53,7 +53,8 @@ export class PreloadScene extends Phaser.Scene {
     this.load.image(TILESET_TEXTURE_KEY, 'assets/tilemaps/tileset_greybox.png');
 
     // Mapy i zabawki-nagrody prosto z manifestu: nowy poziom nie wymaga zmiany tej sceny.
-    LEVELS.forEach((level) => {
+    // Mapy testowe też — `?level=poligon` musi mieć co uruchomić.
+    ALL_LEVELS.forEach((level) => {
       this.load.tilemapTiledJSON(level.mapKey, level.mapFile);
       // Jeden plik obsługuje i ekran nagrody, i zabawkę stojącą na mecie —
       // rasteryzujemy w największej potrzebnej skali (Dokumentacja sekcja 4).
@@ -81,7 +82,14 @@ export class PreloadScene extends Phaser.Scene {
     this.createPlaceholderTextures();
     this.createFlashlightTexture();
     this.createDigitTextures();
-    this.scene.start('Menu');
+
+    // `?level=<id>` w adresie (playtest konkretnego poziomu, testy) — prosto do gry.
+    const levelId = levelFromUrl();
+    if (levelId) {
+      this.scene.start('Game', { levelId });
+    } else {
+      this.scene.start('Menu');
+    }
   }
 
   private showProgressBar(): void {

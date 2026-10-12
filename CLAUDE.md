@@ -28,6 +28,11 @@ Brak testów i lintera — weryfikacja to `tsc` + ręczne uruchomienie gry (`npm
 w tej samej klatce, a Phaser kasuje wtedy flagę `JustDown` (skok i wybór w menu nie
 zadziałają). Rozdziel wciśnięcie: `keyboard.down(k)` → `waitForTimeout(~100)` → `keyboard.up(k)`.
 
+**Skróty do testów:** `?level=<id>` w adresie uruchamia poziom od razu, z pominięciem menu
+i blokad (`?level=level3`, `?level=poligon` — tor wszystkich mechanik M3, poza menu i zapisem).
+W trybie dev gra jest dostępna jako `window.__game` — z Playwrighta można czytać stan
+(`__game.scene.getScene('Game').players`) i teleportować postać (`player.body.reset(x, y)`).
+
 **Sprzątanie po weryfikacji:** jeśli uruchomisz serwer dev albo przeglądarkę, żeby coś
 sprawdzić, **zamknij je przed końcem tury** i usuń pliki robocze (zrzuty ekranu,
 `.playwright-cli/`). Nie zostawiaj wiszących procesów — użytkownik nie ma ich sprzątać za Ciebie.

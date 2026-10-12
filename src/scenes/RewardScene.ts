@@ -11,7 +11,7 @@ import {
   REWARD_CONFETTI_LIFESPAN_MS,
   REWARD_INPUT_DELAY_MS,
 } from '../config/constants';
-import { getLevel, getNextLevel } from '../config/levels';
+import { getLevel, getNextLevel, isStoryLevel } from '../config/levels';
 import { CANDY_TEXTURE } from '../objects/Candy';
 import { saveLevelResult } from '../systems/SaveManager';
 import { AudioManager } from '../systems/AudioManager';
@@ -50,7 +50,10 @@ export class RewardScene extends Phaser.Scene {
 
     // Zapis idzie przed animacjami: dziecko może w każdej chwili zamknąć kartę,
     // a odzyskana zabawka ma zostać odzyskana.
-    saveLevelResult(level.id, data.candiesCollected);
+    // Mapa testowa (`?level=poligon`) nie zostawia śladu w postępie dzieci.
+    if (isStoryLevel(level.id)) {
+      saveLevelResult(level.id, data.candiesCollected);
+    }
 
     this.add
       .rectangle(0, 0, GAME_WIDTH, GAME_HEIGHT, level.backgroundColor, 0.96)
