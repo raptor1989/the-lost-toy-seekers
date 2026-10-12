@@ -132,6 +132,14 @@ export const LEVELS: readonly LevelDefinition[] = [
     rewardKey: 'reward_teddy',
     rewardFile: 'assets/svg/reward_teddy.svg',
   },
+  {
+    id: 'level2',
+    mapKey: 'map_level2',
+    mapFile: 'assets/tilemaps/level2.tmj',
+    backgroundColor: 0x14284f,
+    rewardKey: 'reward_car',
+    rewardFile: 'assets/svg/reward_car.svg',
+  },
 ];
 
 /**
