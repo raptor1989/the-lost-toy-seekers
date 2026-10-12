@@ -21,11 +21,16 @@ import {
   MUSHROOM_HEIGHT,
   HUD_DIGIT_WIDTH,
   HUD_DIGIT_HEIGHT,
+  ANT_WIDTH,
+  ANT_HEIGHT,
+  ACORN_SIZE,
 } from '../config/constants';
 import { ALL_LEVELS, TILESET_TEXTURE_KEY, levelFromUrl } from '../config/levels';
 import { CANDY_TEXTURE } from '../objects/Candy';
 import { GHOST_TEXTURE, SPARKLE_TEXTURE } from '../objects/Ghost';
 import { HIDDEN_TEXTURE } from '../objects/HiddenObject';
+import { ANT_TEXTURE } from '../objects/Ant';
+import { ACORN_TEXTURE } from '../objects/Acorn';
 import { GATE_TEXTURE } from '../objects/interactive/Gate';
 import { LEVER_BASE_TEXTURE, LEVER_HANDLE_TEXTURE, HINT_TEXTURE } from '../objects/interactive/Lever';
 import { PLATE_TEXTURE } from '../objects/interactive/PressurePlate';
@@ -70,6 +75,7 @@ export class PreloadScene extends Phaser.Scene {
       height: 96,
     });
     this.load.svg(SPARKLE_TEXTURE, 'assets/svg/fx_sparkle.svg', { width: 32, height: 32 });
+    this.load.svg(ACORN_TEXTURE, 'assets/svg/world_acorn.svg', { width: ACORN_SIZE, height: ACORN_SIZE });
 
     AudioManager.preload(this.load);
   }
@@ -155,6 +161,8 @@ export class PreloadScene extends Phaser.Scene {
     g.clear();
 
     this.createInteractiveTextures(g);
+
+    this.createAntTexture(g);
 
     // Kłódka na zablokowanym poziomie — jedyny komunikat „jeszcze nie teraz".
     g.lineStyle(7, 0x4a3226, 1);
@@ -319,6 +327,44 @@ export class PreloadScene extends Phaser.Scene {
     g.fillCircle(w / 2 + 4, capHeight / 2 - 10, 7);
     g.fillCircle(w / 2 + 26, capHeight / 2 - 2, 5);
     g.generateTexture(MUSHROOM_TEXTURE, w, h);
+    g.clear();
+  }
+
+  /**
+   * Mrówka niosąca liść — placeholder do M5 w kolorach palety: brązowe ciałko
+   * (kontur kartonu), zielony liść nad głową. Patrzy w prawo; `flipX` odwraca.
+   */
+  private createAntTexture(g: Phaser.GameObjects.Graphics): void {
+    const w = ANT_WIDTH;
+    const h = ANT_HEIGHT;
+    // nóżki
+    g.lineStyle(2, 0x4a3226, 1);
+    for (const x of [14, 20, 26]) {
+      g.lineBetween(x, h - 10, x - 3, h - 1);
+      g.lineBetween(x + 2, h - 10, x + 5, h - 1);
+    }
+    // liść trzymany nad głową (z łodyżką)
+    g.lineBetween(30, h - 16, 26, 12);
+    g.fillStyle(0x4e9a52, 1);
+    g.fillEllipse(w / 2, 9, w - 6, 15);
+    g.lineStyle(2, 0x2f6b35, 1);
+    g.strokeEllipse(w / 2, 9, w - 6, 15);
+    g.lineBetween(6, 9, w - 6, 9);
+    // odwłok, tułów, głowa
+    g.fillStyle(0x6b4a2a, 1);
+    g.lineStyle(2, 0x4a3226, 1);
+    g.fillCircle(10, h - 12, 8);
+    g.strokeCircle(10, h - 12, 8);
+    g.fillCircle(21, h - 12, 5);
+    g.strokeCircle(21, h - 12, 5);
+    g.fillCircle(32, h - 14, 7);
+    g.strokeCircle(32, h - 14, 7);
+    // oko
+    g.fillStyle(0xffffff, 1);
+    g.fillCircle(35, h - 16, 2.5);
+    g.fillStyle(0x3a2820, 1);
+    g.fillCircle(35.6, h - 16, 1.3);
+    g.generateTexture(ANT_TEXTURE, w, h);
     g.clear();
   }
 

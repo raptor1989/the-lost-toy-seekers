@@ -12,9 +12,12 @@ import {
   TEMPORARY_GROUND_MEMORY_MS,
   PLATFORM_GROUND_MEMORY_MS,
   LAUNCH_GROUND_GRACE_MS,
+  BONK_VELOCITY,
+  BONK_COOLDOWN_MS,
 } from '../config/constants';
 import { InputManager, type PlayerId, type PlayerInput } from '../systems/InputManager';
 import { AudioManager } from '../systems/AudioManager';
+import type { SfxName } from '../config/audio';
 
 /**
  * Klasa bazowa gracza: ruch, skok wybaczający błędy, squash & stretch.
@@ -36,6 +39,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
   private temporaryGroundAt = Number.NEGATIVE_INFINITY;
   private platformGroundAt = Number.NEGATIVE_INFINITY;
   private launchedAt = Number.NEGATIVE_INFINITY;
+  private bonkedAt = Number.NEGATIVE_INFINITY;
   private squashTween?: Phaser.Tweens.Tween;
 
   constructor(
@@ -111,6 +115,29 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
     this.lastJumpPressedAt = Number.NEGATIVE_INFINITY;
     this.wasOnGround = false;
     this.playSquash(JUMP_STRETCH_X, JUMP_STRETCH_Y);
+  }
+
+  /**
+   * „Bęc" od mrówki albo żołędzia: podskok w miejscu, squash i dźwięk.
+   *
+   * Prędkość pionowa zmienia się tylko **w górę**: wznoszącemu się skokowi podskok
+   * niczego nie odbiera (żołądź w głowę w pół skoku nie może skrócić skoku nad
+   * przepaścią), a spadającemu łagodnie hamuje upadek. Bez odrzutu w bok i bez
+   * odbierania kontroli. W czasie {@link BONK_COOLDOWN_MS} kolejny kontakt nic nie robi.
+   *
+   * @param sound dźwięk „bęc" — mrówka i żołądź brzmią inaczej
+   * @returns `false`, jeśli „bęc" było przed chwilą albo gracz nie ma kontroli
+   */
+  bonk(sound: SfxName = 'boing'): boolean {
+    const now = this.scene.time.now;
+    if (!this.hasControl || now - this.bonkedAt < BONK_COOLDOWN_MS) {
+      return false;
+    }
+    this.bonkedAt = now;
+    this.setVelocityY(Math.min(this.arcadeBody.velocity.y, BONK_VELOCITY));
+    AudioManager.play(this.scene, sound);
+    this.playSquash(LAND_SQUASH_X, LAND_SQUASH_Y);
+    return true;
   }
 
   /**

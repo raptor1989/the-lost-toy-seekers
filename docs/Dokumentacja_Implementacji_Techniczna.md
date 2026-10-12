@@ -354,6 +354,29 @@ dostawał przez to ciało przeskalowane drugi raz: strefa cukierka miała 35 px 
 a meta — 18 px zamiast 96. Strefy ustawiamy helperem `setBodySizeInWorld`
 ([utils/physics.ts](../src/utils/physics.ts)), który przelicza rozmiar ze świata na teksturę.
 
+### 3.8. Przeszkody-psotki: mrówki i żołędzie (M4)
+
+GDD wymienia dwie przeszkody „do omijania": mrówki niosące liście (poziom 1) i miękkie żołędzie
+zrzucane dla żartu przez duszki (poziom 4). W grze bez kary trzeba było zdecydować, **co właściwie
+się dzieje przy kontakcie**:
+
+* **„Bęc" zamiast kary** (`Player.bonk`): podskok w miejscu (~45 px, `BONK_VELOCITY`), dźwięk
+  i squash. **Bez odrzutu w bok** — odrzut przy krawędzi zepchnąłby dziecko do przepaści —
+  i bez odbierania kontroli. To jedyny „koszt" kontaktu: chwila zabawnego zamieszania.
+* **Prędkość pionowa zmienia się tylko w górę.** Żołądź w głowę w pół skoku nie może skrócić
+  skoku nad przepaścią; spadającemu podskok najwyżej łagodnie hamuje upadek.
+* **Cooldown `BONK_COOLDOWN_MS`** — stanie na mrówce nie daje serii podskoków.
+* **Mrówka** (`Ant`) chodzi po trasie z mapy wolniej niż dziecko, bez grawitacji i kolizji
+  z kaflami (trasa leży na podłodze). Po kontakcie podskakuje i zawraca w stronę przeciwną do
+  gracza — nie „przykleja się" do dziecka.
+* **Żołędzie zrzuca duszek z właściwością `acorns`**, nie osobny obiekt: GDD mówi wprost,
+  że rzucają je duszki, a dotknięty duszek znika jak każdy inny i przestaje rzucać, dopóki nie
+  wróci. Przed zrzutem duszek **trzęsie się** (`ACORN_WARN_MS`) — zapowiedź „zaraz coś spadnie".
+* **Żołądź spada wolno** (własna grawitacja `ACORN_FALL_GRAVITY` i limit
+  `ACORN_MAX_FALL_SPEED`), żeby dziecko widziało, co nadlatuje, i zdążyło zejść z drogi.
+  Leżący żołądź już nikogo nie trafia i po chwili znika. Grupa żołędzi jest zwykłą grupą, nie
+  fizyczną: grupa Arcade przy dodaniu nadpisałaby ciału grawitację i limit prędkości.
+
 ---
 
 ## 4. Pipeline Assetów (SVG → Gra)
@@ -483,7 +506,7 @@ w `constants.ts`, nie zmiana assetu).
 * **Nazwy obiektów** wpisuje się w Tiled w pole **Name** (nie Class) — Phaser zawsze wystawia
   `name`, więc jest to najpewniejszy klucz. Rozpoznawane nazwy trzyma `config/levels.ts`
   (`OBJECT`): `player1`, `player2`, `checkpoint`, `candy`, `goal`, `ghost`, `hidden`,
-  `gate`, `lever`, `plate`, `block`, `leaf`, `bubble`, `mushroom`.
+  `gate`, `lever`, `plate`, `block`, `leaf`, `bubble`, `mushroom`, `ant`.
 * **`hidden` rysuje się prostokątem**, nie punktem (M3): rozmiar prostokąta jest wprost
   rozmiarem mostu czy półki, więc w edytorze widać dokładnie to, co dostaniemy w grze.
   Górna krawędź prostokąta to powierzchnia, po której się chodzi — kładąc most w poprzek
@@ -514,6 +537,10 @@ w `constants.ts`, nie zmiana assetu).
   `MUSHROOM_BOUNCE_HEIGHT` (≈ 405 px nad kapeluszem, kapelusz `MUSHROOM_HEIGHT` nad podłogą).
   Projektując, sprawdź, czego grzyb pozwala dosięgnąć — także przez bramy, których nie wolno
   przeskoczyć.
+* **Mrówka** (`ant`, M4) to **polilinia o dwóch punktach na podłodze** — trasa stóp mrówki.
+  **Duszek z żołędziami** to zwykły `ghost` z właściwością `acorns` (bool) — stawiaj go
+  wysoko (żołądź ma spadać, nie wypadać tuż nad podłogą) i nad gruntem, na który dzieci
+  i tak wchodzą, a nie nad skokiem nad przepaścią.
 * **Pomieszczenie za bramą musi dać się otworzyć od środka** — drugi przycisk (albo dźwignia)
   w środku, wskazujący tę samą bramę. Inaczej dziecko, które weszło samo, może zostać zamknięte,
   jeśli drugie nie pomoże (sekcja 3.5).

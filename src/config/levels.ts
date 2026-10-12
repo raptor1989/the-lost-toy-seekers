@@ -86,6 +86,12 @@ export const OBJECT = {
    * wyrzuca w górę na `MUSHROOM_BOUNCE_HEIGHT`.
    */
   mushroom: 'mushroom',
+  /**
+   * Mrówka niosąca liść (GDD poziom 1) — **polilinia o dwóch punktach na podłodze**:
+   * trasa stóp mrówki. Niegroźna: kontakt to podskok „bęc". Zwykły punkt dostaje
+   * domyślną trasę w prawo.
+   */
+  ant: 'ant',
 } as const;
 
 /** Właściwości obiektów (Custom Properties w Tiled). */
@@ -100,6 +106,11 @@ export const PROPERTY = {
    * Bez tej właściwości — {@link DEFAULT_ALLOWED_PLAYER}.
    */
   allowedPlayer: 'allowedPlayer',
+  /**
+   * Na duszku (bool): duszek co chwilę zrzuca miękki żołądź (GDD poziom 4).
+   * Dotknięty duszek znika jak każdy inny — i przestaje rzucać, dopóki nie wróci.
+   */
+  acorns: 'acorns',
 } as const;
 
 /**

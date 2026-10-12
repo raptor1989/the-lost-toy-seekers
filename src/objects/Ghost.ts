@@ -10,6 +10,8 @@ import {
   GHOST_RESPAWN_MAX_MS,
   GHOST_RESPAWN_POP_MS,
   GHOST_RESPAWN_RETRY_MS,
+  ACORN_WARN_MS,
+  ACORN_WARN_ANGLE,
   DEPTH_PICKUPS,
 } from '../config/constants';
 import { setBodySizeInWorld } from '../utils/physics';
@@ -38,6 +40,7 @@ export class Ghost extends Phaser.Physics.Arcade.Sprite {
   /** Skala odpowiadająca {@link GHOST_SIZE} — punkt docelowy animacji powrotu. */
   private restScale = 1;
   private patrol?: Phaser.Tweens.Tween;
+  private teaseTween?: Phaser.Tweens.Tween;
   private awake = true;
 
   constructor(scene: Phaser.Scene, from: Phaser.Math.Vector2, to: Phaser.Math.Vector2) {
@@ -89,6 +92,29 @@ export class Ghost extends Phaser.Physics.Arcade.Sprite {
     );
 
     return true;
+  }
+
+  /** Duszek jest na miejscu i można go dotknąć (nie czeka na powrót po „puf"). */
+  get isAwake(): boolean {
+    return this.awake;
+  }
+
+  /**
+   * Zapowiedź psoty: duszek trzęsie się przez {@link ACORN_WARN_MS}, zanim zrzuci
+   * żołądź. Obrót nie miesza się z patrolem, który steruje tylko pozycją.
+   */
+  tease(): void {
+    this.teaseTween?.stop();
+    this.setAngle(-ACORN_WARN_ANGLE);
+    this.teaseTween = this.scene.tweens.add({
+      targets: this,
+      angle: ACORN_WARN_ANGLE,
+      duration: ACORN_WARN_MS / 6,
+      yoyo: true,
+      repeat: 2,
+      ease: 'Sine.easeInOut',
+      onComplete: () => this.setAngle(0),
+    });
   }
 
   /**

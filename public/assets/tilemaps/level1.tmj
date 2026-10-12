@@ -8,7 +8,7 @@
  "orientation": "orthogonal",
  "renderorder": "right-down",
  "nextlayerid": 5,
- "nextobjectid": 51,
+ "nextobjectid": 53,
  "tiledversion": "1.10.2",
  "version": "1.10",
  "type": "map",
@@ -10378,6 +10378,25 @@
     },
     {
      "id": 18,
+     "name": "ant",
+     "type": "",
+     "rotation": 0,
+     "visible": true,
+     "x": 1328,
+     "y": 768,
+     "polyline": [
+      {
+       "x": 0,
+       "y": 0
+      },
+      {
+       "x": 352,
+       "y": 0
+      }
+     ]
+    },
+    {
+     "id": 19,
      "name": "candy",
      "type": "",
      "point": true,
@@ -10389,7 +10408,7 @@
      "height": 0
     },
     {
-     "id": 19,
+     "id": 20,
      "name": "candy",
      "type": "",
      "point": true,
@@ -10401,7 +10420,7 @@
      "height": 0
     },
     {
-     "id": 20,
+     "id": 21,
      "name": "candy",
      "type": "",
      "point": true,
@@ -10413,7 +10432,7 @@
      "height": 0
     },
     {
-     "id": 21,
+     "id": 22,
      "name": "candy",
      "type": "",
      "point": true,
@@ -10425,7 +10444,7 @@
      "height": 0
     },
     {
-     "id": 22,
+     "id": 23,
      "name": "candy",
      "type": "",
      "point": true,
@@ -10437,7 +10456,7 @@
      "height": 0
     },
     {
-     "id": 23,
+     "id": 24,
      "name": "checkpoint",
      "type": "",
      "point": true,
@@ -10449,7 +10468,7 @@
      "height": 0
     },
     {
-     "id": 24,
+     "id": 25,
      "name": "candy",
      "type": "",
      "point": true,
@@ -10461,7 +10480,7 @@
      "height": 0
     },
     {
-     "id": 25,
+     "id": 26,
      "name": "candy",
      "type": "",
      "point": true,
@@ -10473,7 +10492,7 @@
      "height": 0
     },
     {
-     "id": 26,
+     "id": 27,
      "name": "candy",
      "type": "",
      "point": true,
@@ -10485,7 +10504,7 @@
      "height": 0
     },
     {
-     "id": 27,
+     "id": 28,
      "name": "checkpoint",
      "type": "",
      "point": true,
@@ -10497,7 +10516,7 @@
      "height": 0
     },
     {
-     "id": 28,
+     "id": 29,
      "name": "hidden",
      "type": "",
      "rotation": 0,
@@ -10508,7 +10527,7 @@
      "height": 32
     },
     {
-     "id": 29,
+     "id": 30,
      "name": "hidden",
      "type": "",
      "rotation": 0,
@@ -10519,7 +10538,7 @@
      "height": 32
     },
     {
-     "id": 30,
+     "id": 31,
      "name": "candy",
      "type": "",
      "point": true,
@@ -10531,7 +10550,7 @@
      "height": 0
     },
     {
-     "id": 31,
+     "id": 32,
      "name": "candy",
      "type": "",
      "point": true,
@@ -10543,7 +10562,7 @@
      "height": 0
     },
     {
-     "id": 32,
+     "id": 33,
      "name": "candy",
      "type": "",
      "point": true,
@@ -10555,7 +10574,7 @@
      "height": 0
     },
     {
-     "id": 33,
+     "id": 34,
      "name": "candy",
      "type": "",
      "point": true,
@@ -10567,7 +10586,7 @@
      "height": 0
     },
     {
-     "id": 34,
+     "id": 35,
      "name": "block",
      "type": "",
      "rotation": 0,
@@ -10578,7 +10597,7 @@
      "height": 64
     },
     {
-     "id": 35,
+     "id": 36,
      "name": "candy",
      "type": "",
      "point": true,
@@ -10590,7 +10609,7 @@
      "height": 0
     },
     {
-     "id": 36,
+     "id": 37,
      "name": "candy",
      "type": "",
      "point": true,
@@ -10602,7 +10621,7 @@
      "height": 0
     },
     {
-     "id": 37,
+     "id": 38,
      "name": "candy",
      "type": "",
      "point": true,
@@ -10614,7 +10633,7 @@
      "height": 0
     },
     {
-     "id": 38,
+     "id": 39,
      "name": "checkpoint",
      "type": "",
      "point": true,
@@ -10626,7 +10645,7 @@
      "height": 0
     },
     {
-     "id": 39,
+     "id": 40,
      "name": "candy",
      "type": "",
      "point": true,
@@ -10638,7 +10657,7 @@
      "height": 0
     },
     {
-     "id": 40,
+     "id": 41,
      "name": "candy",
      "type": "",
      "point": true,
@@ -10650,7 +10669,7 @@
      "height": 0
     },
     {
-     "id": 41,
+     "id": 42,
      "name": "candy",
      "type": "",
      "point": true,
@@ -10662,7 +10681,7 @@
      "height": 0
     },
     {
-     "id": 42,
+     "id": 43,
      "name": "checkpoint",
      "type": "",
      "point": true,
@@ -10674,7 +10693,7 @@
      "height": 0
     },
     {
-     "id": 43,
+     "id": 44,
      "name": "ghost",
      "type": "",
      "rotation": 0,
@@ -10693,7 +10712,26 @@
      ]
     },
     {
-     "id": 44,
+     "id": 45,
+     "name": "ant",
+     "type": "",
+     "rotation": 0,
+     "visible": true,
+     "x": 3120,
+     "y": 768,
+     "polyline": [
+      {
+       "x": 0,
+       "y": 0
+      },
+      {
+       "x": 224,
+       "y": 0
+      }
+     ]
+    },
+    {
+     "id": 46,
      "name": "candy",
      "type": "",
      "point": true,
@@ -10705,7 +10743,7 @@
      "height": 0
     },
     {
-     "id": 45,
+     "id": 47,
      "name": "candy",
      "type": "",
      "point": true,
@@ -10717,7 +10755,7 @@
      "height": 0
     },
     {
-     "id": 46,
+     "id": 48,
      "name": "checkpoint",
      "type": "",
      "point": true,
@@ -10729,7 +10767,7 @@
      "height": 0
     },
     {
-     "id": 47,
+     "id": 49,
      "name": "candy",
      "type": "",
      "point": true,
@@ -10741,7 +10779,7 @@
      "height": 0
     },
     {
-     "id": 48,
+     "id": 50,
      "name": "candy",
      "type": "",
      "point": true,
@@ -10753,7 +10791,7 @@
      "height": 0
     },
     {
-     "id": 49,
+     "id": 51,
      "name": "candy",
      "type": "",
      "point": true,
@@ -10765,7 +10803,7 @@
      "height": 0
     },
     {
-     "id": 50,
+     "id": 52,
      "name": "goal",
      "type": "",
      "point": true,

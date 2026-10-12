@@ -6,6 +6,11 @@ import {
   GOAL_SIZE,
   GOAL_CELEBRATION_MS,
   GHOST_PATROL_DEFAULT,
+  GHOST_SIZE,
+  ANT_PATROL_DEFAULT,
+  ACORN_DROP_MIN_MS,
+  ACORN_DROP_MAX_MS,
+  ACORN_WARN_MS,
   LEAF_PATH_DEFAULT,
   SOAP_BUBBLE_PATH_DEFAULT,
   DEPTH_DECOR,
@@ -27,7 +32,9 @@ import { PlayerOne } from '../objects/PlayerOne';
 import { PlayerTwo } from '../objects/PlayerTwo';
 import { Candy } from '../objects/Candy';
 import { Goal } from '../objects/Goal';
-import { Ghost } from '../objects/Ghost';
+import { Ghost, SPARKLE_TEXTURE } from '../objects/Ghost';
+import { Ant } from '../objects/Ant';
+import { Acorn } from '../objects/Acorn';
 import { HiddenObject } from '../objects/HiddenObject';
 import { Gate } from '../objects/interactive/Gate';
 import { Lever } from '../objects/interactive/Lever';
@@ -97,6 +104,8 @@ export class GameScene extends Phaser.Scene {
   private rescue!: RescueSystem;
   private interactions!: InteractionSystem;
 
+  private solidLayers: Phaser.Tilemaps.TilemapLayer[] = [];
+  private acorns!: Phaser.GameObjects.Group;
   private candies!: Phaser.GameObjects.Group;
   private candiesTotal = 0;
   private candiesCollected = 0;
@@ -124,6 +133,7 @@ export class GameScene extends Phaser.Scene {
 
     this.spawnPlayers(map);
     const solidLayers = [ground, oneway].filter(Boolean) as Phaser.Tilemaps.TilemapLayer[];
+    this.solidLayers = solidLayers;
     this.physics.add.collider(this.players, solidLayers);
 
     this.input_ = new InputManager(this);
@@ -137,6 +147,7 @@ export class GameScene extends Phaser.Scene {
     this.spawnMushrooms(map);
     this.spawnCandies(map);
     this.spawnGhosts(map);
+    this.spawnAnts(map);
     this.spawnGoal(map);
 
     this.startHud();
@@ -426,9 +437,15 @@ export class GameScene extends Phaser.Scene {
 
   private spawnGhosts(map: Phaser.Tilemaps.Tilemap): void {
     const ghosts = this.add.group();
+    this.createAcorns();
 
-    for (const patrol of this.findPatrols(map, OBJECT.ghost)) {
-      ghosts.add(new Ghost(this, patrol.from, patrol.to));
+    for (const object of this.objectsNamed(map, OBJECT.ghost)) {
+      const patrol = this.patrolOf(object);
+      const ghost = new Ghost(this, patrol.from, patrol.to);
+      ghosts.add(ghost);
+      if (tiledProperty(object, PROPERTY.acorns) === true) {
+        this.startAcornDrops(ghost);
+      }
     }
 
     this.physics.add.overlap(
@@ -436,6 +453,89 @@ export class GameScene extends Phaser.Scene {
       ghosts,
       (_player, ghostObject) => {
         (ghostObject as Ghost).bump((x, y) => this.dropCandy(x, y));
+      },
+      onlyWithControl,
+    );
+  }
+
+  /**
+   * Żołędzie zrzucane przez duszki (GDD poziom 4). Grupa zwykła, nie fizyczna:
+   * grupa Arcade nadpisałaby przy dodaniu własną, słabszą grawitację żołędzia.
+   * Trafiony gracz robi „bęc" (`Player.bonk`), żołądź znika w brokacie; leżący
+   * na ziemi już nikogo nie trafia.
+   */
+  private createAcorns(): void {
+    this.acorns = this.add.group();
+    this.physics.add.collider(this.acorns, this.solidLayers, (acornObject) => {
+      (acornObject as Acorn).land();
+    });
+    this.physics.add.overlap(
+      this.players,
+      this.acorns,
+      (playerObject, acornObject) => {
+        const acorn = acornObject as Acorn;
+        if (!acorn.isFalling) {
+          return;
+        }
+        (playerObject as Player).bonk();
+        this.sparkleAt(acorn.x, acorn.y);
+        acorn.vanish();
+      },
+      onlyWithControl,
+    );
+  }
+
+  /**
+   * Duszek co chwilę zrzuca żołądź — ale najpierw się trzęsie (`Ghost.tease`), żeby
+   * dziecko wiedziało, że zaraz coś spadnie. Dotknięty duszek (znikł w brokacie)
+   * nie rzuca, dopóki nie wróci.
+   */
+  private startAcornDrops(ghost: Ghost): void {
+    const scheduleNext = (): void => {
+      this.time.delayedCall(Phaser.Math.Between(ACORN_DROP_MIN_MS, ACORN_DROP_MAX_MS), () => {
+        if (ghost.isAwake) {
+          ghost.tease();
+          this.time.delayedCall(ACORN_WARN_MS, () => {
+            if (ghost.isAwake) {
+              this.acorns.add(new Acorn(this, ghost.x, ghost.y + GHOST_SIZE / 4));
+            }
+          });
+        }
+        scheduleNext();
+      });
+    };
+    scheduleNext();
+  }
+
+  /** Mały błysk brokatu — trafiony żołądź znika „z puf", a nie po prostu przestaje istnieć. */
+  private sparkleAt(x: number, y: number): void {
+    const emitter = this.add.particles(x, y, SPARKLE_TEXTURE, {
+      speed: { min: 40, max: 120 },
+      lifespan: 400,
+      scale: { start: 0.8, end: 0 },
+      emitting: false,
+    });
+    emitter.setDepth(DEPTH_PLAYERS);
+    emitter.explode(6);
+    this.time.delayedCall(600, () => emitter.destroy());
+  }
+
+  /**
+   * Mrówki niosące liście (GDD poziom 1). Kontakt to „bęc" gracza i odwrót mrówki —
+   * niegroźne, do omijania albo przeskakiwania.
+   */
+  private spawnAnts(map: Phaser.Tilemaps.Tilemap): void {
+    const ants = this.findRoutes(map, OBJECT.ant, new Phaser.Math.Vector2(ANT_PATROL_DEFAULT, 0)).map(
+      (route) => new Ant(this, route.from, route.to),
+    );
+    this.physics.add.overlap(
+      this.players,
+      ants,
+      (playerObject, antObject) => {
+        const player = playerObject as Player;
+        if (player.bonk('squish')) {
+          (antObject as Ant).bumped(player.x);
+        }
       },
       onlyWithControl,
     );
@@ -548,18 +648,16 @@ export class GameScene extends Phaser.Scene {
    * Zwykły punkt też jest obsłużony: dostaje domyślny odcinek w poziomie, żeby
    * szybki szkic poziomu nie wymagał precyzji.
    */
-  private findPatrols(map: Phaser.Tilemaps.Tilemap, name: string): Route[] {
-    return this.objectsNamed(map, name).map((object) => {
-      const half = GHOST_PATROL_DEFAULT / 2;
-      const x = object.x ?? 0;
-      const y = object.y ?? 0;
-      return (
-        this.polylineEnds(object) ?? {
-          from: new Phaser.Math.Vector2(x - half, y),
-          to: new Phaser.Math.Vector2(x + half, y),
-        }
-      );
-    });
+  private patrolOf(object: Phaser.Types.Tilemaps.TiledObject): Route {
+    const half = GHOST_PATROL_DEFAULT / 2;
+    const x = object.x ?? 0;
+    const y = object.y ?? 0;
+    return (
+      this.polylineEnds(object) ?? {
+        from: new Phaser.Math.Vector2(x - half, y),
+        to: new Phaser.Math.Vector2(x + half, y),
+      }
+    );
   }
 
   /**

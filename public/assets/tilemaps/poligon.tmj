@@ -8,7 +8,7 @@
  "orientation": "orthogonal",
  "renderorder": "right-down",
  "nextlayerid": 5,
- "nextobjectid": 56,
+ "nextobjectid": 58,
  "tiledversion": "1.10.2",
  "version": "1.10",
  "type": "map",
@@ -8371,6 +8371,51 @@
      "y": 768,
      "width": 0,
      "height": 0
+    },
+    {
+     "id": 56,
+     "name": "ant",
+     "type": "",
+     "rotation": 0,
+     "visible": true,
+     "x": 1104,
+     "y": 768,
+     "polyline": [
+      {
+       "x": 0,
+       "y": 0
+      },
+      {
+       "x": 192,
+       "y": 0
+      }
+     ]
+    },
+    {
+     "id": 57,
+     "name": "ghost",
+     "type": "",
+     "properties": [
+      {
+       "name": "acorns",
+       "type": "bool",
+       "value": true
+      }
+     ],
+     "rotation": 0,
+     "visible": true,
+     "x": 288,
+     "y": 440,
+     "polyline": [
+      {
+       "x": 0,
+       "y": 0
+      },
+      {
+       "x": 64,
+       "y": 0
+      }
+     ]
     }
    ],
    "opacity": 1,

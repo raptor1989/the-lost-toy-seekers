@@ -356,6 +356,48 @@ export const MUSHROOM_SHAKE_INTENSITY = 0.004;
  */
 export const LAUNCH_GROUND_GRACE_MS = 120;
 
+// ---------------------------------------------------------------- przeszkody-psotki
+// Mrówki niosące liście (poziom 1) i żołędzie zrzucane przez duszki (poziom 4).
+// GDD: „niegroźne, do omijania". Kontakt to zabawne „bęc" — podskok w miejscu,
+// dźwięk i squash. Bez odrzutu w bok (nie może zepchnąć do przepaści) i bez
+// odbierania kontroli: przeszkoda ma rozśmieszyć, nie ukarać.
+
+/** Podskok po „bęc" (px/s, ujemne = w górę) — ok. 45 px, wyraźnie niżej niż skok. */
+export const BONK_VELOCITY = -300;
+/** Ile ms po „bęc" kolejny kontakt nic nie robi — stanie na mrówce nie daje serii podskoków. */
+export const BONK_COOLDOWN_MS = 700;
+
+/** Rozmiar mrówki z liściem (placeholder do M5). */
+export const ANT_WIDTH = 44;
+export const ANT_HEIGHT = 36;
+/** ⚙ Mrówka chodzi wolno — łatwo ją wyprzedzić, przeskoczyć albo na nią wskoczyć. */
+export const ANT_SPEED = 45;
+/** Trasa mrówki postawionej w Tiled jako punkt (w bok, w prawo). */
+export const ANT_PATROL_DEFAULT = 160;
+/** Mrówka podskakuje, kiedy ktoś na nią wpadnie, i zawraca. */
+export const ANT_HOP_HEIGHT = 12;
+export const ANT_HOP_MS = 160;
+
+export const ACORN_SIZE = 28;
+/**
+ * ⚙ Żołędzie spadają wolno („miękkie", GDD): własna, słabsza grawitacja i limit
+ * prędkości. Dziecko ma widzieć, co nadlatuje, i zdążyć zejść z drogi.
+ */
+export const ACORN_FALL_GRAVITY = 450;
+export const ACORN_MAX_FALL_SPEED = 320;
+/** Obrót spadającego żołędzia (stopnie na sekundę). */
+export const ACORN_SPIN = 200;
+/** ⚙ Co ile duszek zrzuca żołądź — losowo z przedziału, żeby nie był metronomem. */
+export const ACORN_DROP_MIN_MS = 2600;
+export const ACORN_DROP_MAX_MS = 4200;
+/** Duszek trzęsie się przed zrzutem — zapowiedź „zaraz coś spadnie". */
+export const ACORN_WARN_MS = 600;
+export const ACORN_WARN_ANGLE = 12;
+/** Ile żołądź leży po upadku, zanim zniknie. */
+export const ACORN_REST_MS = 700;
+/** Żołądź, który nigdzie nie spadł (przepaść), znika po tym czasie. */
+export const ACORN_LIFETIME_MS = 8000;
+
 // ---------------------------------------------------------------- meta poziomu
 
 /** Rozmiar zabawki stojącej na mecie (w świecie gry). */
