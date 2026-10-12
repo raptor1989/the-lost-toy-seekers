@@ -629,7 +629,7 @@ w `constants.ts`, nie zmiana assetu).
 
 Kolejność zoptymalizowana pod zasadę: **najpierw grywalny prototyp, grafika na końcu** (rozszerzenie Kroków 1–5 z GDD).
 
-### Stan realizacji — *aktualizacja: 2026-10-09*
+### Stan realizacji — *aktualizacja: 2026-10-12*
 
 | Etap | Stan | Uwagi |
 |---|---|---|
@@ -637,7 +637,7 @@ Kolejność zoptymalizowana pod zasadę: **najpierw grywalny prototyp, grafika n
 | **M1** — Rdzeń ruchu i strojenie | ✅ **ukończony** | `InputManager`, `CoopCamera` z bańką, `RescueSystem`, coyote time + jump buffering, squash & stretch. **Playtest z dziećmi zaliczony** — 5-latek przechodzi tor testowy samodzielnie |
 | **M2** — Pętla rozgrywki | ✅ **ukończony** | Pipeline map z Tiled, generyczna `GameScene`, manifest `levels.ts`, checkpointy z mapy, cukierki, `UIScene` z ikonowym HUD, meta poziomu + `RewardScene`, `SaveManager` z paskiem odzyskanych zabawek, `MenuScene`, duszki-psotniki. **Kryterium spełnione: pełne przejście szarego poziomu 1 od menu do nagrody.** Czeka na playtest z dziećmi |
 | **M3** — Mechaniki kooperacji | ✅ **ukończony** | Magiczna latarka Gracza 2 (`FlashlightSystem`) i obiekty odkrywane światłem (`HiddenObject`); dźwignie, przyciski tamy i bramy; pchane bloki; pływające liście i mydlane bąbelki (`MovingPlatform`); grzyby-trampoliny — wszystko w `objects/interactive/` + `InteractionSystem`, z poligonami na poziomie 1. **Zweryfikowane w grze** (każda mechanika + pętla menu → nagroda → menu) i przeglądem `kid-check`. Czeka na playtest z dziećmi |
-| **M4** — Poziomy w Tiled | ⬜ nierozpoczęty | |
+| **M4** — Poziomy w Tiled | ✅ **ukończony** | Cztery poziomy z GDD jako greybox w Tiled: samouczek „Kartonowy Las", „Rzeka Bąbelków" (liście, bąbelki, tama), „Wzgórze Klocków" (dźwignie, latarka, klocek), pionowy „Domek na Drzewie" (grzyby, żołędzie, domek ze skrzynią) — w manifeście z nagrodami. Mrówki i żołędzie (przeszkody-psotki, sekcja 3.8), strefy ratunkowe z mapy, poprawka bańki kamery. Poligon M3 jako mapa testowa, `?level=<id>`. **Zweryfikowane w grze** — każdy skok i każda zagadka obojgiem graczy (116 sprawdzeń w Playwrighcie na prawdziwej fizyce) — i przeglądem `kid-check`. **Czeka na playtest każdego poziomu z dziećmi** |
 | **M5** — Art pass | 🟡 **grafika gotowa, czeka na integrację** | Zmiana pipeline'u na SVG (sekcja 4). **Komplet grafik narysowany (2026-10-09, sekcja 4.1):** oba misie w 6 pozach + portrety, duszek ×2, cukierki ×3, 4 nagrody, tilesety i horyzonty paralaksy 4 poziomów, niebo/gwiazdy/chmury, elementy interaktywne, UI (cyfry, przyciski, ramka portretu, kłódka), efekty, mapka menu — generatory w `tools/build-*.mjs`, podgląd w `/asset_preview.html`. Greybox dźwięku: 14 syntezowanych SFX + `AudioManager`. **Brak:** podpięcie w `PreloadScene`/scenach (rysowane równolegle z M3 poza `src/`; integracja to następny krok — plan w 4.1), nagrania głosu, muzyka |
 | **M6** — Polish i playtesty | ⬜ nierozpoczęty | |
 
@@ -819,8 +819,58 @@ pulsujący zarys mostu i strzałkę nad dźwignią, czy da radę świecić w ruc
 czy finał z dźwignią nie jest za trudny jak na pierwszy poziom, czy grzyb nie wyrzuca za wysoko.
 Poligony M3 na poziomie 1 to tor testowy — docelowe rozmieszczenie mechanik należy do M4.
 
-### M4 — Poziomy w Tiled (3–4 wieczory)
+### M4 — Poziomy w Tiled (3–4 wieczory) ✅
 Greybox wszystkich 4 poziomów zgodnie z GDD sekcja 4 + playtest każdego z dziećmi **przed** art passem (przesuwanie platform w Tiled jest darmowe, po oklejeniu grafiką — bolesne).
+
+**Zrealizowano (2026-10-12):** cztery mapy w `public/assets/tilemaps/` i wpisy w manifeście
+[levels.ts](../src/config/levels.ts) z nagrodami (miś, autko, robot, skrzynia). Dotychczasowy
+poligon M3 przeszedł do `poligon.tmj` jako mapa testowa (`TEST_LEVELS`, adres `?level=poligon`).
+
+| Poziom | Rozmiar | Co uczy / czego wymaga |
+|---|---|---|
+| 1 „Kartonowy Las" | 120 × 28 | **Samouczek.** Główna ścieżka to wyłącznie chód i skok: schodki z kartonów 1-2-3, przepaści 2, 4 i 5 kafli, dwa duszki, dwie mrówki. Umiejętności jako **opcjonalne sekrety** z cukierkami: wysoka półka po ukrytych stopniach (latarka) i karton, na który wchodzi się z dopchniętego klocka (krawężnik zatrzymuje klocek we właściwym miejscu). |
+| 2 „Rzeka Bąbelków" | 140 × 28 | Kamienie nad wodą, dwa **liście** przez wodę szeroką na 12 kafli, **tama** (brama 6 kafli; przed nią przycisk Gracza 1, za nią wspólny), dwa **bąbelki-windy** — na wysoki brzeg i na wyspę z metą. |
+| 3 „Wzgórze Klocków" | 140 × 28 | Dwie przepaści po 11 kafli z **ukrytymi mostami** (latarka obowiązkowa), **dźwignia** na półce 6 kafli, do której prowadzi ukryty stopień (Gracz 2 świeci, Gracz 1 pociąga), **klocek** pod klif 5 kafli, druga dźwignia przy bramie. |
+| 4 „Domek na Drzewie" | 44 × 84 | **Wspinaczka**: pięć pięter co 12 kafli z pełnymi gałęziami-podłogami, schodki z gałęzi, dwa **grzyby**, dwa duszki zrzucające **żołędzie**, przerwana gałąź z ukrytym mostem i strefą ratunkową pod spodem, domek z drzwiami na dźwignię i skrzynią skarbów. |
+
+**Decyzje z projektowania:**
+
+* **Każdy wymagany skok mieści się w regule 70%**: najwyżej 3 kafle w górę z przylegającego
+  stopnia, najwyżej 6 kafli przepaści po płaskim — sprawdzane rachunkiem (zgrubny BFS po
+  powierzchniach mapy), a potem w grze.
+* **Przepaść, którą ma zamykać ukryty most, ma 11–12 kafli.** Przy 9–10 wytrawny skok
+  (~275 px, `JUMP_DISTANCE_MAX`) przenosi nad nią i latarka przestaje być potrzebna.
+* **Cukierek nad półką przenikalną da się złapać głową z podłogi** (zasięg ~215 px), więc
+  sekret, który ma czegoś wymagać, stoi na pełnym kafelku, a cukierki są odsunięte od jego
+  krawędzi — inaczej sięga się ich z boku podskokiem.
+* **Przyciski tamy: przed bramą Gracza 1, za bramą wspólny.** Dwa przyciski „tylko dla
+  jednego gracza" dawały zakleszczenie: Gracz 1 przebiegający sam w czasie zwłoki zamykania
+  zostawiłby młodsze dziecko po drugiej stronie bez wyjścia.
+* **Brama na drodze w poziomach z półkami stoi pod ścianą** — z półki z dźwignią dało się ją
+  przeskoczyć; ściana nad otworem zamyka tę drogę.
+* **Klocek nie może się zaklinować na zawsze**: korytarz kończy się albo przeszkodą, przy
+  której klocek ma stać (krawężnik, klif), albo przepaścią, z której wraca na start.
+* **Poziom pionowy ma piętra co 12 kafli** — grzyb wyrzuca ~461 px nad podłogę, więc zapas
+  wynosi 77 px (przy 14 kaflach byłoby 13 px). Pełne gałęzie-podłogi łapią spadających:
+  wpadka kosztuje najwyżej jedno piętro, a pod jedyną przerwą leży strefa ratunkowa.
+* **Duszek z żołędziami lata wysoko i nad gruntem**, nie nad skokiem przez przepaść.
+
+**Weryfikacja — testy na prawdziwej fizyce gry** (Playwright + `window.__game`, teleport na
+miejsce startu, potem zwykłe klawisze): poziom 1 — 31 sprawdzeń, poziom 2 — 26, poziom 3 — 24,
+poziom 4 — 35; każdy skok głównej ścieżki obojgiem graczy, każda zagadka także „negatywnie"
+(bez latarki most przepuszcza, bez klocka klifu nie da się pokonać, sam Gracz 2 nie przejdzie
+tamy, przycisk Gracza 1 nie reaguje na Gracza 2), wpadki kończą się ratunkiem, meta otwiera
+nagrodę. Pełna pętla: menu z czterema przystankami → poziom 1 → nagroda → „dalej" → poziom 2,
+zapis i odblokowanie w menu.
+
+**Przegląd `kid-check` znalazł i naprawił** dwa problemy widoczne dopiero w pionie: bańkę
+kamery, która przy obu graczach poza kadrem zamieniała ich miejscami w kółko (sekcja 3.1),
+i spadek „piętro niżej" bez ratunku (strefy `rescue`, sekcja 3.2). Dodatkowo „bęc" od żołędzia
+w powietrzu dawał darmowy podwójny skok — teraz w powietrzu nie zmienia toru lotu (sekcja 3.8).
+
+**Do playtestu z dziećmi** (wartości do strojenia na podstawie obserwacji): wsiadanie na liść
+(postój `PLATFORM_END_PAUSE_MS`), częstotliwość żołędzi (`ACORN_DROP_*`), długość poziomów
+i gęstość cukierków. Mapy są danymi — korekty robi się w Tiled, bez zmian w kodzie.
 
 ### M5 — Art pass (2–4 wieczory, równolegle z resztą) 🟡
 Rysowanie assetów SVG (sekcja 4), podmiana greyboxu, paralaksa, animacje postaci, muzyka i SFX, nagrania głosowe.

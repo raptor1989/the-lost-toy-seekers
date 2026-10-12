@@ -65,7 +65,17 @@ Gracz 1 **pcha klocki** (wystarczy w nie iść) — klocek robi stopień, a poł
 trzyma bramę otwartą za dziecko. Po wodzie pływają **liście-tratwy**, a **mydlane bąbelki**
 działają jak windy — obie platformy stają na chwilę na końcach trasy, żeby wsiadanie nie
 wymagało refleksu. **Grzyby-trampoliny** wyrzucają zawsze na tę samą wysokość.
-Na poziomie 1 każda mechanika ma swój poligon (docelowe rozmieszczenie — M4).
+Wszystkie mechaniki są też zebrane na **poligonie** (`?level=poligon`) — mapie testowej poza menu.
+
+**M4 ukończone — cztery poziomy z GDD** (na razie w szarych klockach, gotowe do playtestu):
+samouczek **„Kartonowy Las"** (sam chód i skok, a latarka i pchanie jako sekrety z cukierkami),
+**„Rzeka Bąbelków"** (liście, bąbelki-windy i tama: jedno trzyma przycisk, drugie przechodzi),
+**„Wzgórze Klocków"** (Gracz 2 świeci ukryte mosty, Gracz 1 pociąga dźwignie i pcha klocek)
+i pionowy **„Domek na Drzewie"** (wspinaczka po gałęziach, grzyby-trampoliny, duszki rzucające
+miękkimi żołędziami, domek ze skrzynią skarbów). Na pierwszym poziomie chodzą też **mrówki
+z liśćmi** — wpadnięcie na nią albo trafienie żołędziem to tylko zabawne „bęc". Każdy skok
+i każda zagadka są sprawdzone w grze obojgiem graczy. Poziomy odblokowują się po kolei,
+a `?level=level3` w adresie uruchamia wybrany poziom od razu (do playtestów).
 
 Gra ma też już **dźwięki**: na razie syntezowane placeholdery (skok, cukierek, śmieszne
 wpadki, chichot duszka, fanfara), do podmiany na nagrania bez zmian w kodzie.
@@ -76,7 +86,8 @@ zabawki-nagrody, tilesety i tła paralaksy czterech poziomów, elementy interakt
 i mapka ogrodu do menu. Postacie, tilesety i tła powstają z generatorów (`npm run assets`),
 a wszystko można obejrzeć w `/asset_preview.html` — w tym makietę kadru poziomu.
 
-**Następny krok:** playtest M2–M3 z dziećmi, potem M4 — greybox czterech poziomów z GDD.
+**Następny krok:** playtest czterech poziomów z dziećmi (korekty w Tiled), potem podpięcie
+grafiki z M5 w scenach.
 
 ### Sterowanie
 
@@ -95,7 +106,7 @@ Aktualna tabela postępu: [sekcja 8 dokumentacji implementacyjnej](docs/Dokument
 src/
 ├── config/      # constants.ts (strojenie), levels.ts (manifest poziomów), audio.ts (manifest dźwięków)
 ├── scenes/      # Boot, Preload, Menu, Game, UI, Reward
-├── objects/     # klasy sprite'ów: Player, Candy, Ghost, Goal, HiddenObject
+├── objects/     # klasy sprite'ów: Player, Candy, Ghost, Goal, HiddenObject, Ant, Acorn
 │   └── interactive/  # Gate, Lever, PressurePlate, PushBlock, MovingPlatform, MushroomTrampoline
 ├── systems/     # InputManager, CoopCamera, RescueSystem, FlashlightSystem, InteractionSystem, AudioManager...
 └── utils/       # digits.ts (cyfry licznika), physics.ts (rozmiary ciał Arcade)
