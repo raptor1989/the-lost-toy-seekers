@@ -363,8 +363,10 @@ się dzieje przy kontakcie**:
 * **„Bęc" zamiast kary** (`Player.bonk`): podskok w miejscu (~45 px, `BONK_VELOCITY`), dźwięk
   i squash. **Bez odrzutu w bok** — odrzut przy krawędzi zepchnąłby dziecko do przepaści —
   i bez odbierania kontroli. To jedyny „koszt" kontaktu: chwila zabawnego zamieszania.
-* **Prędkość pionowa zmienia się tylko w górę.** Żołądź w głowę w pół skoku nie może skrócić
-  skoku nad przepaścią; spadającemu podskok najwyżej łagodnie hamuje upadek.
+* **W powietrzu „bęc" nie zmienia toru lotu** — podskok jest tylko na ziemi. Żołądź w głowę
+  w pół skoku nie może ani skrócić skoku nad przepaścią, ani dać dodatkowego wybicia. Pierwsza
+  wersja podbijała spadającego i działała jak darmowy podwójny skok: na drabince gałęzi
+  postać trafiona przy szczycie skoku przeskakiwała dwie gałęzie naraz.
 * **Cooldown `BONK_COOLDOWN_MS`** — stanie na mrówce nie daje serii podskoków.
 * **Mrówka** (`Ant`) chodzi po trasie z mapy wolniej niż dziecko, bez grawitacji i kolizji
   z kaflami (trasa leży na podłodze). Po kontakcie podskakuje i zawraca w stronę przeciwną do

@@ -118,12 +118,13 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
   }
 
   /**
-   * „Bęc" od mrówki albo żołędzia: podskok w miejscu, squash i dźwięk.
+   * „Bęc" od mrówki albo żołędzia: squash i dźwięk, a na ziemi — podskok w miejscu.
    *
-   * Prędkość pionowa zmienia się tylko **w górę**: wznoszącemu się skokowi podskok
-   * niczego nie odbiera (żołądź w głowę w pół skoku nie może skrócić skoku nad
-   * przepaścią), a spadającemu łagodnie hamuje upadek. Bez odrzutu w bok i bez
-   * odbierania kontroli. W czasie {@link BONK_COOLDOWN_MS} kolejny kontakt nic nie robi.
+   * **W powietrzu tor lotu się nie zmienia.** Żołądź w głowę w pół skoku nie może ani
+   * skrócić skoku nad przepaścią, ani dać dodatkowego wybicia — pierwsza wersja
+   * podbijała spadającego i działała jak darmowy podwójny skok (postać przeskakiwała
+   * dwie gałęzie naraz). Bez odrzutu w bok i bez odbierania kontroli. W czasie
+   * {@link BONK_COOLDOWN_MS} kolejny kontakt nic nie robi.
    *
    * @param sound dźwięk „bęc" — mrówka i żołądź brzmią inaczej
    * @returns `false`, jeśli „bęc" było przed chwilą albo gracz nie ma kontroli
@@ -134,7 +135,9 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
       return false;
     }
     this.bonkedAt = now;
-    this.setVelocityY(Math.min(this.arcadeBody.velocity.y, BONK_VELOCITY));
+    if (this.isOnGround) {
+      this.setVelocityY(BONK_VELOCITY);
+    }
     AudioManager.play(this.scene, sound);
     this.playSquash(LAND_SQUASH_X, LAND_SQUASH_Y);
     return true;
